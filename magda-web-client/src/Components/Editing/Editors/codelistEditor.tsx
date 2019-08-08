@@ -55,6 +55,7 @@ export function codelistEditor(
 }
 
 export function codelistRadioEditor(
+    idNamespace: string,
     options: any,
     reorder = false
 ): Editor<string> {
@@ -68,29 +69,26 @@ export function codelistRadioEditor(
             if (reorder) {
                 keys = keys.sort(alphaLabelSort(options));
             }
-            const name = Math.random() + ".";
             return (
                 <div>
                     {keys.map(val => {
                         return (
-                            <div>
-                                <div className="au-control-input">
-                                    <input
-                                        className="au-control-input__input"
-                                        type="radio"
-                                        value={val}
-                                        name={name}
-                                        id={name + val}
-                                        onChange={callback}
-                                        checked={value === val}
-                                    />{" "}
-                                    <label
-                                        className="au-control-input__text"
-                                        htmlFor={name + val}
-                                    >
-                                        {options[val]}
-                                    </label>
-                                </div>
+                            <div className="au-control-input au-control-input--block">
+                                <input
+                                    className="au-control-input__input"
+                                    type="radio"
+                                    value={val}
+                                    name={val}
+                                    id={idNamespace + "-" + val}
+                                    onChange={callback}
+                                    checked={value === val}
+                                />{" "}
+                                <label
+                                    className="au-control-input__text"
+                                    htmlFor={idNamespace + "-" + val}
+                                >
+                                    {options[val]}
+                                </label>
                             </div>
                         );
                     })}

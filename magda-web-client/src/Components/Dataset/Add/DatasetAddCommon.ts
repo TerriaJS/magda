@@ -1,6 +1,9 @@
 import uuidv4 from "uuid/v4";
 
-import { licenseLevel } from "constants/DatasetConstants";
+import {
+    licenseLevel,
+    ContactPointDisplayOption
+} from "constants/DatasetConstants";
 import { fetchOrganization } from "api-clients/RegistryApis";
 import { config } from "config";
 import { User } from "reducers/userManagementReducer";
@@ -83,10 +86,11 @@ export type Dataset = {
     accessNotesTemp?: string;
 };
 
-type DatasetPublishing = {
+export type DatasetPublishing = {
     state: string;
     level: string;
     notesToApprover?: string;
+    contactPointDisplay?: ContactPointDisplayOption;
 };
 
 type SpatialCoverage = {
@@ -142,12 +146,12 @@ function createBlankState(user: User): State {
         dataset: {
             title: "Untitled",
             languages: ["eng"],
-            contactPointDisplay: "role",
             owningOrgUnitId: user.orgUnitId
         },
         datasetPublishing: {
             state: "draft",
-            level: "agency"
+            level: "agency",
+            contactPointDisplay: "members"
         },
         spatialCoverage: {},
         temporalCoverage: {

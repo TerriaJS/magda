@@ -15,6 +15,11 @@
             "type": "string",
             "default": "agency",
             "enum": ["agency", "team", "public", "personal"]
+        },
+        "contactPointDisplay": {
+            "title": "What should be shown for the contact point(s) of a dataset",
+            "type": "string",
+            "enum": ["members", "team", "organization"]
         }
     }
 }

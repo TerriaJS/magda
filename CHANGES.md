@@ -70,6 +70,7 @@ UI:
 -   Overall page layout adjustment for `Details and Content` page
 -   fixed: keywords & themes extraction might produce duplicate keywords for different files
 -   Added ability to set the owning org unit in Add Dataset flow.
+-   Restricted dataset contact point display options to team members, team or org and made it save in the registry.
 -   Stopped keywords & themes extraction producing duplicate keywords for different files
 -   Capped the maximum input to retext for keyword extraction to prevent browser freezeup
 -   Made all keywords extracted lower case

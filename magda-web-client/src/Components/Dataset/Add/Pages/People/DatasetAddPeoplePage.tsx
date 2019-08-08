@@ -7,7 +7,10 @@ import {
 } from "Components/Editing/Editors/textEditor";
 import { codelistRadioEditor } from "Components/Editing/Editors/codelistEditor";
 import * as codelists from "constants/DatasetConstants";
-import { Dataset } from "Components/Dataset/Add/DatasetAddCommon";
+import {
+    Dataset,
+    DatasetPublishing
+} from "Components/Dataset/Add/DatasetAddCommon";
 import OrganisationAutoComplete from "./OrganisationAutocomplete";
 import OrgUnitDropdown from "./OrgUnitDropdown";
 
@@ -73,12 +76,14 @@ function YesNoEditReveal(props) {
 type Props = {
     edit: (aspectField: string) => (field: string) => (newValue: any) => void;
     dataset: Dataset;
+    publishing: DatasetPublishing;
 };
 
 export default function DatasetAddPeoplePage(props: Props) {
     const { dataset } = props;
 
     const editDataset = props.edit("dataset");
+    const editPublishing = props.edit("datasetPublishing");
 
     return (
         <div className="row people-and-production-page">
@@ -109,9 +114,10 @@ export default function DatasetAddPeoplePage(props: Props) {
                 </h4>
                 <div>
                     <AlwaysEditor
-                        value={dataset.contactPointDisplay}
-                        onChange={editDataset("contactPointDisplay")}
+                        value={props.publishing.contactPointDisplay}
+                        onChange={editPublishing("contactPointDisplay")}
                         editor={codelistRadioEditor(
+                            "dataset-contact-point-display",
                             codelists.contactPointDisplay
                         )}
                     />
