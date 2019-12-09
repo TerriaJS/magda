@@ -1,7 +1,7 @@
 {
   "name": "@magda/magda-scss-compiler",
   "description": "The web-client SCSS compiler pod",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "license": "Apache-2.0",
   "scripts": {
     "build": "yarn run compile",
@@ -14,7 +14,7 @@
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@types/autoprefixer": "^9.1.0",
     "@types/chai": "^4.0.1",
     "@types/clean-css": "^3.4.30",
@@ -39,8 +39,8 @@
     "typescript": "^3.2.0"
   },
   "dependencies": {
-    "@magda/typescript-common": "^0.0.56-terria-1",
-    "@magda/web-client": "^0.0.56-terria-1",
+    "@magda/typescript-common": "^0.0.56-terria-2",
+    "@magda/web-client": "^0.0.56-terria-2",
     "autoprefixer": "^9.2.1",
     "clean-css": "^4.2.1",
     "escape-string-regexp": "^1.0.5",

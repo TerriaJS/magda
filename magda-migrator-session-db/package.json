@@ -1,6 +1,6 @@
 {
   "name": "@magda/migrator-session-db",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "description": "The database storing session information.",
   "scripts": {
     "dev": "echo \"No dev mode available, use helm instead.\"",
@@ -16,8 +16,8 @@
     }
   },
   "devDependencies": {
-    "@magda/db-migrator": "^0.0.56-terria-1",
-    "@magda/scripts": "^0.0.56-terria-1"
+    "@magda/db-migrator": "^0.0.56-terria-2",
+    "@magda/scripts": "^0.0.56-terria-2"
   },
   "magda": {
     "categories": {

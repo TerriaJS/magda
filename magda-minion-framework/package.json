@@ -1,7 +1,7 @@
 {
   "name": "@magda/minion-framework",
   "description": "MAGDA Minion Framework",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "scripts": {
     "build": "yarn run compile",
     "compile": "tsc -p tsconfig-build.json",
@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "main": "dist",
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@types/chai": "^4.0.1",
     "@types/express": "^4.0.36",
     "@types/isomorphic-fetch": "0.0.34",
@@ -36,8 +36,8 @@
     "typescript": "^3.2.0"
   },
   "dependencies": {
-    "@magda/registry-aspects": "^0.0.56-terria-1",
-    "@magda/typescript-common": "^0.0.56-terria-1",
+    "@magda/registry-aspects": "^0.0.56-terria-2",
+    "@magda/typescript-common": "^0.0.56-terria-2",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "isomorphic-fetch": "^2.2.1",

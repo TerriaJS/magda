@@ -1,7 +1,7 @@
 {
   "name": "@magda/minion-format",
   "description": "MAGDA Layering Minion",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "scripts": {
     "build": "yarn run compile",
     "compile": "tsc -p tsconfig-build.json",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@types/chai": "^4.0.2",
     "@types/ftp": "^0.3.29",
     "@types/lodash": "^4.14.88",
@@ -36,9 +36,9 @@
     "typescript": "^3.2.0"
   },
   "dependencies": {
-    "@magda/minion-framework": "^0.0.56-terria-1",
-    "@magda/registry-aspects": "^0.0.56-terria-1",
-    "@magda/typescript-common": "^0.0.56-terria-1",
+    "@magda/minion-framework": "^0.0.56-terria-2",
+    "@magda/registry-aspects": "^0.0.56-terria-2",
+    "@magda/typescript-common": "^0.0.56-terria-2",
     "@types/escape-string-regexp": "^0.0.32",
     "@types/lodash": "^4.14.88",
     "escape-string-regexp": "^1.0.5",

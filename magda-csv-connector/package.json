@@ -1,7 +1,7 @@
 {
   "name": "@magda/csv-connector",
   "description": "MAGDA Csv/Xlsx/Ods etc data catalog Connector",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "scripts": {
     "build": "yarn run compile",
     "compile": "yarn run compile-node && yarn run compile-browser",
@@ -17,7 +17,7 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@types/jsonpath": "^0.1.29",
     "@types/lodash": "^4.14.66",
     "@types/read-pkg-up": "^3.0.1",
@@ -31,8 +31,8 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
-    "@magda/registry-aspects": "^0.0.56-terria-1",
-    "@magda/typescript-common": "^0.0.56-terria-1",
+    "@magda/registry-aspects": "^0.0.56-terria-2",
+    "@magda/typescript-common": "^0.0.56-terria-2",
     "escape-html": "^1.0.3",
     "jsonpath": "^1.0.0",
     "read-pkg-up": "^3.0.0",

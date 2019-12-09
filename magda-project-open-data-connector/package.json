@@ -1,7 +1,7 @@
 {
   "name": "@magda/project-open-data-connector",
   "description": "MAGDA Project Open Data (data.json) Connector",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "license": "Apache-2.0",
   "scripts": {
     "build": "yarn run compile",
@@ -17,7 +17,7 @@
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@types/read-pkg-up": "^3.0.1",
     "@types/request": "^2.48.1",
     "@types/urijs": "^1.15.34",
@@ -27,8 +27,8 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
-    "@magda/registry-aspects": "^0.0.56-terria-1",
-    "@magda/typescript-common": "^0.0.56-terria-1",
+    "@magda/registry-aspects": "^0.0.56-terria-2",
+    "@magda/typescript-common": "^0.0.56-terria-2",
     "@types/to-markdown": "^3.0.0",
     "jsonpath": "^1.0.0",
     "lodash": "^4.17.4",

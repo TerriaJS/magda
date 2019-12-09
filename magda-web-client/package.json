@@ -2,7 +2,7 @@
   "private": true,
   "name": "@magda/web-client",
   "description": "The MAGDA in-browser web front end.",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "license": "Apache-2.0",
   "scripts": {
     "storybook": "start-storybook -p 9001 -c .storybook -s ./public",
@@ -65,8 +65,8 @@
   },
   "devDependencies": {
     "@craco/craco": "^5.0.2",
-    "@magda/registry-aspects": "^0.0.56-terria-1",
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/registry-aspects": "^0.0.56-terria-2",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@storybook/addon-actions": "^3.3.3",
     "@storybook/addon-links": "^3.3.3",
     "@storybook/addons": "^3.3.3",

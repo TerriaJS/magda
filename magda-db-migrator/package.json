@@ -1,6 +1,6 @@
 {
   "name": "@magda/db-migrator",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "description": "A base Docker image for PostgreSQL with Flyway for schema migrations.",
   "scripts": {
     "docker-build-prod": "create-docker-context-for-node-component --build --push --tag auto --repository asia.gcr.io/terriajs-automated-deployment",
@@ -17,7 +17,7 @@
     }
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1"
+    "@magda/scripts": "^0.0.56-terria-2"
   },
   "magda": {
     "categories": {

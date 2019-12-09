@@ -1,7 +1,7 @@
 {
   "name": "@magda/gateway",
   "description": "The public gateway to all of MAGDA, including the API and web front end.",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "license": "Apache-2.0",
   "scripts": {
     "build": "yarn run compile",
@@ -15,8 +15,8 @@
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "dependencies": {
-    "@magda/tenant-api": "^0.0.56-terria-1",
-    "@magda/typescript-common": "^0.0.56-terria-1",
+    "@magda/tenant-api": "^0.0.56-terria-2",
+    "@magda/typescript-common": "^0.0.56-terria-2",
     "body-parser": "^1.13.2",
     "cheerio": "^0.22.0",
     "compression": "^1.7.2",
@@ -53,7 +53,7 @@
     "yargs": "^12.0.5"
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1",
+    "@magda/scripts": "^0.0.56-terria-2",
     "@types/chai": "^4.0.1",
     "@types/compression": "^0.0.36",
     "@types/cors": "^2.8.1",

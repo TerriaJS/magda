@@ -1,6 +1,6 @@
 {
   "name": "@magda/elastic-search",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "description": "MAGDA's custom elasticsearch docker image.",
   "scripts": {
     "dev": "docker-compose up",
@@ -70,7 +70,7 @@
     }
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1"
+    "@magda/scripts": "^0.0.56-terria-2"
   },
   "magda": {
     "categories": {

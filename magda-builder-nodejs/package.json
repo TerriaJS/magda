@@ -1,6 +1,6 @@
 {
   "name": "@magda/builder-nodejs",
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "description": "Builder image for nodejs magda projects",
   "scripts": {
     "docker-build-prod": "create-docker-context-for-node-component --build --push",
@@ -16,7 +16,7 @@
     }
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-1"
+    "@magda/scripts": "^0.0.56-terria-2"
   },
   "magda": {
     "categories": {

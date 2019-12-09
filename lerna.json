@@ -3,7 +3,7 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "packages": ["deploy/", "magda-*", "scripts/"],
-  "version": "0.0.56-terria-1",
+  "version": "0.0.56-terria-2",
   "hoist": [
     "tsmonad",
     "urijs",
