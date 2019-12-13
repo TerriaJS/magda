@@ -11,7 +11,7 @@
     "test": "mocha --no-deprecation --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\"",
     "dev": "run-typescript-in-nodemon src/index.ts --defaultRecipient magda@mailinator.com",
     "docker-build-local": "create-docker-context-for-node-component --build --push --tag auto --local",
-    "docker-build-prod": "create-docker-context-for-node-component --build --push --tag auto --repository asia.gcr.io/terriajs-automated-deployment",
+    "docker-build-prod": "create-docker-context-for-node-component --build --push --tag auto --repository asia.gcr.io/digital-twin-261504",
     "retag-and-push": "retag-and-push"
   },
   "dependencies": {

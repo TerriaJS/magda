@@ -3,7 +3,7 @@
   "version": "0.0.56-terria-2",
   "description": "A base Docker image for PostgreSQL with Flyway for schema migrations.",
   "scripts": {
-    "docker-build-prod": "create-docker-context-for-node-component --build --push --tag auto --repository asia.gcr.io/terriajs-automated-deployment",
+    "docker-build-prod": "create-docker-context-for-node-component --build --push --tag auto --repository asia.gcr.io/digital-twin-261504",
     "make-latest": "bash -c \"docker tag data61/magda-postgres:$npm_package_version data61/magda-postgres:latest && docker push data61/magda-postgres:latest\"",
     "docker-build-local": "create-docker-context-for-node-component --build --push --tag auto --local",
     "retag-and-push": "retag-and-push"

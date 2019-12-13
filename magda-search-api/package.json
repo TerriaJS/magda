@@ -8,7 +8,7 @@
     "test": "cd .. && sbt searchApi/test",
     "compile": "cd .. && sbt searchApi/compile",
     "docker-build-local": "cd .. && sbt \"-Drepository=localhost:5000\" searchApi/dockerBuildAndPush",
-    "docker-build-prod": "cd .. && sbt \"-Dversion=$npm_package_version\" \"-Drepository=asia.gcr.io/terriajs-automated-deployment\" searchApi/dockerBuildAndPush",
+    "docker-build-prod": "cd .. && sbt \"-Dversion=$npm_package_version\" \"-Drepository=asia.gcr.io/digital-twin-261504\" searchApi/dockerBuildAndPush",
     "retag-and-push": "retag-and-push",
     "start": "cd .. && sbt searchApi/run",
     "dev": "cd .. && sbt ~searchApi/relaunch"

@@ -8,7 +8,7 @@
     "test": "cd .. && sbt registryApi/test",
     "compile": "cd .. && sbt registryApi/compile",
     "docker-build-local": "cd .. && sbt \"-Drepository=localhost:5000\" registryApi/dockerBuildAndPush",
-    "docker-build-prod": "cd .. && sbt \"-Dversion=$npm_package_version\" \"-Drepository=asia.gcr.io/terriajs-automated-deployment\" registryApi/dockerBuildAndPush",
+    "docker-build-prod": "cd .. && sbt \"-Dversion=$npm_package_version\" \"-Drepository=asia.gcr.io/digital-twin-261504\" registryApi/dockerBuildAndPush",
     "retag-and-push": "retag-and-push",
     "start": "cd .. && sbt registryApi/run",
     "dev": "cd .. && sbt ~registryApi/relaunch"

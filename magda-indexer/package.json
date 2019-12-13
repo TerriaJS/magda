@@ -7,7 +7,7 @@
     "test": "cd .. && sbt indexer/test",
     "compile": "cd .. && sbt indexer/compile",
     "docker-build-local": "cd .. && sbt \"-Drepository=localhost:5000\" indexer/dockerBuildAndPush",
-    "docker-build-prod": "cd .. && sbt \"-Dversion=$npm_package_version\" \"-Drepository=asia.gcr.io/terriajs-automated-deployment\" indexer/dockerBuildAndPush",
+    "docker-build-prod": "cd .. && sbt \"-Dversion=$npm_package_version\" \"-Drepository=asia.gcr.io/digital-twin-261504\" indexer/dockerBuildAndPush",
     "retag-and-push": "retag-and-push",
     "start": "cd .. && sbt indexer/run",
     "dev": "cd .. && sbt ~indexer/relaunch"
