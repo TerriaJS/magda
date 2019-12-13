@@ -1,7 +1,7 @@
 {
   "name": "@magda/gateway",
   "description": "The public gateway to all of MAGDA, including the API and web front end.",
-  "version": "0.0.56-terria-2",
+  "version": "0.0.56-terria-2a",
   "license": "Apache-2.0",
   "scripts": {
     "build": "yarn run compile",
@@ -42,7 +42,7 @@
     "passport-arcgis": "^0.1.8",
     "passport-custom": "^1.0.5",
     "passport-facebook": "^2.0.0",
-    "passport-google-oauth20": "^1.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-wsfed-saml2": "https://github.com/magda-io/passport-wsfed-saml2",
     "pg": "^6.4.0",
