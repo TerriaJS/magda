@@ -242,6 +242,7 @@ export default class EsriPortal implements ConnectorSource {
                 if (
                     item.access === "shared" ||
                     item.access === "public" ||
+                    item.access === "private" ||
                     item.access === "org"
                 ) {
                     const groupInfoPromise = this.requestDatasetGroupInformation(
