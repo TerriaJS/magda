@@ -1,16 +1,16 @@
-import * as cors from "cors";
-import * as express from "express";
-import * as path from "path";
-import * as ejs from "ejs";
-import * as helmet from "helmet";
-import * as compression from "compression";
-import * as basicAuth from "express-basic-auth";
-import * as _ from "lodash";
+import cors from "cors";
+import express from "express";
+import path from "path";
+import ejs from "ejs";
+import helmet from "helmet";
+import compression from "compression";
+import basicAuth from "express-basic-auth";
+import _ from "lodash";
 
 import {
     installStatusRouter,
     createServiceProbe
-} from "@magda/typescript-common/dist/express/status";
+} from "magda-typescript-common/src/express/status";
 import createApiRouter from "./createApiRouter";
 import createAuthRouter from "./createAuthRouter";
 import createGenericProxy from "./createGenericProxy";
@@ -20,6 +20,7 @@ import Authenticator from "./Authenticator";
 import defaultConfig from "./defaultConfig";
 import { ProxyTarget } from "./createApiRouter";
 import setupTenantMode from "./setupTenantMode";
+import createPool from "./createPool";
 
 // Tell typescript about the semi-private __express field of ejs.
 declare module "ejs" {
@@ -89,10 +90,10 @@ export default function buildApp(config: Config) {
         ? defaultConfig.proxyRoutes
         : ((config.proxyRoutesJson as unknown) as Routes);
 
+    const dbPool = createPool(config);
     const authenticator = new Authenticator({
         sessionSecret: config.sessionSecret,
-        dbHost: config.dbHost,
-        dbPort: config.dbPort
+        dbPool
     });
 
     // Create a new Express application.

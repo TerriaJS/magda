@@ -1,11 +1,11 @@
-import * as _ from "lodash";
+import _ from "lodash";
 
-import jsc from "@magda/typescript-common/dist/test/jsverify";
+import jsc from "magda-typescript-common/src/test/jsverify";
 import {
     stringArb,
     dateStringArb,
     arbFlatMap
-} from "@magda/typescript-common/dist/test/arbitraries";
+} from "magda-typescript-common/src/test/arbitraries";
 
 export const configArb = jsc.record({
     type: stringArb,
@@ -59,12 +59,17 @@ export const stateArb: jsc.Arbitrary<State> = arbFlatMap(
                 })
             ])
             .fromPairs()
-            .value();
+            .value() as {
+            [key: string]: jsc.Arbitrary<{
+                config: any;
+                job: any;
+            }>;
+        };
 
         if (connectorIds.length > 0) {
             return jsc.record(connectorStates);
         } else {
-            return jsc.constant({} as _.Dictionary<any>);
+            return jsc.constant({});
         }
     },
     connectorStates => {

@@ -1,17 +1,14 @@
 {
-    "comments":
-        "Matching takes place in the order defined in this file. Place code matches before name matches, and smaller regions before larger ones.",
+    "comments": "Matching takes place in the order defined in this file. Place code matches before name matches, and smaller regions before larger ones.",
     "regionWmsMap": {
         "STE": {
             "layerName": "FID_STE_2011_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_STE_2011_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_STE_2011_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "STE_CODE11",
             "aliases": ["ste_code", "ste_code_2011", "ste"],
             "digits": 1,
             "description": "States and Territories (STE)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json",
+            "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -27,14 +24,12 @@
         },
         "SA4": {
             "layerName": "FID_SA4_2011_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_SA4_2011_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_SA4_2011_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "SA4_CODE11",
             "aliases": ["sa4_code_2011", "sa4_code", "sa4"],
             "digits": 3,
             "description": "Statistical Area Level 4 (SA4)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json",
+            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -50,14 +45,12 @@
         },
         "SA3": {
             "layerName": "FID_SA3_2011_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_SA3_2011_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_SA3_2011_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "SA3_CODE11",
             "aliases": ["sa3_code_2011", "sa3_code", "sa3"],
             "digits": 5,
             "description": "Statistical Area Level 3 (SA3)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_SA3_2011_AUST_SA3_CODE11.json",
+            "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -73,14 +66,12 @@
         },
         "SA2": {
             "layerName": "FID_SA2_2011_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_SA2_2011_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_SA2_2011_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "SA2_MAIN11",
             "aliases": ["sa2_code_2011", "sa2_code", "sa2"],
             "digits": 9,
             "description": "Statistical Area Level 2 (SA2)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_SA2_2011_AUST_SA2_MAIN11.json",
+            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_MAIN11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -96,8 +87,7 @@
         },
         "SA1": {
             "layerName": "FID_SA1_2011_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_SA1_2011_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_SA1_2011_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "SA1_MAIN11",
             "aliases": [
                 "sa1_code_2011",
@@ -107,8 +97,7 @@
             ],
             "digits": 11,
             "description": "Statistical Area Level 1 (SA1)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_SA1_2011_AUST_SA1_MAIN11.json",
+            "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_MAIN11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -124,8 +113,7 @@
         },
         "LGA": {
             "layerName": "FID_LGA_2015_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_LGA_2015_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_LGA_2015_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "LGA_CODE15",
             "aliases": [
                 "lga_code_2015",
@@ -137,8 +125,7 @@
             ],
             "digits": 5,
             "description": "Local Government Area (LGA)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
+            "regionIdsFile": "data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -154,8 +141,7 @@
         },
         "POA": {
             "layerName": "FID_POA_2011_AUST",
-            "server":
-                "https://vector-tiles.terria.io/FID_POA_2011_AUST/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_POA_2011_AUST/{z}/{x}/{y}.pbf",
             "regionProp": "POA_CODE",
             "aliases": [
                 "poa_2011",
@@ -169,8 +155,7 @@
             "digits": 4,
             "dataReplacements": [["^(?=\\d\\d\\d$)", "0"]],
             "description": "Postal Area (POA)",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json",
+            "regionIdsFile": "data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -186,8 +171,7 @@
         },
         "COM_ELB_ID_2016": {
             "layerName": "FID_COM20160509_ELB",
-            "server":
-                "https://vector-tiles.terria.io/FID_COM20160509_ELB/{z}/{x}/{y}.pbf",
+            "server": "https://vector-tiles.terria.io/FID_COM20160509_ELB/{z}/{x}/{y}.pbf",
             "regionProp": "DIV_ID",
             "aliases": [
                 "divisionid",
@@ -197,8 +181,7 @@
             ],
             "digits": 3,
             "description": "Commonwealth Electoral District",
-            "regionIdsFile":
-                "data/regionids/region_map-FID_COM20160509_ELB_DIV_ID.json",
+            "regionIdsFile": "data/regionids/region_map-FID_COM20160509_ELB_DIV_ID.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,

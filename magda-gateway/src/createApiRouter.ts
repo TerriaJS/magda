@@ -1,9 +1,9 @@
-import * as express from "express";
+import express from "express";
 import { Router } from "express";
-import * as _ from "lodash";
-import * as escapeStringRegexp from "escape-string-regexp";
+import _ from "lodash";
+import escapeStringRegexp from "escape-string-regexp";
 
-import buildJwt from "@magda/typescript-common/dist/session/buildJwt";
+import buildJwt from "magda-typescript-common/src/session/buildJwt";
 
 import createBaseProxy from "./createBaseProxy";
 import Authenticator from "./Authenticator";
@@ -33,7 +33,7 @@ export default function createApiRouter(options: ApiRouterOptions): Router {
 
     const router: Router = express.Router();
 
-    proxy.on("proxyReq", (proxyReq, req: any, res, options) => {
+    proxy.on("proxyReq", (proxyReq, req: any, _res, _options) => {
         if (jwtSecret && req.user) {
             proxyReq.setHeader(
                 "X-Magda-Session",

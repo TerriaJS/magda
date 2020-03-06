@@ -1,9 +1,9 @@
-import * as express from "express";
-import * as yargs from "yargs";
-import * as path from "path";
+import express from "express";
+import yargs from "yargs";
+import path from "path";
 
-import RegistryClient from "@magda/typescript-common/dist/registry/RegistryClient";
-import { MAGDA_ADMIN_PORTAL_ID } from "@magda/typescript-common/dist/registry/TenantConsts";
+import RegistryClient from "magda-typescript-common/src/registry/RegistryClient";
+import { MAGDA_ADMIN_PORTAL_ID } from "magda-typescript-common/src/registry/TenantConsts";
 import createApiRouter from "./createApiRouter";
 import { NodeMailerSMTPMailer } from "./SMTPMailer";
 import ContentApiDirMapper from "./ContentApiDirMapper";
@@ -149,6 +149,9 @@ app.use(
     })
 );
 
-process.on("unhandledRejection", (reason: string, promise: any) => {
-    console.error(reason);
-});
+process.on(
+    "unhandledRejection",
+    (reason: {} | null | undefined, promise: Promise<any>) => {
+        console.error(reason);
+    }
+);

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-import * as nock from "nock";
+import nock from "nock";
 import { Test, Response } from "supertest";
 
 export { Response };

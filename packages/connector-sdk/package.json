@@ -1,0 +1,45 @@
+{
+  "name": "@magda/connector-sdk",
+  "description": "MAGDA Connector SDK",
+  "version": "0.0.57-0",
+  "scripts": {
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo",
+    "compile": "webpack && webpack --env.target=web",
+    "dts-rollup": "api-extractor run -l && api-extractor run -c api-extractor-web.json -l",
+    "build": "yarn compile && yarn dts-rollup",
+    "npm-setup": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\" > .npmrc",
+    "release": "npm publish || echo \"Skip releasing npm package @magda/connector-sdk.\""
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "browser": "dist/index-web.js",
+  "devDependencies": {
+    "@magda/typescript-common": "^0.0.57-0",
+    "@microsoft/api-extractor": "^7.7.8",
+    "typescript": "^3.7.2",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@types/urijs": "^1.15.34",
+    "@types/yargs": "^12.0.8"
+  },
+  "magda": {
+    "language": "typescript",
+    "categories": {
+      "npmPackage": true,
+      "useCommonLib": true
+    }
+  },
+  "keywords": [
+    "Magda",
+    "Connector",
+    "SDK"
+  ],
+  "files": [
+    "dist"
+  ]
+}

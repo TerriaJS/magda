@@ -111,6 +111,21 @@
             "type": "node",
             "request": "launch",
             "protocol": "inspector",
+            "name": "CSV Connector Test Cases",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "cwd": "${workspaceRoot}/magda-csv-connector",
+            "args": [
+                "--compilers",
+                "ts:ts-node/register",
+                "--require",
+                "tsconfig-paths/register",
+                "src/test/**/*.spec.ts"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "protocol": "inspector",
             "name": "Minion Format",
             "runtimeExecutable": "${workspaceRoot}/scripts/node_modules/.bin/ts-node",
             "windows": {
@@ -441,6 +456,37 @@
                 "tsconfig-paths/register",
                 "src/test/**/*.spec.ts"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "protocol": "inspector",
+            "name": "Launch Storage API",
+            "runtimeExecutable": "${workspaceRoot}/scripts/node_modules/.bin/ts-node",
+            "cwd": "${workspaceRoot}/magda-storage-api",
+            "args": ["src/index.ts"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "protocol": "inspector",
+            "name": "Storage API Test Cases",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "cwd": "${workspaceRoot}/magda-storage-api",
+            "args": [
+                "--compilers",
+                "ts:ts-node/register",
+                "--require",
+                "tsconfig-paths/register",
+                "src/test/**/*.spec.ts"
+            ],
+            "env": {
+                "MINIO_HOST": "localhost",
+                "MINIO_PORT": "9000",
+                "MINIO_ACCESS_KEY": "minio",
+                "MINIO_SECRET_KEY": "minio123",
+                "JWT_SECRET": "squirrel"
+            }
         }
     ]
 }

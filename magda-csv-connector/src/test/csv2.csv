@@ -1,6 +1,0 @@
-ID,Title,Description,Status,Data Steward,Sensitive Data?​,Dataset Value,​Open Data?​,Internal Location,​Created Internal​ly?,Primary Source,Data Custodian,Information Classification,Update Frequency,Format,Tags,Published Location,Security Classification,Licence Type,Item Type,Path
-1,DATASET TITLE 1,"DATASET
-
-DESCRIPTION 1",Active,Fred Nerk,Yes,Not Classified,No,http://internal-1,No,Sourced from a chicken farm,,Resource,Quarterly,CSV;#JSON;#Excel;#Other,"KE1, K W 2, KW3",LOCATION 3,UNCLASSIFIED,No Licence,Item,PATH/2
-3,DATASET TITLE 2,<script>alert(‘DATASET DESCRIPTION 2’)</script>,Active,,No,Not Classified,Yes,INTERNAL DATABASE 2,Yes,Internally produced by Agency,Joe Bloggs,Location,AsNeeded,Shape File;#Other,KW4,LOCATION 2,UNCLASSIFIED,CC - Attribution (CC BY),Item,PATH/1
-4,Ecological Communities of National Environmental Significance (Threatened Ecological Communities),DATASET <b>DESCRIPTION</b> 3,Active,,No,Not Classified,Yes,file://external-3,Yes,Produced with magic,,Resource,AsNeeded,CSV;#Other,,LOCATION 1,PROTECTED,No Licence,Item,PATH/3

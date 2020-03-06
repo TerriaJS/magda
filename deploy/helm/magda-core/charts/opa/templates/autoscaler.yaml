@@ -1,0 +1,14 @@
+{{ if .Values.autoscaler.enabled }}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: opa
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: opa
+  minReplicas: {{ .Values.autoscaler.minReplicas }}
+  maxReplicas: {{ .Values.autoscaler.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.autoscaler.targetCPUUtilizationPercentage }}
+{{ end }}

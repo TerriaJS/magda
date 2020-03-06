@@ -1,5 +1,5 @@
-import * as pg from "pg";
-import * as _ from "lodash";
+import pg from "pg";
+import _ from "lodash";
 import { Maybe } from "tsmonad";
 const textTree = require("text-treeview");
 

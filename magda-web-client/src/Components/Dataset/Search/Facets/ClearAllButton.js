@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import queryString from "query-string";
-import AUbuttons from "pancake/react/buttons";
 import removePassiveIcon from "assets/remove-passive.svg";
 
 const ClearAllButton = ({ location, history, dispatch }) => {
@@ -20,9 +19,8 @@ const ClearAllButton = ({ location, history, dispatch }) => {
         <div className="search-facet">
             <div className="facet-wrapper">
                 <div className="facet-header">
-                    <AUbuttons
-                        as="secondary"
-                        className="btn-facet"
+                    <button
+                        className="btn-facet au-btn au-btn--secondary"
                         onClick={() => {
                             const query = queryString.parse(location.search);
                             const qStr = queryString.stringify({
@@ -40,7 +38,7 @@ const ClearAllButton = ({ location, history, dispatch }) => {
                             alt="Clear all button"
                         />
                         <span>Clear All</span>
-                    </AUbuttons>
+                    </button>
                 </div>
             </div>
         </div>

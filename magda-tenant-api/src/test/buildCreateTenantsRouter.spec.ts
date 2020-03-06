@@ -1,19 +1,19 @@
 import {} from "mocha";
-import * as request from "supertest";
-import * as express from "express";
-import * as nock from "nock";
+import request from "supertest";
+import express from "express";
+import nock from "nock";
 import { Response } from "supertest";
 import { expect } from "chai";
-import mockAuthorization from "@magda/typescript-common/dist/test/mockAuthorization";
+import mockAuthorization from "magda-typescript-common/src/test/mockAuthorization";
 import createTenantsRouter from "../createTenantsRouter";
 import mockDatabase from "./mockDatabase";
 import Database from "../Database";
-import mockTenantDataStore from "@magda/typescript-common/dist/test/mockTenantDataStore";
-import { Tenant } from "@magda/typescript-common/dist/tenant-api/Tenant";
+import mockTenantDataStore from "magda-typescript-common/src/test/mockTenantDataStore";
+import { Tenant } from "magda-typescript-common/src/tenant-api/Tenant";
 import {
     MAGDA_TENANT_ID_HEADER,
     MAGDA_ADMIN_PORTAL_ID
-} from "@magda/typescript-common/dist/registry/TenantConsts";
+} from "magda-typescript-common/src/registry/TenantConsts";
 
 describe("Tenant api router", function(this: Mocha.ISuiteCallbackContext) {
     let app: express.Express;

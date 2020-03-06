@@ -1,4 +1,5 @@
-@import "variables.scss";
+@import "variables";
+@import "./pancake/sass/core.scss";
 
 .markdown__wrap {
     word-wrap: break-word;

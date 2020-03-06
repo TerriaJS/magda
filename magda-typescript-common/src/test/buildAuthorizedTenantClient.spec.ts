@@ -1,10 +1,10 @@
 import {} from "mocha";
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
 import AuthorizedTenantClient from "../tenant-api/AuthorizedTenantClient";
 import mockTenantDataStore from "./mockTenantDataStore";
 import { MAGDA_ADMIN_PORTAL_ID } from "../registry/TenantConsts";
-import * as nock from "nock";
+import nock from "nock";
 
 const jwt = require("jsonwebtoken");
 

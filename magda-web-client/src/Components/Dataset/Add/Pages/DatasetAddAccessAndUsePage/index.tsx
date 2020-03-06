@@ -2,11 +2,8 @@ import React from "react";
 
 import ToolTip from "Components/Dataset/Add/ToolTip";
 import { AlwaysEditor } from "Components/Editing/AlwaysEditor";
-import { MultilineTextEditor } from "Components/Editing/Editors/textEditor";
 import { codelistRadioEditor } from "Components/Editing/Editors/codelistEditor";
 import LicenseEditor from "Components/Dataset/Add/LicenseEditor";
-
-import AccessLocationAutoComplete from "./AccessLocationAutoComplete";
 
 import { State } from "Components/Dataset/Add/DatasetAddCommon";
 import * as codelists from "constants/DatasetConstants";
@@ -14,115 +11,250 @@ import * as codelists from "constants/DatasetConstants";
 import { getFormatIcon } from "../../../View/DistributionIcon";
 import helpIcon from "assets/help.svg";
 
-import ReactSelect from "react-select";
-import ReactSelectStyles from "../../../../Common/react-select/ReactSelectStyles";
+import ReactSelectOriginal from "react-select";
+import ValidationHoc from "Components/Common/react-select/ValidationHoc";
 import PurpleToolTip from "Components/Common/TooltipWrapper";
 import { config } from "config";
-import AUpageAlert from "@gov.au/page-alerts";
+
+import ValidationRequiredLabel from "../../ValidationRequiredLabel";
+import * as ValidationManager from "../../ValidationManager";
+import { CustomValidatorType } from "../../ValidationManager";
 
 import "./index.scss";
+
+//--- Added Validation Support to ReactSelect
+const ReactSelect = ValidationHoc(ReactSelectOriginal);
 
 type Props = {
     edit: <K extends keyof State>(
         aspectField: K
     ) => (field: string) => (newValue: any) => void;
     editState: <K extends keyof State>(field: K) => (newValue: any) => void;
+    editStateWithUpdater: (updater: (state: State) => void) => void;
     stateData: State;
+};
+
+const publishToDgaValidator: CustomValidatorType = (
+    value,
+    state,
+    validationItem
+) => {
+    if (value !== true) {
+        return {
+            valid: true
+        };
+    }
+    if (
+        !ValidationManager.shouldValidate(
+            "$.informationSecurity.classification"
+        )
+    ) {
+        return {
+            valid: true
+        };
+    }
+    if (
+        state.informationSecurity.classification &&
+        state.informationSecurity.classification !== "UNOFFICIAL"
+    ) {
+        return {
+            valid: false,
+            validationMessage:
+                "Validation Error: Only unofficial data can be published to data.gov.au. " +
+                'Please update the "Publish to data.gov.au" or "Security classification" section accordingly.'
+        };
+    }
+    return {
+        valid: true
+    };
+};
+
+const classificationValidator: CustomValidatorType = (
+    value,
+    state,
+    validationItem
+) => {
+    if (
+        !ValidationManager.shouldValidate(
+            "$.datasetPublishing.publishAsOpenData.dga"
+        )
+    ) {
+        // --- ask ValidationManager fall back to default validator (`isEmpty`)
+        return {
+            useDefaultValidator: true
+        };
+    }
+    const result = publishToDgaValidator(
+        state.datasetPublishing &&
+            state.datasetPublishing.publishAsOpenData &&
+            state.datasetPublishing.publishAsOpenData.dga,
+        state,
+        validationItem
+    );
+    if (result.valid === true) {
+        // --- ask ValidationManager fall back to default validator (`isEmpty`)
+        return {
+            useDefaultValidator: true
+        };
+    } else {
+        return result;
+    }
 };
 
 export default function DatasetAddAccessAndUsePage(props: Props) {
     let {
-        files,
+        distributions,
         dataset,
-        datasetAccess,
         licenseLevel,
         datasetPublishing,
         informationSecurity
     } = props.stateData;
 
     const editDatasetPublishing = props.edit("datasetPublishing");
-    const editDatasetAccess = props.edit("datasetAccess");
     const editInformationSecurity = props.edit("informationSecurity");
+    const editPublishToDga = (shouldPublishToDga: string | undefined) => {
+        props.editStateWithUpdater(state => ({
+            ...state,
+            datasetPublishing: {
+                ...state.datasetPublishing,
+                publishAsOpenData: {
+                    ...(state.datasetPublishing.publishAsOpenData
+                        ? state.datasetPublishing.publishAsOpenData
+                        : {}),
+                    dga: shouldPublishToDga === "true" ? true : false
+                }
+            }
+        }));
+    };
+
+    const shouldPublishToDga: boolean = datasetPublishing.publishAsOpenData
+        ? !!datasetPublishing.publishAsOpenData.dga
+        : false;
 
     return (
         <div className="row dataset-access-and-use-page">
             <div className="col-sm-12">
                 <h2>Access and Use</h2>
-                <h3 className="with-underline">User access</h3>
+                <h3 className="with-underline">Sharing</h3>
+
+                {config.featureFlags.publishToDga ? (
+                    <div className="question-publish-to-dga">
+                        <h4 className="with-icon">
+                            <span>
+                                Do you want to publish this dataset to{" "}
+                                <a href="https://data.gov.au" target="__blank">
+                                    data.gov.au
+                                </a>{" "}
+                                as open data? (*)
+                            </span>
+                            <span className="tooltip-container">
+                                <PurpleToolTip
+                                    className="tooltip no-print"
+                                    launcher={() => (
+                                        <div className="tooltip-launcher-icon help-icon">
+                                            <img
+                                                src={helpIcon}
+                                                alt="Publish to data.gov.au, click for more information"
+                                            />
+                                        </div>
+                                    )}
+                                    innerElementClassName="inner"
+                                >
+                                    {() => (
+                                        <>
+                                            Publishing to data.gov.au will mean
+                                            the dataset will be available
+                                            publicly via the data.gov.au website
+                                            as open data. Please ensure your
+                                            dataset has the appropriate security
+                                            classification and license if
+                                            selecting Yes
+                                        </>
+                                    )}
+                                </PurpleToolTip>
+                            </span>
+                        </h4>
+                        <div className="input-area">
+                            <AlwaysEditor
+                                value={shouldPublishToDga ? "true" : "false"}
+                                onChange={value => {
+                                    editPublishToDga(value);
+                                    if (
+                                        ValidationManager.shouldValidate(
+                                            "$.informationSecurity.classification"
+                                        )
+                                    ) {
+                                        // --- trigger classifcation validtion as well
+                                        setTimeout(() => {
+                                            ValidationManager.onInputFocusOut(
+                                                "$.informationSecurity.classification"
+                                            );
+                                        }, 1);
+                                    }
+                                }}
+                                validationFieldPath="$.datasetPublishing.publishAsOpenData.dga"
+                                validationFieldLabel="Publish as Open Data (data.gov.au)"
+                                customValidator={publishToDgaValidator}
+                                editor={codelistRadioEditor(
+                                    "dataset-publishing-as-open-data",
+                                    {
+                                        true:
+                                            "Yes, publish this as open data to data.gov.au",
+                                        false:
+                                            "No, share it internally within my organisation only"
+                                    }
+                                )}
+                            />
+                        </div>
+                    </div>
+                ) : null}
+
                 <div className="question-who-can-see-dataset">
                     <h4 className="with-icon">
                         <span>
                             Who can see the dataset once it is published?
                         </span>
-                        <span className="help-icon-container">
-                            <img src={helpIcon} />
-                        </span>
                     </h4>
-                    <ToolTip>
-                        We recommend you publish your data to everyone in your
-                        organisation to help prevent data silos.
-                    </ToolTip>
-                    <div>
-                        <AlwaysEditor
-                            value={datasetPublishing.level}
-                            onChange={editDatasetPublishing("level")}
-                            editor={codelistRadioEditor(
-                                "dataset-publishing-level",
-                                codelists.publishingLevel
-                            )}
-                        />
-                    </div>
-                </div>
-
-                <div className="question-access-notes">
-                    <h4>Where can users access this dataset from?</h4>
-                    <ToolTip>
-                        Select the best location for this dataset based on its
-                        contents and your organisation file structure.
-                    </ToolTip>
-                    <h4>Dataset location:</h4>
-                    <div className="access-location-input-container">
-                        <AccessLocationAutoComplete
-                            placeholder="Start typing a file location name..."
-                            defaultValue={
-                                datasetAccess.location
-                                    ? datasetAccess.location
-                                    : ""
-                            }
-                            onChange={editDatasetAccess("location")}
-                        />
-                    </div>
-                    <h4>Dataset access notes:</h4>
-                    <div>
-                        <MultilineTextEditor
-                            value={datasetAccess.notes}
-                            placeholder="Enter any access considerations for users, such as permissions or restrictions they should be aware of..."
-                            onChange={editDatasetAccess("notes")}
-                        />
+                    <div className="input-area">
+                        <ToolTip>
+                            We recommend you publish your data to everyone in
+                            your organisation to help prevent data silos.
+                        </ToolTip>
+                        <div>
+                            <AlwaysEditor
+                                value={datasetPublishing.level}
+                                onChange={editDatasetPublishing("level")}
+                                editor={codelistRadioEditor(
+                                    "dataset-publishing-level",
+                                    codelists.publishingLevel
+                                )}
+                            />
+                        </div>
                     </div>
                 </div>
 
                 <h3 className="with-underline">Dataset use</h3>
 
-                {files.length !== 0 && (
+                {distributions.length !== 0 && (
                     <div className="question-license-apply-type">
                         <h4>
                             What type of licence should be applied to these
-                            files?
+                            distributions?
                         </h4>
 
                         <ToolTip>
                             By default, Magda adds Licenses at the Dataset Level
-                            (i.e. to all files), but this can be overriden to
-                            apply at a Distribution (each file or URL) level if
-                            desired.
+                            (i.e. to all distributions), but this can be
+                            overriden to apply at a Distribution (each file or
+                            URL) level if desired.
                         </ToolTip>
 
                         <div className="row">
                             <div className="col-sm-4">
                                 <ReactSelect
+                                    validationFieldPath="$.licenseLevel"
+                                    validationFieldLabel="Licence Type"
                                     className="license-apply-type-select"
-                                    styles={ReactSelectStyles}
                                     isSearchable={false}
                                     options={
                                         Object.keys(
@@ -159,7 +291,10 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                 )}
 
                 <div className="question-license-restriction-type">
-                    <h4>What licence restrictions should be applied?</h4>
+                    <h4>
+                        What licence restrictions should be applied?
+                        <ValidationRequiredLabel validationFieldPath="$.dataset.defaultLicense" />
+                    </h4>
                     <ToolTip>
                         We recommend a Whole of Government Licence be applied to
                         encourage inter-department data sharing in the future.
@@ -168,6 +303,8 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                         <div className="license-dataset-option-container row">
                             <div className="col-sm-6">
                                 <LicenseEditor
+                                    validationFieldPath="$.dataset.defaultLicense"
+                                    validationFieldLabel="Dataset Level Licence"
                                     value={dataset.defaultLicense || ""}
                                     onChange={license => {
                                         props.editState("dataset")({
@@ -180,10 +317,12 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                         </div>
                     ) : (
                         <div className="license-distribution-option-container">
-                            {files.map((file, fileIndex) => {
+                            {distributions.map((file, fileIndex) => {
                                 const edit = field => value => {
                                     file[field] = value;
-                                    props.editState("files")(files);
+                                    props.editState("distributions")(
+                                        distributions
+                                    );
                                 };
                                 return (
                                     <div className="fileBlock">
@@ -200,6 +339,8 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                                         </div>
                                         <div className="fileBlock-control">
                                             <LicenseEditor
+                                                validationFieldPath={`$.distributions[${fileIndex}].license`}
+                                                validationFieldLabel="Distribution Licence"
                                                 value={file.license || ""}
                                                 onChange={edit("license")}
                                             />
@@ -216,6 +357,7 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                         <span>
                             What is the sensitivity or security classification
                             of this dataset?
+                            <ValidationRequiredLabel validationFieldPath="$.informationSecurity.classification" />
                         </span>
                         <span className="tooltip-container">
                             <PurpleToolTip
@@ -255,7 +397,9 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                     <div className="row">
                         <div className="col-sm-6">
                             <ReactSelect
-                                styles={ReactSelectStyles}
+                                validationFieldPath="$.informationSecurity.classification"
+                                validationFieldLabel="Dataset Sensitivity or Security Classification"
+                                customValidator={classificationValidator}
                                 isSearchable={false}
                                 options={
                                     Object.keys(codelists.classification).map(
@@ -279,23 +423,35 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                                           }
                                         : null
                                 }
-                                onChange={(item: any) =>
+                                onChange={(item: any) => {
                                     editInformationSecurity("classification")(
                                         item.value
-                                    )
-                                }
+                                    );
+                                    if (
+                                        ValidationManager.shouldValidate(
+                                            "$.datasetPublishing.publishAsOpenData.dga"
+                                        )
+                                    ) {
+                                        // --- trigger publish to dga validtion as well
+                                        setTimeout(() => {
+                                            ValidationManager.onInputFocusOut(
+                                                "$.datasetPublishing.publishAsOpenData.dga"
+                                            );
+                                        }, 1);
+                                    }
+                                }}
                             />
                         </div>
                     </div>
                     {informationSecurity.classification === "PROTECTED" ? (
                         <div className="row">
                             <div className="col-sm-12">
-                                <AUpageAlert as="warning">
+                                <div className="au-page-alerts au-page-alerts--warning">
                                     <div>
                                         Protected datasets must be stored within
                                         the Protected Enclave
                                     </div>
-                                </AUpageAlert>
+                                </div>
                             </div>
                         </div>
                     ) : null}
@@ -303,14 +459,14 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                     informationSecurity.classification === "TOP SECRET" ? (
                         <div className="row">
                             <div className="col-sm-12">
-                                <AUpageAlert as="warning">
+                                <div className="au-page-alerts au-page-alerts--warning">
                                     <div>
                                         Secret or Top Secret classified data
                                         must not be stored on any departmental
                                         network, and must be managed as a
                                         physical asset
                                     </div>
-                                </AUpageAlert>
+                                </div>
                             </div>
                         </div>
                     ) : null}
@@ -321,6 +477,7 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                             <span>
                                 What sensitivity markers should be added to this
                                 dataset?
+                                <ValidationRequiredLabel validationFieldPath="$.informationSecurity.disseminationLimits" />
                             </span>
                             <span className="tooltip-container">
                                 <PurpleToolTip
@@ -354,7 +511,8 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                         <div className="row">
                             <div className="col-sm-8">
                                 <ReactSelect
-                                    styles={ReactSelectStyles}
+                                    validationFieldPath="$.informationSecurity.disseminationLimits"
+                                    validationFieldLabel="Dataset Sensitivity Markers"
                                     isSearchable={false}
                                     isMulti={true}
                                     options={

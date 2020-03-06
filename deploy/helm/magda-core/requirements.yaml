@@ -1,0 +1,99 @@
+dependencies:
+  - name: apidocs-server
+    tags:
+      - all
+      - apidocs-server
+  - name: authorization-api
+    tags:
+      - all
+      - authorization-api
+  - name: authorization-db
+    tags:
+      - all
+      - authorization-db
+  - name: combined-db
+    tags:
+      - all
+      - combined-db
+  - name: content-api
+    tags:
+      - all
+      - content-api
+  - name: content-db
+    tags:
+      - all
+      - content-db
+  - name: correspondence-api
+    tags:
+      - all
+      - correspondence-api
+  - name: elasticsearch
+    tags:
+      - all
+      - elasticsearch
+  - name: gateway
+    tags:
+      - all
+      - gateway
+  - name: indexer
+    tags:
+      - all
+      - indexer
+  - name: preview-map
+    tags:
+      - all
+      - preview-map
+  - name: registry-api
+    tags:
+      - all
+      - registry-api
+  - name: registry-db
+    tags:
+      - all
+      - registry-db
+  - name: search-api
+    tags:
+      - all
+      - search-api
+  - name: session-db
+    tags:
+      - all
+      - session-db
+  - name: web-server
+    tags:
+      - all
+      - web-server
+  - name: admin-api
+    tags:
+      - all
+      - admin-api
+  - name: opa
+    tags:
+      - all
+      - opa
+  - name: minio
+    tags:
+      - all
+      - storage-api
+  - name: storage-api
+    tags:
+      - all
+      - storage-api
+  - name: tenant-api
+    condition: global.enableMultiTenants
+    tags:
+      - all
+      - tenant-api
+  - name: tenant-db
+    condition: global.enableMultiTenants
+    tags:
+      - all
+      - tenant-db
+
+# K8s misc
+  - name: priorities
+    tags:
+      - priorities
+  - name: ingress
+    tags:
+      - ingress

@@ -2,7 +2,6 @@ package au.csiro.data61.magda.opa
 
 import org.scalatest.Ignore
 
-@Ignore
 class TestRecordEsriOpaPolicyWithExpirationOnly
     extends RecordEsriOpaPolicyWithInvalidAccessControlAspectSpec
     with GroupsJwtForRecordEsriOpaPolicyTest {

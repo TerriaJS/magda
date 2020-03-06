@@ -1,9 +1,9 @@
-import * as express from "express";
-import * as yargs from "yargs";
+import express from "express";
+import yargs from "yargs";
 
 import Database from "./Database";
 import createTenantsRouter from "./createTenantsRouter";
-import addJwtSecretFromEnvVar from "@magda/typescript-common/dist/session/addJwtSecretFromEnvVar";
+import addJwtSecretFromEnvVar from "magda-typescript-common/src/session/addJwtSecretFromEnvVar";
 
 const argv = addJwtSecretFromEnvVar(
     yargs
@@ -30,7 +30,8 @@ const argv = addJwtSecretFromEnvVar(
         })
         .option("authApiUrl", {
             describe: "The authorization api URL",
-            type: "string"
+            type: "string",
+            default: "http://localhost:6104/v0"
         }).argv
 );
 
@@ -55,7 +56,10 @@ app.use(
 app.listen(argv.listenPort);
 console.log("Tenant API started on port " + argv.listenPort);
 
-process.on("unhandledRejection", (reason: string, promise: any) => {
-    console.error("Unhandled rejection:");
-    console.error(reason);
-});
+process.on(
+    "unhandledRejection",
+    (reason: {} | null | undefined, promise: Promise<any>) => {
+        console.error("Unhandled rejection:");
+        console.error(reason);
+    }
+);

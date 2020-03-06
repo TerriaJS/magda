@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 import React from "react";
 import { connect } from "react-redux";
-import AUfooter, { AUfooterNav } from "../../pancake/react/footer";
 import { Link } from "react-router-dom";
 import { Small } from "Components/Common/Responsive";
 
@@ -42,7 +41,10 @@ function FooterLink({ link }) {
 
 function FooterNavs({ footerNavs }) {
     return footerNavs.map(item => (
-        <AUfooterNav className="col-md-3 col-sm-6 col-xs-6" key={item.label}>
+        <nav
+            className="au-footer__navigation col-md-3 col-sm-6 col-xs-6"
+            key={item.label}
+        >
             <h3 className="au-display-lg">{item.label}</h3>
 
             <ul className="au-link-list">
@@ -52,7 +54,7 @@ function FooterNavs({ footerNavs }) {
                     </li>
                 ))}
             </ul>
-        </AUfooterNav>
+        </nav>
     ));
 }
 
@@ -81,7 +83,11 @@ function Copyright({ href, logoSrc, logoClassName, logoAlt, htmlContent }) {
 
 function Footer({ footerMediumNavs, footerSmallNavs, footerCopyRightItems }) {
     return (
-        <AUfooter dark className="au-body au-body--dark footer">
+        <footer
+            className="au-footer au-body au-body--dark footer"
+            role="contentinfo"
+            aria-label="footer"
+        >
             <div className="container-fluid">
                 <Small>
                     {matched => (
@@ -107,7 +113,7 @@ function Footer({ footerMediumNavs, footerSmallNavs, footerCopyRightItems }) {
                     </section>
                 ) : null}
             </div>
-        </AUfooter>
+        </footer>
     );
 }
 

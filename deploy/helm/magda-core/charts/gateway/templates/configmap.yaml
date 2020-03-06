@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "gateway-config"
+  labels:
+    pod: "gateway"
+data:
+  # When the config map is mounted as a volume, these will be created as files.
+  {{- if .Values.routes }}
+  routes.json: '{{ toJson .Values.routes | indent 2 }}'
+  {{- else }}
+  routes.json: '{{ toJson .Values.defaultRoutes | indent 2 }}'
+  {{- end }}
+  {{- if .Values.webRoutes }}
+  webRoutes.json: '{{ toJson .Values.webRoutes | indent 2 }}'
+  {{- else }}
+  webRoutes.json: '{}'
+  {{- end }}
+  helmet.json: '{{ toJson .Values.helmet | indent 2 }}'
+  cors.json: '{{ toJson .Values.cors | indent 2 }}'
+  csp.json: '{{ toJson .Values.csp | indent 2 }}'
+

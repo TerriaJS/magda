@@ -1,17 +1,17 @@
 import {} from "mocha";
 import { ApiRouterOptions } from "../createApiRouter";
 import { SMTPMailer, Message, Attachment } from "../SMTPMailer";
-import * as fs from "fs";
-import * as path from "path";
+import fs from "fs";
+import path from "path";
 
 import createApiRouter from "../createApiRouter";
 
 import { expect } from "chai";
-import * as sinon from "sinon";
-import * as supertest from "supertest";
-import * as express from "express";
-import * as nock from "nock";
-import RegistryClient from "@magda/typescript-common/dist/registry/RegistryClient";
+import sinon from "sinon";
+import supertest from "supertest";
+import express from "express";
+import nock from "nock";
+import RegistryClient from "magda-typescript-common/src/registry/RegistryClient";
 import ContentApiDirMapper from "../ContentApiDirMapper";
 import EmailTemplateRender from "../EmailTemplateRender";
 

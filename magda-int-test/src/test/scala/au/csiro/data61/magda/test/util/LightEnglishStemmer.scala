@@ -16,25 +16,28 @@ import org.apache.lucene.analysis.Analyzer.TokenStreamComponents
 import org.apache.lucene.analysis.charfilter.HTMLStripCharFilter
 import org.apache.lucene.analysis.custom.CustomAnalyzer
 
-
 class LightEnglishStemmer {
 
-   def stem(string: String): String = {
+  def stem(string: String): String = {
 
-     val KStemmAna = CustomAnalyzer.builder.withTokenizer(classOf[KeywordTokenizerFactory]).addTokenFilter(classOf[KStemFilterFactory]).build
-     val reader: Reader = new StringReader(string)
-     val stream: TokenStream = KStemmAna.tokenStream("", reader)
-     val term: CharTermAttribute = stream.getAttribute(classOf[CharTermAttribute])
+    val KStemmAna = CustomAnalyzer.builder
+      .withTokenizer(classOf[KeywordTokenizerFactory])
+      .addTokenFilter(classOf[KStemFilterFactory])
+      .build
+    val reader: Reader = new StringReader(string)
+    val stream: TokenStream = KStemmAna.tokenStream("", reader)
+    val term: CharTermAttribute =
+      stream.getAttribute(classOf[CharTermAttribute])
 
-     stream.reset()
-     var output: String = "";
-     while (stream.incrementToken) {
-       output = output + term.toString
-     }
-     stream.end()
-     stream.close()
+    stream.reset()
+    var output: String = "";
+    while (stream.incrementToken) {
+      output = output + term.toString
+    }
+    stream.end()
+    stream.close()
 
-     return output
+    return output
   }
 
 }

@@ -27,14 +27,14 @@ class Account extends React.Component {
     renderRoles() {
         const user = this.props.user;
         return (
-            <p>
+            <div>
                 Roles:{" "}
                 {user.roles && user.roles.length ? (
                     <ul>{user.roles.map(role => this.renderRole(role))}</ul>
                 ) : (
                     "N/A"
                 )}
-            </p>
+            </div>
         );
     }
 
@@ -110,7 +110,7 @@ class Account extends React.Component {
                             <p>Email: {this.props.user.email}</p>
                             {this.renderRoles()}
                             {this.props.user.isAdmin && (
-                                <a href="/admin" class="au-btn">
+                                <a href="/admin" className="au-btn">
                                     Administrate
                                 </a>
                             )}

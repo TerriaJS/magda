@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-const AUpageAlert = require("pancake/react/page-alerts").default;
 
 import "./MatchingStatus.scss";
 
@@ -23,7 +22,7 @@ export default function MatchingStatus(props: {
         return (
             <div>
                 <div className="no-matching">
-                    <AUpageAlert as="info">
+                    <div className="au-page-alerts au-page-alerts--info">
                         <p>
                             <strong>
                                 Sorry, we couldn't find any datasets that match
@@ -35,7 +34,7 @@ export default function MatchingStatus(props: {
                             spelling or{" "}
                             <Link to="suggest">suggest a dataset</Link>.
                         </p>
-                    </AUpageAlert>
+                    </div>
                 </div>
             </div>
         );

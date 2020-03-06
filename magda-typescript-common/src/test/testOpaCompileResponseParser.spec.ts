@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import OpaCompileResponseParser from "../OpaCompileResponseParser";
-import * as testData from "./sampleOpaResponse.json";
-import * as testDataSimple from "./sampleOpaResponseSimple.json";
+import testData from "./sampleOpaResponse.json";
+import testDataSimple from "./sampleOpaResponseSimple.json";
 import "mocha";
 
 /**

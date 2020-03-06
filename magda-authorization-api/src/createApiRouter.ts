@@ -1,24 +1,13 @@
-import * as express from "express";
+import express from "express";
 import { Maybe } from "tsmonad";
 
 import Database from "./Database";
-import {
-    PublicUser,
-    DatasetAccessControlMetaData
-} from "@magda/typescript-common/dist/authorization-api/model";
-import {
-    getUserIdHandling,
-    getUserId
-} from "@magda/typescript-common/dist/session/GetUserId";
-import GenericError from "@magda/typescript-common/dist/authorization-api/GenericError";
-import AuthError from "@magda/typescript-common/dist/authorization-api/AuthError";
-import { installStatusRouter } from "@magda/typescript-common/dist/express/status";
+import { PublicUser } from "magda-typescript-common/src/authorization-api/model";
+import { getUserIdHandling } from "magda-typescript-common/src/session/GetUserId";
+import GenericError from "magda-typescript-common/src/authorization-api/GenericError";
+import AuthError from "magda-typescript-common/src/authorization-api/AuthError";
+import { installStatusRouter } from "magda-typescript-common/src/express/status";
 import { NodeNotFoundError } from "./NestedSetModelQueryer";
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
-import { AuthorizedRegistryOptions } from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
-import unionToThrowable from "@magda/typescript-common/dist/util/unionToThrowable";
-import getUsersAllowedOperationOnDataset from "./getUsersAllowedOperationOnDataset";
 
 export interface ApiRouterOptions {
     database: Database;
@@ -121,21 +110,6 @@ export default function createApiRouter(options: ApiRouterOptions) {
         );
     };
 
-    const MUST_BE_LOGGED_IN = function(req: any, res: any, next: any) {
-        // --- require to be logged in user only
-        // --- we probably should have a OPA policy to control all APIs in future
-        // --- so that we never need the similar logic here
-        getUserId(req, options.jwtSecret).caseOf({
-            just: userId => {
-                req.userId = userId;
-                next();
-            },
-            nothing: () => {
-                res.status(401).send("Not authorized");
-            }
-        });
-    };
-
     const NO_CACHE = function(req: any, res: any, next: any) {
         res.set({
             "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -178,122 +152,6 @@ export default function createApiRouter(options: ApiRouterOptions) {
         }
         res.end();
     });
-
-    /**
-     * @apiGroup Auth
-     * @api {post} /v0/auth/users/allowed/dataset Get authorised users for dataset operation
-     * @apiDescription Returns a list users who can perform specified dataset operation
-     *
-     * @apiParam {String} datasetId Optional dataset id if you want to specify which dataset you want OPA makes decision on.
-     *  You must either supply an Id of the dataset or supply the dataset metadata as other query string parameters accordingly.
-     *
-     * @apiParam {String} operationUri  Mandatory The uri of the operation required
-     * @apiParam {String} publishingState  Optional Dataset publishingState; Required if `datasetId` not present
-     * @apiParam {String} ownerId  Optional Dataset ownerId; Supply only if `datasetId` not present
-     * @apiParam {String} orgUnitOwnerId  Optional Dataset orgUnitOwnerId; Supply only if `datasetId` not present
-     * @apiParam {String[]} preAuthorisedPermissionIds  Optional Dataset preAuthorisedPermissionIds; Supply only if `datasetId` not present
-     *
-     *
-     * @apiSuccessExample {json} 200
-     *    [{
-     *        "id":"...",
-     *        "displayName":"Fred Nerk",
-     *        "email":"fred.nerk@data61.csiro.au",
-     *        "photoURL":"...",
-     *        "source":"google",
-     *        "isAdmin": true
-     *    }]
-     *
-     * @apiErrorExample {json} 401/500
-     *    {
-     *      "isError": true,
-     *      "errorCode": 401, //--- or 500 depends on error type
-     *      "errorMessage": "Not authorized"
-     *    }
-     */
-    router.get(
-        "/public/users/allowed/dataset",
-        MUST_BE_LOGGED_IN,
-        NO_CACHE,
-        async function(req, res) {
-            try {
-                let dataset: DatasetAccessControlMetaData;
-                const datasetId = req.query.datasetId;
-                if (datasetId) {
-                    // --- load dataset info from registry
-                    const registryOptions: AuthorizedRegistryOptions = {
-                        baseUrl: options.registryApiUrl,
-                        jwtSecret: options.jwtSecret,
-                        userId: (req as any).userId,
-                        tenantId: options.tenantId
-                    };
-
-                    const registryClient = new Registry(registryOptions);
-                    const record: Record = unionToThrowable(
-                        await registryClient.getRecord(datasetId, undefined, [
-                            "publishing",
-                            "dataset-access-control"
-                        ])
-                    );
-                    dataset = {
-                        // --- default to `published` --- to be consistent with UI & other codebase
-                        publishingState:
-                            record &&
-                            record.aspects &&
-                            record.aspects.publishing &&
-                            record.aspects.publishing.state
-                                ? record.aspects.publishing.state
-                                : "published",
-                        accessControl:
-                            record &&
-                            record.aspects &&
-                            record.aspects["dataset-access-control"]
-                                ? record.aspects["dataset-access-control"]
-                                : {}
-                    };
-                } else {
-                    dataset = {
-                        publishingState: req.query.publishingState,
-                        accessControl: {
-                            ownerId: req.query.ownerId,
-                            orgUnitOwnerId: req.query.orgUnitOwnerId,
-                            preAuthorisedPermissionIds: Array.isArray(
-                                req.query.preAuthorisedPermissionIds
-                            )
-                                ? req.query.preAuthorisedPermissionIds
-                                : undefined
-                        }
-                    };
-                    if (
-                        typeof dataset.publishingState !== "string" ||
-                        !dataset.publishingState
-                    ) {
-                        throw new GenericError(
-                            "Expecting dataset id or dataset metadata"
-                        );
-                    }
-                }
-                const operationUri = req.query.operationUri;
-                if (!operationUri) {
-                    throw new GenericError("Missing parameter `operationUri`");
-                }
-                const users = await getUsersAllowedOperationOnDataset(
-                    options.opaUrl,
-                    database.getPool(),
-                    dataset,
-                    operationUri
-                );
-                res.send(users);
-            } catch (e) {
-                if (e instanceof GenericError) {
-                    const data = e.toData();
-                    res.status(data.errorCode).json(data);
-                } else {
-                    respondWithError("/public/users/whoami", res, e);
-                }
-            }
-        }
-    );
 
     /**
      * @apiGroup Auth
@@ -516,16 +374,22 @@ export default function createApiRouter(options: ApiRouterOptions) {
     /**
      * @apiGroup Auth
      * @api {get} /public/orgunits Get orgunits by name
-     * @apiDescription Gets org units matching a name
+     * @apiDescription
+     * Gets org units matching a name
+     * Optionally provide a test Org Unit Id that will be used to
+     * test the relationship with each of returned orgUnit item.
+     * Possible Value: 'ancestor', 'descendant', 'equal', 'unrelated'
      *
      * @apiParam (query) {string} nodeName the name of the org unit to look up
      * @apiParam (query) {boolean} leafNodesOnly Whether only leaf nodes should be returned
+     * @apiParam (Query) {string} relationshipOrgUnitId Optional; The org unit id that is used to test the relationship with each of returned orgUnit item.
      *
      * @apiSuccessExample {json} 200
      *    [{
-     *      id: "e5f0ed5f-aa97-4e49-89a6-3f044aecc3f7"
-     *      name: "other-team"
-     *      description: "The other teams"
+     *      "id": "e5f0ed5f-aa97-4e49-89a6-3f044aecc3f7",
+     *      "name": "other-team",
+     *      "description": "The other teams",
+     *      "relationship": "unrelated"
      *    }]
      *
      * @apiErrorExample {json} 401/500
@@ -539,11 +403,23 @@ export default function createApiRouter(options: ApiRouterOptions) {
         try {
             const nodeName: string = req.query.nodeName;
             const leafNodesOnly: string = req.query.leafNodesOnly;
+            const relationshipOrgUnitId = req.query.relationshipOrgUnitId;
 
             const nodes = await orgQueryer.getNodes({
                 name: nodeName,
                 leafNodesOnly: leafNodesOnly === "true"
             });
+
+            if (relationshipOrgUnitId && nodes.length) {
+                for (let i = 0; i < nodes.length; i++) {
+                    const r = await orgQueryer.compareNodes(
+                        nodes[i]["id"],
+                        relationshipOrgUnitId
+                    );
+                    nodes[i]["relationship"] = r;
+                }
+            }
+
             res.status(200).json(nodes);
         } catch (e) {
             respondWithError("/public/orgunits", res, e);
@@ -632,7 +508,7 @@ export default function createApiRouter(options: ApiRouterOptions) {
      *      "errorMessage": "Not authorized"
      *    }
      */
-    router.get("/public/orgunits/:nodeId", MUST_BE_ADMIN, async (req, res) => {
+    router.get("/public/orgunits/:nodeId", async (req, res) => {
         const nodeId = req.params.nodeId;
         handleMaybePromise(
             res,

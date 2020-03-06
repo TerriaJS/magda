@@ -1,7 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "title":
-        "Aspect describing the quality rating of a dataset as determined by a number of different minions out of 100, along with the weight that they carry.",
+    "title": "Aspect describing the quality rating of a dataset as determined by a number of different minions out of 100, along with the weight that they carry.",
     "type": "object",
     "properties": {
         "additionalProperties": {

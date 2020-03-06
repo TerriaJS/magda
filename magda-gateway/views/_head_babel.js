@@ -2278,8 +2278,8 @@
                                   obj !== _symbol2.default.prototype
                                   ? "symbol"
                                   : typeof obj === "undefined"
-                                      ? "undefined"
-                                      : _typeof2(obj);
+                                  ? "undefined"
+                                  : _typeof2(obj);
                           };
 
                 function _interopRequireDefault(obj) {
@@ -2301,8 +2301,8 @@
                                   obj !== _symbol2.default.prototype
                                   ? "symbol"
                                   : typeof obj === "undefined"
-                                      ? "undefined"
-                                      : _typeof(obj);
+                                  ? "undefined"
+                                  : _typeof(obj);
                           };
 
                 /***/
@@ -2331,8 +2331,8 @@
                     var target = IS_GLOBAL
                         ? global
                         : IS_STATIC
-                            ? global[name]
-                            : (global[name] || {})[PROTOTYPE];
+                        ? global[name]
+                        : (global[name] || {})[PROTOTYPE];
                     var key, own, out;
                     if (IS_GLOBAL) source = name;
                     for (key in source) {
@@ -2346,40 +2346,32 @@
                             IS_GLOBAL && typeof target[key] != "function"
                                 ? source[key]
                                 : // bind timers to global for call from export context
-                                  IS_BIND && own
-                                    ? ctx(out, global)
-                                    : // wrap global constructors for prevent change them in library
-                                      IS_WRAP && target[key] == out
-                                        ? (function(C) {
-                                              var F = function F(a, b, c) {
-                                                  if (this instanceof C) {
-                                                      switch (
-                                                          arguments.length
-                                                      ) {
-                                                          case 0:
-                                                              return new C();
-                                                          case 1:
-                                                              return new C(a);
-                                                          case 2:
-                                                              return new C(
-                                                                  a,
-                                                                  b
-                                                              );
-                                                      }
-                                                      return new C(a, b, c);
-                                                  }
-                                                  return C.apply(
-                                                      this,
-                                                      arguments
-                                                  );
-                                              };
-                                              F[PROTOTYPE] = C[PROTOTYPE];
-                                              return F;
-                                              // make static versions for prototype methods
-                                          })(out)
-                                        : IS_PROTO && typeof out == "function"
-                                            ? ctx(Function.call, out)
-                                            : out;
+                                IS_BIND && own
+                                ? ctx(out, global)
+                                : // wrap global constructors for prevent change them in library
+                                IS_WRAP && target[key] == out
+                                ? (function(C) {
+                                      var F = function F(a, b, c) {
+                                          if (this instanceof C) {
+                                              switch (arguments.length) {
+                                                  case 0:
+                                                      return new C();
+                                                  case 1:
+                                                      return new C(a);
+                                                  case 2:
+                                                      return new C(a, b);
+                                              }
+                                              return new C(a, b, c);
+                                          }
+                                          return C.apply(this, arguments);
+                                      };
+                                      F[PROTOTYPE] = C[PROTOTYPE];
+                                      return F;
+                                      // make static versions for prototype methods
+                                  })(out)
+                                : IS_PROTO && typeof out == "function"
+                                ? ctx(Function.call, out)
+                                : out;
                         // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
                         if (IS_PROTO) {
                             (exports.virtual || (exports.virtual = {}))[
@@ -2446,9 +2438,9 @@
                     typeof window != "undefined" && window.Math == Math
                         ? window
                         : typeof self != "undefined" && self.Math == Math
-                            ? self
-                            : // eslint-disable-next-line no-new-func
-                              Function("return this")());
+                        ? self
+                        : // eslint-disable-next-line no-new-func
+                          Function("return this")());
                 if (typeof __g == "number") __g = global; // eslint-disable-line no-undef
 
                 /***/
@@ -7321,10 +7313,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 /**
                  * This is a helper function for getting values from parameter/options
@@ -7773,11 +7765,11 @@
                     // original notice:
 
                     /*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
+                     * The buffer module from node.js, for the browser.
+                     *
+                     * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+                     * @license  MIT
+                     */
 
                     var _typeof =
                         typeof Symbol === "function" &&
@@ -14599,8 +14591,8 @@
                                   obj !== Symbol.prototype
                                   ? "symbol"
                                   : typeof obj === "undefined"
-                                      ? "undefined"
-                                      : _typeof2(obj);
+                                  ? "undefined"
+                                  : _typeof2(obj);
                           };
 
                 var classCallCheck = function classCallCheck(
@@ -17334,8 +17326,8 @@
                     var kind = this.state.type.isLoop
                         ? "loop"
                         : this.match(types._switch)
-                            ? "switch"
-                            : null;
+                        ? "switch"
+                        : null;
                     for (var i = this.state.labels.length - 1; i >= 0; i--) {
                         var label = this.state.labels[i];
                         if (label.statementStart === node.start) {
@@ -18251,8 +18243,8 @@
                         name === "default"
                             ? "Only one default export allowed per module."
                             : "`" +
-                              name +
-                              "` has already been exported. Exported identifiers must be unique."
+                                  name +
+                                  "` has already been exported. Exported identifiers must be unique."
                     );
                 };
 
@@ -19174,7 +19166,7 @@
                             this.finishNode(
                                 node,
                                 op === types.logicalOR ||
-                                op === types.logicalAND
+                                    op === types.logicalAND
                                     ? "LogicalExpression"
                                     : "BinaryExpression"
                             );
@@ -29300,8 +29292,8 @@
                         var result = IS_MAP
                             ? create($this, length)
                             : IS_FILTER
-                                ? create($this, 0)
-                                : undefined;
+                            ? create($this, 0)
+                            : undefined;
                         var val, res;
                         for (; length > index; index++) {
                             if (NO_HOLES || index in self) {
@@ -29328,8 +29320,8 @@
                         return IS_FIND_INDEX
                             ? -1
                             : IS_SOME || IS_EVERY
-                                ? IS_EVERY
-                                : result;
+                            ? IS_EVERY
+                            : result;
                     };
                 };
 
@@ -30570,8 +30562,8 @@
                             ? getAllKeysIn
                             : getAllKeys
                         : isFlat
-                            ? keysIn
-                            : keys;
+                        ? keysIn
+                        : keys;
 
                     var props = isArr ? undefined : keysFunc(value);
                     arrayEach(props || value, function(subValue, key) {
@@ -35384,8 +35376,7 @@
                                                         bindingIdentifiers = ((_bindingIdentifiers = {}),
                                                         (_bindingIdentifiers[
                                                             _name
-                                                        ] =
-                                                            node.id),
+                                                        ] = node.id),
                                                         _bindingIdentifiers);
                                                     }
                                                 } else {
@@ -38132,19 +38123,18 @@
                     return it === undefined
                         ? "Undefined"
                         : it === null
-                            ? "Null"
-                            : // @@toStringTag case
-                              typeof (T = tryGet((O = Object(it)), TAG)) ==
-                              "string"
-                                ? T
-                                : // builtinTag case
-                                  ARG
-                                    ? cof(O)
-                                    : // ES3 arguments fallback
-                                      (B = cof(O)) == "Object" &&
-                                      typeof O.callee == "function"
-                                        ? "Arguments"
-                                        : B;
+                        ? "Null"
+                        : // @@toStringTag case
+                        typeof (T = tryGet((O = Object(it)), TAG)) == "string"
+                        ? T
+                        : // builtinTag case
+                        ARG
+                        ? cof(O)
+                        : // ES3 arguments fallback
+                        (B = cof(O)) == "Object" &&
+                          typeof O.callee == "function"
+                        ? "Arguments"
+                        : B;
                 };
 
                 /***/
@@ -43533,10 +43523,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 var util = __webpack_require__(63);
                 var has = Object.prototype.hasOwnProperty;
@@ -43650,40 +43640,40 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 *
-	 * Based on the Base 64 VLQ implementation in Closure Compiler:
-	 * https://code.google.com/p/closure-compiler/source/browse/trunk/src/com/google/debugging/sourcemap/Base64VLQ.java
-	 *
-	 * Copyright 2011 The Closure Compiler Authors. All rights reserved.
-	 * Redistribution and use in source and binary forms, with or without
-	 * modification, are permitted provided that the following conditions are
-	 * met:
-	 *
-	 *  * Redistributions of source code must retain the above copyright
-	 *    notice, this list of conditions and the following disclaimer.
-	 *  * Redistributions in binary form must reproduce the above
-	 *    copyright notice, this list of conditions and the following
-	 *    disclaimer in the documentation and/or other materials provided
-	 *    with the distribution.
-	 *  * Neither the name of Google Inc. nor the names of its
-	 *    contributors may be used to endorse or promote products derived
-	 *    from this software without specific prior written permission.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 *
+                 * Based on the Base 64 VLQ implementation in Closure Compiler:
+                 * https://code.google.com/p/closure-compiler/source/browse/trunk/src/com/google/debugging/sourcemap/Base64VLQ.java
+                 *
+                 * Copyright 2011 The Closure Compiler Authors. All rights reserved.
+                 * Redistribution and use in source and binary forms, with or without
+                 * modification, are permitted provided that the following conditions are
+                 * met:
+                 *
+                 *  * Redistributions of source code must retain the above copyright
+                 *    notice, this list of conditions and the following disclaimer.
+                 *  * Redistributions in binary form must reproduce the above
+                 *    copyright notice, this list of conditions and the following
+                 *    disclaimer in the documentation and/or other materials provided
+                 *    with the distribution.
+                 *  * Neither the name of Google Inc. nor the names of its
+                 *    contributors may be used to endorse or promote products derived
+                 *    from this software without specific prior written permission.
+                 *
+                 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+                 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+                 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+                 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+                 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+                 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+                 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+                 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+                 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+                 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+                 */
 
                 var base64 = __webpack_require__(616);
 
@@ -43802,10 +43792,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 var base64VLQ = __webpack_require__(286);
                 var util = __webpack_require__(63);
@@ -44290,10 +44280,10 @@
                 "use strict";
 
                 /*
-	 * Copyright 2009-2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE.txt or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2009-2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE.txt or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
                 exports.SourceMapGenerator = __webpack_require__(
                     287
                 ).SourceMapGenerator;
@@ -57521,8 +57511,8 @@
                             var type = Array.isArray(node)
                                 ? "array"
                                 : typeof node === "undefined"
-                                    ? "undefined"
-                                    : (0, _typeof3.default)(node);
+                                ? "undefined"
+                                : (0, _typeof3.default)(node);
                             throw new Error(
                                 "Node list " +
                                     msg +
@@ -62152,8 +62142,8 @@
                     return b64[len - 2] === "="
                         ? 2
                         : b64[len - 1] === "="
-                            ? 1
-                            : 0;
+                        ? 1
+                        : 0;
                 }
 
                 function byteLength(b64) {
@@ -62487,11 +62477,11 @@
             /***/ function(module, exports, __webpack_require__) {
                 /* WEBPACK VAR INJECTION */ (function(global) {
                     /*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
+                     * The buffer module from node.js, for the browser.
+                     *
+                     * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+                     * @license  MIT
+                     */
                     /* eslint-disable no-proto */
 
                     "use strict";
@@ -62534,8 +62524,8 @@
                             : typedArraySupport();
 
                     /*
-	 * Export kMaxLength after typed array support is determined.
-	 */
+                     * Export kMaxLength after typed array support is determined.
+                     */
                     exports.kMaxLength = kMaxLength();
 
                     function typedArraySupport() {
@@ -63635,10 +63625,10 @@
                                 firstByte > 0xef
                                     ? 4
                                     : firstByte > 0xdf
-                                        ? 3
-                                        : firstByte > 0xbf
-                                            ? 2
-                                            : 1;
+                                    ? 3
+                                    : firstByte > 0xbf
+                                    ? 2
+                                    : 1;
 
                             if (i + bytesPerSequence <= end) {
                                 var secondByte,
@@ -63833,8 +63823,8 @@
                     };
 
                     /*
-	 * Need to make sure that buffer isn't trying to write out of bounds.
-	 */
+                     * Need to make sure that buffer isn't trying to write out of bounds.
+                     */
                     function checkOffset(offset, ext, length) {
                         if (offset % 1 !== 0 || offset < 0)
                             throw new RangeError("offset is not uint");
@@ -66011,8 +66001,8 @@
                                 ? s.charAt(i)
                                 : a
                             : TO_STRING
-                                ? s.slice(i, i + 2)
-                                : ((a - 0xd800) << 10) + (b - 0xdc00) + 0x10000;
+                            ? s.slice(i, i + 2)
+                            : ((a - 0xd800) << 10) + (b - 0xdc00) + 0x10000;
                     };
                 };
 
@@ -68862,8 +68852,8 @@
                                         ? ret + 1
                                         : tmp2
                                     : tmp2 > tmp
-                                        ? tmp + 1
-                                        : tmp2;
+                                    ? tmp + 1
+                                    : tmp2;
                         }
                     }
 
@@ -73884,8 +73874,8 @@
                     return isBinary || reIsOctal.test(value)
                         ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
                         : reIsBadHex.test(value)
-                            ? NAN
-                            : +value;
+                        ? NAN
+                        : +value;
                 }
 
                 module.exports = toNumber;
@@ -74267,9 +74257,9 @@
                         pattern.charAt(0) === "."
                             ? "" // anything
                             : // not (start or / followed by . or .. followed by / or end)
-                              options.dot
-                                ? "(?!(?:^|\\/)\\.{1,2}(?:$|\\/))"
-                                : "(?!\\.)";
+                            options.dot
+                            ? "(?!(?:^|\\/)\\.{1,2}(?:$|\\/))"
+                            : "(?!\\.)";
                     var self = this;
 
                     function clearStateChar() {
@@ -74544,8 +74534,8 @@
                             pl.type === "*"
                                 ? star
                                 : pl.type === "?"
-                                    ? qmark
-                                    : "\\" + pl.type;
+                                ? qmark
+                                : "\\" + pl.type;
 
                         hasMagic = true;
                         re = re.slice(0, pl.reStart) + t + "\\(" + tail;
@@ -74668,8 +74658,8 @@
                     var twoStar = options.noglobstar
                         ? star
                         : options.dot
-                            ? twoStarDot
-                            : twoStarNoDot;
+                        ? twoStarDot
+                        : twoStarNoDot;
                     var flags = options.nocase ? "i" : "";
 
                     var re = set
@@ -74679,8 +74669,8 @@
                                     return p === GLOBSTAR
                                         ? twoStar
                                         : typeof p === "string"
-                                            ? regExpEscape(p)
-                                            : p._src;
+                                        ? regExpEscape(p)
+                                        : p._src;
                                 })
                                 .join("\\/");
                         })
@@ -76659,10 +76649,10 @@
                               };
 
                     /*!
-	 * RegJSGen
-	 * Copyright 2014 Benjamin Tan <https://d10.github.io/>
-	 * Available under MIT license <http://d10.mit-license.org/>
-	 */
+                     * RegJSGen
+                     * Copyright 2014 Benjamin Tan <https://d10.github.io/>
+                     * Available under MIT license <http://d10.mit-license.org/>
+                     */
                     (function() {
                         "use strict";
 
@@ -78348,10 +78338,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 var intToCharMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split(
                     ""
@@ -78424,10 +78414,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 exports.GREATEST_LOWER_BOUND = 1;
                 exports.LEAST_UPPER_BOUND = 2;
@@ -78578,10 +78568,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2014 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2014 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 var util = __webpack_require__(63);
 
@@ -78674,10 +78664,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 // It turns out that some (most?) JavaScript engines don't self-host
                 // `Array.prototype.sort`. This makes sense because C++ will likely remain
@@ -78795,10 +78785,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 var util = __webpack_require__(63);
                 var binarySearch = __webpack_require__(617);
@@ -80145,10 +80135,10 @@
 
                 /* -*- Mode: js; js-indent-level: 2; -*- */
                 /*
-	 * Copyright 2011 Mozilla Foundation and contributors
-	 * Licensed under the New BSD license. See LICENSE or:
-	 * http://opensource.org/licenses/BSD-3-Clause
-	 */
+                 * Copyright 2011 Mozilla Foundation and contributors
+                 * Licensed under the New BSD license. See LICENSE or:
+                 * http://opensource.org/licenses/BSD-3-Clause
+                 */
 
                 var SourceMapGenerator = __webpack_require__(287)
                     .SourceMapGenerator;

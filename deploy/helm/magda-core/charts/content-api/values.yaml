@@ -1,0 +1,13 @@
+image: {}
+autoscaler:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+resources:
+  requests:
+    cpu: 10m
+    memory: 30Mi
+  limits:
+    cpu: 50m
+scssVars: '{}'

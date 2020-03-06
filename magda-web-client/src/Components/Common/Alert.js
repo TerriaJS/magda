@@ -1,13 +1,16 @@
 import React from "react";
-import AUpageAlert from "pancake/react/page-alerts";
 import "./Alert.scss";
 
 const Alert = props => {
     return (
         <div>
-            <AUpageAlert as={props.type} className="correspondence-alert">
+            <div
+                className={`au-page-alerts au-page-alerts--${
+                    props.type
+                } correspondence-alert`}
+            >
                 <h5>{props.header}</h5>
-            </AUpageAlert>
+            </div>
             <br />
             {props.message && (
                 <React.Fragment>

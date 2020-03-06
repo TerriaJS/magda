@@ -5,3 +5,9 @@
         @return #ffffff; // Darker background, return light color
     }
 }
+
+@mixin remove-btn-underline() {
+    &.au-btn:hover:not(:disabled) {
+        text-decoration: none;
+    }
+}

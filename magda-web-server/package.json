@@ -1,12 +1,13 @@
 {
   "name": "@magda/web-server",
   "description": "The server that serves the MAGDA web front end.",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
   "license": "Apache-2.0",
   "scripts": {
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo",
     "build": "yarn run compile",
-    "compile": "tsc -p tsconfig-build.json",
-    "watch": "tsc -p tsconfig-build.json --watch",
+    "compile": "tsc -b && ts-module-alias-transformer dist",
+    "watch": "tsc -b --watch",
     "start": "node dist/index.js",
     "dev": "run-typescript-in-nodemon src/index.ts --baseExternalUrl=http://localhost:6107/ --baseUrl=http://dev.magda.io/",
     "docker-build-local": "create-docker-context-for-node-component --build --push --tag auto --local",
@@ -15,7 +16,7 @@
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-3",
+    "@magda/scripts": "^0.0.57-0",
     "@types/chai": "^4.0.1",
     "@types/config": "0.0.32",
     "@types/express": "^4.0.39",
@@ -37,12 +38,12 @@
     "sinon": "^2.4.1",
     "supertest": "^3.0.0",
     "typed-promisify": "^0.4.0",
-    "typescript": "^3.2.0",
+    "typescript": "^3.7.2",
     "xml2js": "^0.4.19"
   },
   "dependencies": {
-    "@magda/typescript-common": "^0.0.56-terria-3",
-    "@magda/web-client": "^0.0.56-terria-3",
+    "@magda/typescript-common": "^0.0.57-0",
+    "@magda/web-client": "^0.0.57-0",
     "express": "^4.15.3",
     "morgan": "^1.9.0",
     "read-pkg-up": "^3.0.0",
@@ -62,5 +63,8 @@
     "categories": {
       "ui": true
     }
+  },
+  "_moduleMappings": {
+    "magda-typescript-common/src": "@magda/typescript-common/dist"
   }
 }

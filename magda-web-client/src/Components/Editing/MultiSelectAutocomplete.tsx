@@ -17,11 +17,13 @@ interface MultiSelectAutocomplete<T> {
     query?: (string: string) => Promise<T[]>;
     toData: (value: T) => SelectData;
     fromData: (value: SelectData) => T;
+    noManualInput?: boolean;
 }
 
 export default function MultiSelectAutoComplete<T>(
     props: MultiSelectAutocomplete<T>
 ) {
+    const noManualInput = props.noManualInput === true ? true : false;
     const loadOptions = props.query
         ? debouncePromise(async (inputValue: string) => {
               const options = await props.query!(inputValue);
@@ -34,12 +36,15 @@ export default function MultiSelectAutoComplete<T>(
             className="react-select"
             isMulti={true}
             isSearchable={true}
-            noOptionsMessage={x =>
-                props.query ? "No Options" : "Type to enter a new option"
+            noOptionsMessage={({ inputValue }) =>
+                noManualInput && inputValue
+                    ? "No Options Available"
+                    : "Type to enter a new option"
             }
             components={{
                 MultiValueRemove: CustomMultiValueRemove
             }}
+            isValidNewOption={noManualInput ? () => false : undefined}
             onChange={(values, action) => {
                 props.onChange(
                     Array.isArray(values)

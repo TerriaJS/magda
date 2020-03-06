@@ -1,6 +1,6 @@
 .dataset-add-file-page {
     .top-area-row {
-        padding-bottom: 100px;
+        padding-bottom: 61px;
         position: relative;
     }
     .top-text-area {
@@ -12,7 +12,10 @@
             line-height: 0.79;
             letter-spacing: normal;
             color: #30384d;
-            margin-bottom: 76px;
+            margin-top: 100px;
+            margin-bottom: 50px;
+            padding-bottom: 22px;
+            border-bottom: solid 1px #cccaca;
         }
         p {
             max-width: none;
@@ -24,13 +27,28 @@
             letter-spacing: normal;
             color: #484848;
         }
+        a {
+            cursor: not-allowed;
+        }
+    }
+    .add-files-heading {
+        h3 {
+            margin-top: 0px;
+            font-size: 24px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.88;
+            letter-spacing: -0.3px;
+            color: #484848;
+        }
     }
     .tip-area {
-        position: absolute;
         bottom: 20px;
+        margin-top: 20px;
         .tooltip-root {
             max-width: none;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 300;
             font-style: normal;
             font-stretch: normal;
@@ -45,9 +63,7 @@
     .files-area {
         margin-bottom: 32px;
     }
-    .dataset-file-root {
-        margin-bottom: 65px;
-    }
+
     .more-files-to-add-text {
         margin-top: 54px;
         font-size: 24px;
@@ -82,5 +98,10 @@
 
     .dataset-add-files-fileListItem {
         list-style: none;
+        margin-bottom: 65px;
+    }
+
+    .dataset-add-files-fileListItem.last-row {
+        margin-bottom: 0px;
     }
 }

@@ -1,10 +1,10 @@
 import setupTenantMode from "../setupTenantMode";
 import TenantsLoader from "../reloadTenants";
-import { Tenant } from "@magda/typescript-common/dist/tenant-api/Tenant";
-import { MAGDA_ADMIN_PORTAL_ID } from "@magda/typescript-common/dist/registry/TenantConsts";
+import { Tenant } from "magda-typescript-common/src/tenant-api/Tenant";
+import { MAGDA_ADMIN_PORTAL_ID } from "magda-typescript-common/src/registry/TenantConsts";
 
 import { expect } from "chai";
-import * as nock from "nock";
+import nock from "nock";
 import { delay } from "q";
 
 describe("Test reload tenants", () => {

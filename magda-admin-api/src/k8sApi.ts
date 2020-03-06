@@ -1,10 +1,11 @@
+/// <reference types="./missing" />
 require("util.promisify/shim")();
-import * as Api from "kubernetes-client";
-import * as fs from "fs";
+import Api from "kubernetes-client";
+import fs from "fs";
 import { promisify } from "util";
-import * as _ from "lodash";
-import * as path from "path";
-import getMinikubeIP from "@magda/typescript-common/dist/util/getMinikubeIP";
+import _ from "lodash";
+import path from "path";
+import getMinikubeIP from "magda-typescript-common/src/util/getMinikubeIP";
 // var request = require('request');
 // require('request-debug')(request);
 

@@ -9,12 +9,12 @@ import Registry from "./registry/AuthorizedRegistryClient";
 import unionToThrowable from "./util/unionToThrowable";
 import { parse as parseArgv } from "yargs";
 
-import * as express from "express";
-import * as fs from "fs";
-import * as path from "path";
-import * as process from "process";
-import * as uuid from "uuid";
-import * as _ from "lodash";
+import express from "express";
+import fs from "fs";
+import path from "path";
+import process from "process";
+import uuid from "uuid";
+import _ from "lodash";
 
 /**
  * A base class for connectors for most any JSON-based catalog source.

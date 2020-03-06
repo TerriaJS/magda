@@ -21,6 +21,10 @@ let defaultBasePath = "http://localhost/api/v0/registry/";
 
 /* tslint:disable:no-unused-variable */
 
+export class ApiError {
+    "message": string;
+}
+
 /**
  * A type of aspect in the registry, unique for a tenant.
  */
@@ -37,10 +41,6 @@ export class AspectDefinition {
      * The JSON Schema of this aspect.
      */
     "jsonSchema": any;
-}
-
-export class BadRequest {
-    "message": string;
 }
 
 export class CountResponse {
@@ -119,6 +119,10 @@ export class Record {
      * The identifier of a tenant
      */
     "tenantId": number;
+    /**
+     * The read authorization policy id of a record
+     */
+    "authnReadPolicyId": string;
 }
 
 /**
@@ -149,6 +153,7 @@ export class RegistryEvent {
     "eventType": EventType;
     "userId": number;
     "data": JsObject;
+    "tenantId": number;
 }
 
 export class WebHook {

@@ -1,0 +1,14 @@
+{{ if .Values.autoscaler.enabled }}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: preview-map
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: preview-map
+  minReplicas: {{ .Values.autoscaler.minReplicas }}
+  maxReplicas: {{ .Values.autoscaler.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.autoscaler.targetCPUUtilizationPercentage }}
+{{ end }}

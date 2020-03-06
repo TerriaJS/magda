@@ -1,6 +1,6 @@
-import * as nodemailer from "nodemailer";
-import * as SMTPTransport from "nodemailer/lib/smtp-transport";
-import { Attachment } from "nodemailer/lib/mailer";
+import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
+export { Attachment } from "nodemailer/lib/mailer";
 
 export interface SMTPMailer {
     send(msg: Message): Promise<{}>;
@@ -16,7 +16,6 @@ export interface SMTPMailerOptions {
 }
 
 export type Message = SMTPTransport.Options;
-export type Attachment = Attachment;
 
 export class NodeMailerSMTPMailer implements SMTPMailer {
     constructor(readonly opts: SMTPMailerOptions) {}

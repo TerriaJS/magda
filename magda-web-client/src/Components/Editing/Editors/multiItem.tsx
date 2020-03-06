@@ -11,6 +11,7 @@ export abstract class MultiItemEditor<V> extends React.Component<
         onChange?: Function;
         canBeAdded: (value: V) => boolean;
         addOnChange: boolean;
+        renderAbove?: boolean;
     },
     { value?: V[]; newValue: V }
 > {
@@ -81,12 +82,42 @@ export abstract class MultiItemEditor<V> extends React.Component<
 }
 
 export class ListMultiItemEditor<V> extends MultiItemEditor<V> {
+    // add a renderer? class method to render out the multi-list-item-editor-container with
+    // 'multi-list-item-editor-item'
+
+    renderSelectedOptions(enabled, value, editor) {
+        if (!enabled && (!value || !value.length)) {
+            return null;
+        }
+        return (
+            <div className="multi-list-item-editor-container clearfix">
+                {value.map((val, i) => {
+                    return (
+                        <div key={i} className="multi-list-item-editor-item">
+                            {editor.view(val)}
+                            {enabled && (
+                                <button
+                                    className="edit-button"
+                                    onClick={this.deleteIndex(i)}
+                                >
+                                    &#215;
+                                </button>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
     render() {
-        const { editor, enabled } = this.props;
+        const { editor, enabled, renderAbove } = this.props;
         const { newValue } = this.state;
         const value = this.value();
         return (
             <div className="list-multi-item-editor-container">
+                {renderAbove
+                    ? this.renderSelectedOptions(enabled, value, editor)
+                    : null}
                 {enabled && (
                     <React.Fragment>
                         {editor.edit(newValue, this.change.bind(this), value, {
@@ -107,28 +138,9 @@ export class ListMultiItemEditor<V> extends MultiItemEditor<V> {
                     </React.Fragment>
                 )}
                 {!enabled && (!value || !value.length) && "NOT SET"}
-                {!enabled && (!value || !value.length) ? null : (
-                    <div className="multi-list-item-editor-container clearfix">
-                        {value.map((val, i) => {
-                            return (
-                                <div
-                                    key={i}
-                                    className="multi-list-item-editor-item"
-                                >
-                                    {editor.view(val)}
-                                    {enabled && (
-                                        <button
-                                            className="edit-button"
-                                            onClick={this.deleteIndex(i)}
-                                        >
-                                            &#215;
-                                        </button>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
+                {renderAbove
+                    ? null
+                    : this.renderSelectedOptions(enabled, value, editor)}
             </div>
         );
     }
@@ -137,7 +149,8 @@ export class ListMultiItemEditor<V> extends MultiItemEditor<V> {
         singleEditor: Editor<V>,
         createNewValue: () => V,
         canBeAdded: (value: V) => boolean = value => !!value,
-        addOnChange: boolean = false
+        addOnChange: boolean = false,
+        renderAbove: boolean = true
     ): Editor<V[]> {
         return {
             edit: (
@@ -153,6 +166,7 @@ export class ListMultiItemEditor<V> extends MultiItemEditor<V> {
                         onChange={onChange}
                         canBeAdded={canBeAdded}
                         addOnChange={addOnChange}
+                        renderAbove={renderAbove}
                     />
                 );
             },
@@ -165,6 +179,7 @@ export class ListMultiItemEditor<V> extends MultiItemEditor<V> {
                         createNewValue={createNewValue}
                         canBeAdded={canBeAdded}
                         addOnChange={addOnChange}
+                        renderAbove={renderAbove}
                     />
                 );
             }

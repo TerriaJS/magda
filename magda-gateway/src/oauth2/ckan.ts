@@ -1,9 +1,9 @@
 import { Authenticator } from "passport";
-import * as express from "express";
+import express from "express";
 import { Router } from "express";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import ApiClient from "@magda/typescript-common/dist/authorization-api/ApiClient";
+import ApiClient from "magda-typescript-common/src/authorization-api/ApiClient";
 import loginToCkan from "./loginToCkan";
 import createOrGetUserToken from "../createOrGetUserToken";
 import { redirectOnSuccess, redirectOnError } from "./redirect";

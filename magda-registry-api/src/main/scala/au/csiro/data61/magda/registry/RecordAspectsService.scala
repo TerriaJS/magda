@@ -7,7 +7,10 @@ import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
 import au.csiro.data61.magda.client.AuthApiClient
 import au.csiro.data61.magda.directives.AuthDirectives.requireIsAdmin
-import au.csiro.data61.magda.directives.TenantDirectives.requiresTenantId
+import au.csiro.data61.magda.directives.TenantDirectives.{
+  requiresTenantId,
+  requiresSpecifiedTenantId
+}
 import au.csiro.data61.magda.model.Registry._
 import com.typesafe.config.Config
 import gnieh.diffson.sprayJson._
@@ -25,12 +28,18 @@ import scala.util.{Failure, Success}
 )
 class RecordAspectsService(
     webHookActor: ActorRef,
-    authClient: AuthApiClient,
+    authClient: RegistryAuthApiClient,
     system: ActorSystem,
     materializer: Materializer,
-    config: Config
-) extends RecordAspectsServiceRO(system, materializer, config) {
-  private val recordPersistence = DefaultRecordPersistence
+    config: Config,
+    recordPersistence: RecordPersistence
+) extends RecordAspectsServiceRO(
+      authClient,
+      system,
+      materializer,
+      config,
+      recordPersistence
+    ) {
 
   /**
     * @apiGroup Registry Record Aspects
@@ -116,7 +125,7 @@ class RecordAspectsService(
     path(Segment / "aspects" / Segment) {
       (recordId: String, aspectId: String) =>
         requireIsAdmin(authClient)(system, config) { _ =>
-          requiresTenantId { tenantId =>
+          requiresSpecifiedTenantId { tenantId =>
             entity(as[JsObject]) { aspect =>
               val theResult = DB localTx { session =>
                 recordPersistence.putRecordAspectById(
@@ -124,14 +133,13 @@ class RecordAspectsService(
                   tenantId,
                   recordId,
                   aspectId,
-                  aspect,
-                  config
+                  aspect
                 ) match {
                   case Success(result) => complete(result)
                   case Failure(exception) =>
                     complete(
                       StatusCodes.BadRequest,
-                      BadRequest(exception.getMessage)
+                      ApiError(exception.getMessage)
                     )
                 }
               }
@@ -203,7 +211,7 @@ class RecordAspectsService(
     path(Segment / "aspects" / Segment) {
       (recordId: String, aspectId: String) =>
         requireIsAdmin(authClient)(system, config) { _ =>
-          requiresTenantId { tenantId =>
+          requiresSpecifiedTenantId { tenantId =>
             val theResult = DB localTx { session =>
               recordPersistence.deleteRecordAspect(
                 session,
@@ -215,7 +223,7 @@ class RecordAspectsService(
                 case Failure(exception) =>
                   complete(
                     StatusCodes.BadRequest,
-                    BadRequest(exception.getMessage)
+                    ApiError(exception.getMessage)
                   )
               }
             }
@@ -306,7 +314,7 @@ class RecordAspectsService(
     path(Segment / "aspects" / Segment) {
       (recordId: String, aspectId: String) =>
         requireIsAdmin(authClient)(system, config) { _ =>
-          requiresTenantId { tenantId =>
+          requiresSpecifiedTenantId { tenantId =>
             entity(as[JsonPatch]) { aspectPatch =>
               val theResult = DB localTx { session =>
                 recordPersistence.patchRecordAspectById(
@@ -314,14 +322,13 @@ class RecordAspectsService(
                   tenantId,
                   recordId,
                   aspectId,
-                  aspectPatch,
-                  config
+                  aspectPatch
                 ) match {
                   case Success(result) => complete(result)
                   case Failure(exception) =>
                     complete(
                       StatusCodes.BadRequest,
-                      BadRequest(exception.getMessage)
+                      ApiError(exception.getMessage)
                     )
                 }
               }

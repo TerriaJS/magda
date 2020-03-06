@@ -1,12 +1,10 @@
 {
-    "extends": "./tsconfig-build.json",
+    "extends": "../tsconfig-global.json",
     "compilerOptions": {
-        "baseUrl": ".",
-        "resolveJsonModule": true,
-        "paths": {
-            "@magda/registry-aspects/dist/*": [
-                "../node_modules/@magda/registry-aspects/src/*"
-            ]
-        }
-    }
+        "outDir": "./dist",
+        "strictNullChecks": false,
+        "rootDir": "./src",
+        "tsBuildInfoFile": "./tsconfig.tsbuildinfo"
+    },
+    "include": ["./src/**/*", "./src/**/*.json"]
 }

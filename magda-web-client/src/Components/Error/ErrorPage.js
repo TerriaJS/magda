@@ -1,5 +1,5 @@
 import React from "react";
-import * as queryString from "query-string";
+import queryString from "query-string";
 import ErrorHandler from "./ErrorHandler";
 import Error401 from "./Error401";
 import Error403 from "./Error403";

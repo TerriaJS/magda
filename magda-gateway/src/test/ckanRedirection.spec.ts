@@ -1,21 +1,21 @@
 import {} from "mocha";
-import * as sinon from "sinon";
-import * as express from "express";
+import sinon from "sinon";
+import express from "express";
 import { expect } from "chai";
-import * as nock from "nock";
-import * as _ from "lodash";
-import * as supertest from "supertest";
-import * as URI from "urijs";
+import nock from "nock";
+import _ from "lodash";
+import supertest from "supertest";
+import URI from "urijs";
 import createCkanRedirectionRouter, {
     genericUrlRedirectConfig,
     covertGenericUrlRedirectConfigToFullArgList,
     genericUrlRedirectConfigs
 } from "../createCkanRedirectionRouter";
 
-import * as resCkanDatasetAspect from "./sampleRegistryResponses/ckanDatasetAspect.json";
-import * as resCkanDatasetQuery from "./sampleRegistryResponses/ckanDatasetQuery.json";
-import * as resCkanOrganizationQuery from "./sampleRegistryResponses/ckanOrganizationQuery.json";
-import * as resCkanResource from "./sampleRegistryResponses/ckanResource.json";
+import resCkanDatasetAspect from "./sampleRegistryResponses/ckanDatasetAspect.json";
+import resCkanDatasetQuery from "./sampleRegistryResponses/ckanDatasetQuery.json";
+import resCkanOrganizationQuery from "./sampleRegistryResponses/ckanOrganizationQuery.json";
+import resCkanResource from "./sampleRegistryResponses/ckanResource.json";
 
 describe("ckanRedirectionRouter router", () => {
     const ckanRedirectionDomain = "ckan.data.gov.au";

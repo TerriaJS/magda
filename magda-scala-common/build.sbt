@@ -9,6 +9,8 @@ libraryDependencies ++= {
   val akkaV       = "2.5.23"
   val akkaHttpV   = "10.1.8"
   val scalaTestV  = "3.0.8"
+  val jjwtV = "0.10.7"
+
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-stream" % akkaV,
@@ -32,8 +34,11 @@ libraryDependencies ++= {
 
     "com.beachape" %% "enumeratum" % "1.5.10",
     "com.github.swagger-akka-http" %% "swagger-akka-http" % "1.1.0",
-    "com.auth0" % "java-jwt" % "3.7.0",
     "net.virtual-void" %%  "json-lenses" % "0.6.2",
-    "com.mapbox.mapboxsdk" % "mapbox-sdk-geojson" % "4.5.0"
+    "com.mapbox.mapboxsdk" % "mapbox-sdk-geojson" % "4.5.0",
+
+    "io.jsonwebtoken" % "jjwt-api" % jjwtV,
+    "io.jsonwebtoken" % "jjwt-impl" % jjwtV,
+    "io.jsonwebtoken" % "jjwt-jackson" % jjwtV
   )
 }

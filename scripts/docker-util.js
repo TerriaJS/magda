@@ -8,21 +8,24 @@ exports.getVersions = function getVersions(local, version) {
     );
 };
 
-exports.getName = function getName() {
+exports.getName = function getName(name) {
+    if (name && typeof name === "string") {
+        return name;
+    }
     return process.env.npm_package_config_docker_name
         ? process.env.npm_package_config_docker_name
         : process.env.npm_package_name
-            ? "data61/magda-" + process.env.npm_package_name.split("/")[1]
-            : "UnnamedImage";
+        ? "data61/magda-" + process.env.npm_package_name.split("/")[1]
+        : "UnnamedImage";
 };
 
-exports.getTags = function getTags(tag, local, repository, version) {
+exports.getTags = function getTags(tag, local, repository, version, name) {
     if (tag === "auto") {
         return exports.getVersions(local, version).map(version => {
             const tagPrefix = exports.getRepository(local, repository);
-            const name = exports.getName();
+            const imageName = exports.getName(name);
 
-            return tagPrefix + name + ":" + version;
+            return tagPrefix + imageName + ":" + version;
         });
     } else {
         return tag ? [tag] : [];

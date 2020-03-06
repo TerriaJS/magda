@@ -9,6 +9,7 @@ import akka.http.scaladsl.server.{AuthenticationFailedRejection, _}
 import au.csiro.data61.magda.Authentication
 import au.csiro.data61.magda.client.AuthApiClient
 import com.typesafe.config.Config
+import io.jsonwebtoken.{Jws, Claims}
 
 import scala.util.control.NonFatal
 
@@ -48,15 +49,19 @@ object AuthDirectives {
         sessionToken match {
           case Some(header) =>
             try {
+              val claims: Jws[Claims] =
+                Authentication.parser(system.log).parseClaimsJws(header.value())
+              val userId = claims.getBody().get("userId", classOf[String])
+
               provide(
-                Authentication.jwt
-                  .verify(header.value())
-                  .getClaim("userId")
-                  .asString()
+                userId
               )
             } catch {
-              case NonFatal(_) =>
-                log.debug("Could not verify X-Magda-Session header in request")
+              case NonFatal(e) =>
+                log.error(
+                  e,
+                  "Could not verify X-Magda-Session header in request"
+                )
                 reject(
                   AuthenticationFailedRejection(
                     AuthenticationFailedRejection.CredentialsRejected,
@@ -65,7 +70,7 @@ object AuthDirectives {
                 )
             }
           case None =>
-            log.debug("Could not find X-Magda-Session header in request")
+            log.info("Could not find X-Magda-Session header in request")
             reject(
               AuthenticationFailedRejection(
                 AuthenticationFailedRejection.CredentialsMissing,

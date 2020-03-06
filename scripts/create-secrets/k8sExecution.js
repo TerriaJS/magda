@@ -123,6 +123,7 @@ function doK8sExecution(config, shouldNotAsk = false) {
         }
 
         createDbPasswords(env, namespace, configData);
+        createMinioCredentials(env, namespace, configData);
 
         createWebAccessPassword(env, namespace, configData);
 
@@ -173,7 +174,7 @@ function doK8sExecution(config, shouldNotAsk = false) {
         }
 
         createSecret(env, namespace, "auth-secrets", {
-            "jwt-secret": pwgen(),
+            "jwt-secret": pwgen(64),
             "session-secret": pwgen()
         });
     });
@@ -338,6 +339,14 @@ function createDbPasswords(env, namespace, configData) {
         data[key] = configData["db-passwords"];
     });
     createSecret(env, namespace, "db-passwords", data);
+}
+
+function createMinioCredentials(env, namespace, configData) {
+    const data = {
+        accesskey: configData["accesskey"],
+        secretkey: configData["secretkey"]
+    };
+    createSecret(env, namespace, "storage-secrets", data);
 }
 
 function createWebAccessPassword(env, namespace, configData) {

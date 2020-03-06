@@ -34,6 +34,11 @@ const argv = yargs
                 "The repository to use in auto tag generation. Will default to '', i.e. dockerhub unless --local is set. Requires --tag=auto",
             type: "string"
         },
+        name: {
+            description:
+                "The package name to use in auto tag generation. Will default to ''. Used to override the docker nanme config in package.json during the auto tagging. Requires --tag=auto",
+            type: "string"
+        },
         version: {
             description:
                 "The version(s) to use in auto tag generation. Will default to the current version in package.json. Requires --tag=auto",
@@ -103,7 +108,7 @@ if (argv.build) {
     const cacheFromImage =
         argv.cacheFromVersion &&
         getRepository(argv.local, argv.repository) +
-            getName() +
+            getName(argv.name) +
             ":" +
             argv.cacheFromVersion;
 
@@ -130,7 +135,13 @@ if (argv.build) {
             shell: true
         }
     );
-    const tags = getTags(argv.tag, argv.local, argv.repository, argv.version);
+    const tags = getTags(
+        argv.tag,
+        argv.local,
+        argv.repository,
+        argv.version,
+        argv.name
+    );
     const tagArgs = tags
         .map(tag => ["-t", tag])
         .reduce((soFar, tagArgs) => soFar.concat(tagArgs), []);

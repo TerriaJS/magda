@@ -1,9 +1,9 @@
-import * as yargs from "yargs";
-import * as _ from "lodash";
+import yargs from "yargs";
+import _ from "lodash";
 
 import buildApp from "./buildApp";
 
-import addJwtSecretFromEnvVar from "@magda/typescript-common/dist/session/addJwtSecretFromEnvVar";
+import addJwtSecretFromEnvVar from "magda-typescript-common/src/session/addJwtSecretFromEnvVar";
 
 const coerceJson = (path?: string) => path && require(path);
 
@@ -282,7 +282,10 @@ const app = buildApp(argv as any);
 app.listen(argv.listenPort);
 console.log("Listening on port " + argv.listenPort);
 
-process.on("unhandledRejection", (reason: string, promise: any) => {
-    console.error("Unhandled rejection");
-    console.error(reason);
-});
+process.on(
+    "unhandledRejection",
+    (reason: {} | null | undefined, promise: Promise<any>) => {
+        console.error("Unhandled rejection");
+        console.error(reason);
+    }
+);

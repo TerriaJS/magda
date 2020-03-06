@@ -1,8 +1,7 @@
 {
     "name": "MAGDA API Documentation",
     "title": "MAGDA API",
-    "description":
-        "This API documentation is for the open data platform MAGDA. REST is used. Unless stated otherwise, the JSON data format is used for all request and response body.",
+    "description": "This API documentation is for the open data platform MAGDA. REST is used. Unless stated otherwise, the JSON data format is used for all request and response body.",
     "url": "https://<host>/api",
     "footer": {
         "title": "LICENSE",

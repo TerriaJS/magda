@@ -13,41 +13,66 @@ global:
   enablePriorityClass: false
   defaultContactEmail: "magda@mailinator.com"
   enableMultiTenants: false
+  connectors:
+    includeInitialJobs: true
+    includeCronJobs: false
 
-gateway:
-  ckanRedirectionDomain: "ckan.data.gov.au"
-  ckanRedirectionPath: ""
-  enableCkanRedirection: false
-  enableAuthEndpoint: true
-  cors:
-    credentials: true
-    origin: true
-  auth:
-    facebookClientId: "173073926555600"
-    arcgisClientId: "d0MgVUbbg5Z6vmWo"
-    googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
-    ckanAuthenticationUrl: https://data.gov.au/data
+magda-core:
+  gateway:
+    ckanRedirectionDomain: "ckan.data.gov.au"
+    ckanRedirectionPath: ""
+    enableCkanRedirection: false
+    enableAuthEndpoint: true
+    cors:
+      credentials: true
+      origin: true
+    auth:
+      facebookClientId: "173073926555600"
+      arcgisClientId: "d0MgVUbbg5Z6vmWo"
+      googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
+      ckanAuthenticationUrl: https://data.gov.au/data
 
-registry-api:
-  skipAuthorization: false
+  registry-api:
+    skipAuthorization: false
 
-correspondence-api:
-  smtpPort: 2525
-  smtpHostname: "smtp.mailgun.org"
+  correspondence-api:
+    smtpPort: 2525
+    smtpHostname: "smtp.mailgun.org"
 
-web-server:
-  fallbackUrl: "https://data.gov.au"
-  featureFlags:
-    cataloguing: true
+  web-server:
+    fallbackUrl: "https://data.gov.au"
+    showNotificationBanner: false
+    featureFlags:
+      cataloguing: true
+      publishToDga: true
+    dateConfig:
+      dateFormats:
+        - YYYY
+        - YYYY-MM
+        - DD-MM-YYYY
+        - MM-DD-YYYY
+        - YYYY-MM-DD
+        - YYYY-MM-DDThh:mmTZD
+        - YYYY-MM-DDThh:mm:ssTZD
+        - YYYY-MM-DDThh:mm:ss.sTZD
+        - DD-MMM-YYYY
+        - MMM-DD-YYYY
+      dateRegexes:
+          dateRegex: "(date|dt|year|decade)"
+          startDateRegex: "(start|st).*(date|dt|year|decade)"
+          endDateRegex: "(end).*(date|dt|year|decade)"
 
-connectors:
-  includeCronJobs: false
+
+tags:
+  all: true
+  connectors: false
+  connector-dga: true
+
+connector-dga:
   config:
-    - image:
-        name: "magda-ckan-connector"
-      id: dga
-      name: "data.gov.au"
-      sourceUrl: "https://data.gov.au/"
-      pageSize: 1000
-      schedule: "0 * * * *"
-      ignoreHarvestSources: ["*"]
+    id: dga
+    name: "data.gov.au"
+    sourceUrl: "https://data.gov.au/"
+    pageSize: 1000
+    schedule: "0 * * * *"
+    ignoreHarvestSources: ["*"]

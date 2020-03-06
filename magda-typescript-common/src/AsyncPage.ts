@@ -31,8 +31,8 @@ export default class AsyncPage<T> {
     }
 
     static singlePromise<T>(valuePromise: Promise<T>): AsyncPage<T> {
-        return AsyncPage.create<T>(
-            current => (current ? undefined : valuePromise)
+        return AsyncPage.create<T>(current =>
+            current ? undefined : valuePromise
         );
     }
 

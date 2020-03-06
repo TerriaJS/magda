@@ -19,13 +19,23 @@ import akka.http.scaladsl.model.HttpHeader
 
 trait HttpFetcher {
   def get(path: String, headers: Seq[HttpHeader] = Seq()): Future[HttpResponse]
-  def post[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(implicit m: ToEntityMarshaller[T]): Future[HttpResponse]
-  def put[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(implicit m: ToEntityMarshaller[T]): Future[HttpResponse]
+
+  def post[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(
+      implicit m: ToEntityMarshaller[T]
+  ): Future[HttpResponse]
+
+  def put[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(
+      implicit m: ToEntityMarshaller[T]
+  ): Future[HttpResponse]
 }
 
-class HttpFetcherImpl(baseUrl: URL)(implicit val system: ActorSystem,
-                                    val materializer: Materializer, val ec: ExecutionContext) extends HttpFetcher {
-  lazy val connectionFlow: Flow[(HttpRequest, Int), (Try[HttpResponse], Int), _] = {
+class HttpFetcherImpl(baseUrl: URL)(
+    implicit val system: ActorSystem,
+    val materializer: Materializer,
+    val ec: ExecutionContext
+) extends HttpFetcher {
+  lazy val connectionFlow
+      : Flow[(HttpRequest, Int), (Try[HttpResponse], Int), _] = {
     val host = baseUrl.getHost
     val port = getPort(baseUrl)
 
@@ -35,46 +45,87 @@ class HttpFetcherImpl(baseUrl: URL)(implicit val system: ActorSystem,
     }
   }
 
-  def get(path: String, headers: Seq[HttpHeader] = Seq()): Future[HttpResponse] = {
+  def get(
+      path: String,
+      headers: Seq[HttpHeader] = Seq()
+  ): Future[HttpResponse] = {
     val url = s"${baseUrl.getPath}${path}"
-    system.log.debug("Making GET request to {}{}", baseUrl.getHost, url)    
-    val request = RequestBuilding.Get(url).withHeaders(scala.collection.immutable.Seq.concat(headers))
+    system.log.debug("Making GET request to {}{}", baseUrl.getHost, url)
+    val request = RequestBuilding
+      .Get(url)
+      .withHeaders(scala.collection.immutable.Seq.concat(headers))
     Source.single((request, 0)).via(connectionFlow).runWith(Sink.head).map {
       case (response, _) => response.get
     }
   }
 
-  def post[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(implicit m: ToEntityMarshaller[T]): Future[HttpResponse] = {
+  def post[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(
+      implicit m: ToEntityMarshaller[T]
+  ): Future[HttpResponse] = {
     val url = s"${baseUrl.getPath}${path}"
-    system.log.debug("Making POST request to {}{} with {}", baseUrl.getHost, url, payload)
-    val request = RequestBuilding.Post(url, payload).withHeaders(scala.collection.immutable.Seq.concat(headers))
+    system.log.debug(
+      "Making POST request to {}{} with {}",
+      baseUrl.getHost,
+      url,
+      payload
+    )
+    val request = RequestBuilding
+      .Post(url, payload)
+      .withHeaders(scala.collection.immutable.Seq.concat(headers))
     Source.single((request, 0)).via(connectionFlow).runWith(Sink.head).map {
       case (response, _) => response.get
     }
   }
 
-  def put[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(implicit m: ToEntityMarshaller[T]): Future[HttpResponse] = {
+  def put[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(
+      implicit m: ToEntityMarshaller[T]
+  ): Future[HttpResponse] = {
     val url = s"${baseUrl.getPath}${path}"
-    system.log.debug("Making PUT request to {}{} with {}", baseUrl.getHost, url, payload)
-    val request = RequestBuilding.Put(url, payload).withHeaders(scala.collection.immutable.Seq.concat(headers))
+    system.log.debug(
+      "Making PUT request to {}{} with {}",
+      baseUrl.getHost,
+      url,
+      payload
+    )
+    val request = RequestBuilding
+      .Put(url, payload)
+      .withHeaders(scala.collection.immutable.Seq.concat(headers))
     Source.single((request, 0)).via(connectionFlow).runWith(Sink.head).map {
       case (response, _) => response.get
     }
   }
 
-  def delete[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(implicit m: ToEntityMarshaller[T]): Future[HttpResponse] = {
+  def delete[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(
+      implicit m: ToEntityMarshaller[T]
+  ): Future[HttpResponse] = {
     val url = s"${baseUrl.getPath}${path}"
-    system.log.debug("Making DELETE request to {}{} with {}", baseUrl.getHost, url, payload)
-    val request = RequestBuilding.Delete(url, payload).withHeaders(scala.collection.immutable.Seq.concat(headers))
+    system.log.debug(
+      "Making DELETE request to {}{} with {}",
+      baseUrl.getHost,
+      url,
+      payload
+    )
+    val request = RequestBuilding
+      .Delete(url, payload)
+      .withHeaders(scala.collection.immutable.Seq.concat(headers))
     Source.single((request, 0)).via(connectionFlow).runWith(Sink.head).map {
       case (response, _) => response.get
     }
   }
 
-  def head[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(implicit m: ToEntityMarshaller[T]): Future[HttpResponse] = {
+  def head[T](path: String, payload: T, headers: Seq[HttpHeader] = Seq())(
+      implicit m: ToEntityMarshaller[T]
+  ): Future[HttpResponse] = {
     val url = s"${baseUrl.getPath}${path}"
-    system.log.debug("Making HEAD request to {}{} with {}", baseUrl.getHost, url, payload)
-    val request = RequestBuilding.Head(url, payload).withHeaders(scala.collection.immutable.Seq.concat(headers))
+    system.log.debug(
+      "Making HEAD request to {}{} with {}",
+      baseUrl.getHost,
+      url,
+      payload
+    )
+    val request = RequestBuilding
+      .Head(url, payload)
+      .withHeaders(scala.collection.immutable.Seq.concat(headers))
     Source.single((request, 0)).via(connectionFlow).runWith(Sink.head).map {
       case (response, _) => response.get
     }
@@ -82,6 +133,10 @@ class HttpFetcherImpl(baseUrl: URL)(implicit val system: ActorSystem,
 }
 
 object HttpFetcher {
-  def apply(baseUrl: URL)(implicit system: ActorSystem,
-                          materializer: Materializer, ec: ExecutionContext) = new HttpFetcherImpl(baseUrl)
+
+  def apply(baseUrl: URL)(
+      implicit system: ActorSystem,
+      materializer: Materializer,
+      ec: ExecutionContext
+  ) = new HttpFetcherImpl(baseUrl)
 }

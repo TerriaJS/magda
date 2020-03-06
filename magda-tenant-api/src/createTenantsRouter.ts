@@ -1,14 +1,14 @@
-import * as express from "express";
+import express from "express";
 import Database from "./Database";
 import {
     MAGDA_TENANT_ID_HEADER,
     MAGDA_ADMIN_PORTAL_ID
-} from "@magda/typescript-common/dist/registry/TenantConsts";
-import { mustBeAdmin } from "@magda/typescript-common/dist/authorization-api/authMiddleware";
+} from "magda-typescript-common/src/registry/TenantConsts";
+import { mustBeAdmin } from "magda-typescript-common/src/authorization-api/authMiddleware";
 import {
     installStatusRouter,
     createServiceProbe
-} from "@magda/typescript-common/dist/express/status";
+} from "magda-typescript-common/src/express/status";
 
 export interface ApiRouterOptions {
     database: Database;

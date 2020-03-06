@@ -1,8 +1,8 @@
 import "isomorphic-fetch";
 import buildConnectorManifest from "./buildConnectorManifest";
 import K8SApi from "./k8sApi";
-import * as express from "express";
-import * as HttpProxy from "http-proxy";
+import express from "express";
+import HttpProxy from "http-proxy";
 
 // Use type merging to add a connectorProxy property to Express's Request object.
 declare global {

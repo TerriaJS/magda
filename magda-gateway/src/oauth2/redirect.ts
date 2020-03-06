@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as URI from "urijs";
+import URI from "urijs";
 
 export function redirectOnSuccess(toURL: string, req: Request, res: Response) {
     const source = URI(toURL)

@@ -32,7 +32,14 @@ object DateParser {
 
   private val constants: List[DateConstant] = List(Now)
   private val constantMap = constants
-    .flatMap(constant => constant.strings.flatMap(string => List(string, string.toUpperCase(), string.toLowerCase()).map((constant, _))))
+    .flatMap(
+      constant =>
+        constant.strings.flatMap(
+          string =>
+            List(string, string.toUpperCase(), string.toLowerCase())
+              .map((constant, _))
+        )
+    )
     .map { case (constant, string) => (string, constant) }
     .toMap
 
@@ -40,9 +47,18 @@ object DateParser {
     val format: String = ""
     val precision: ChronoUnit = ChronoUnit.YEARS
   }
-  case class OffsetDateTimeFormat(override val format: String, override val precision: ChronoUnit) extends Format
-  case class DateTimeFormat(override val format: String, override val precision: ChronoUnit) extends Format
-  case class DateFormat(override val format: String, override val precision: ChronoUnit) extends Format
+  case class OffsetDateTimeFormat(
+      override val format: String,
+      override val precision: ChronoUnit
+  ) extends Format
+  case class DateTimeFormat(
+      override val format: String,
+      override val precision: ChronoUnit
+  ) extends Format
+  case class DateFormat(
+      override val format: String,
+      override val precision: ChronoUnit
+  ) extends Format
 
   // TODO: push the strings into config.
   private val timeFormats = List(
@@ -78,13 +94,18 @@ object DateParser {
     dateSeparator <- dateSeparators
     dateFormat <- dateFormats
   } yield {
-    val fullDateTimeFormat: String = s"${dateFormat.format}${dateTimeSeparator}${timeFormat.format}"
+    val fullDateTimeFormat: String =
+      s"${dateFormat.format}${dateTimeSeparator}${timeFormat.format}"
     formatToFormat(fullDateTimeFormat, dateSeparator, timeFormat)
   }
 
   val formats = formatsWithoutTimes ++ formatsWithTimes
 
-  private def formatToFormat(format: String, dateSeparator: String, originalFormat: Format) = {
+  private def formatToFormat(
+      format: String,
+      dateSeparator: String,
+      originalFormat: Format
+  ) = {
     val replacedDateFormat = format.replace("{sep}", dateSeparator)
     val regex = replacedDateFormat
       .replaceAll("'", "")
@@ -114,30 +135,54 @@ object DateParser {
   case class ConstantResult(dateConstant: DateConstant) extends ParseResult
   case object ParseFailure extends ParseResult
 
-  private def roundUp[T <: Temporal](roundUp: Boolean, date: T, originalFormat: Format): T =
-    if (roundUp) date.plus(1, originalFormat.precision).minus(1, ChronoUnit.MILLIS).asInstanceOf[T] else date
+  private def roundUp[T <: Temporal](
+      roundUp: Boolean,
+      date: T,
+      originalFormat: Format
+  ): T =
+    if (roundUp)
+      date
+        .plus(1, originalFormat.precision)
+        .minus(1, ChronoUnit.MILLIS)
+        .asInstanceOf[T]
+    else date
 
-  def parseDate(input: String, shouldRoundUp: Boolean)(implicit defaultOffset: ZoneOffset): ParseResult = {
+  def parseDate(input: String, shouldRoundUp: Boolean)(
+      implicit defaultOffset: ZoneOffset
+  ): ParseResult = {
     val raw = input.toUpperCase
 
     if (raw.isEmpty())
       ParseFailure
     else
       constantMap.get(raw) match {
-        case Some(constant) => ConstantResult(constant) // If the date is a constant representation of "Now", assume the temporal coverage is the last modified date.
+        case Some(constant) =>
+          ConstantResult(constant) // If the date is a constant representation of "Now", assume the temporal coverage is the last modified date.
         case None =>
-          formats
-            .view
+          formats.view
             .filter { case (regex, _, _) => regex.matches(raw) }
             .map {
               case (regex, format, originalFormat) => {
                 catching(classOf[DateTimeParseException]) opt {
                   originalFormat match {
-                    case OffsetDateTimeFormat(_, _) => roundUp(shouldRoundUp, OffsetDateTime.parse(raw, format), originalFormat)
-                    case DateTimeFormat(_, _) => roundUp(shouldRoundUp, LocalDateTime.parse(raw, format), originalFormat)
-                      .atOffset(defaultOffset)
-                    case DateFormat(_, _) => roundUp(shouldRoundUp, LocalDate.parse(raw, format).atStartOfDay(), originalFormat)
-                      .atOffset(defaultOffset)
+                    case OffsetDateTimeFormat(_, _) =>
+                      roundUp(
+                        shouldRoundUp,
+                        OffsetDateTime.parse(raw, format),
+                        originalFormat
+                      )
+                    case DateTimeFormat(_, _) =>
+                      roundUp(
+                        shouldRoundUp,
+                        LocalDateTime.parse(raw, format),
+                        originalFormat
+                      ).atOffset(defaultOffset)
+                    case DateFormat(_, _) =>
+                      roundUp(
+                        shouldRoundUp,
+                        LocalDate.parse(raw, format).atStartOfDay(),
+                        originalFormat
+                      ).atOffset(defaultOffset)
                   }
                 }
               }
@@ -150,12 +195,15 @@ object DateParser {
       }
   }
 
-  def parseDateDefault(raw: String, shouldRoundUp: Boolean)(implicit defaultOffset: ZoneOffset): Option[OffsetDateTime] =
+  def parseDateDefault(raw: String, shouldRoundUp: Boolean)(
+      implicit defaultOffset: ZoneOffset
+  ): Option[OffsetDateTime] =
     parseDate(raw, shouldRoundUp) match {
       case DateTimeResult(zonedDateTime) => Some(zonedDateTime)
-      case ConstantResult(constant) => constant match {
-        case Now => Some(OffsetDateTime.now())
-      }
+      case ConstantResult(constant) =>
+        constant match {
+          case Now => Some(OffsetDateTime.now())
+        }
       case ParseFailure => None
     }
 }

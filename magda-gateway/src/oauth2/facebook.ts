@@ -1,9 +1,9 @@
 import { Strategy as FBStrategy } from "passport-facebook";
-import * as express from "express";
+import express from "express";
 import { Router } from "express";
 import { Authenticator, Profile } from "passport";
 
-import ApiClient from "@magda/typescript-common/dist/authorization-api/ApiClient";
+import ApiClient from "magda-typescript-common/src/authorization-api/ApiClient";
 import createOrGetUserToken from "../createOrGetUserToken";
 import { redirectOnSuccess, redirectOnError } from "./redirect";
 

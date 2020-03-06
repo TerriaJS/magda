@@ -11,31 +11,36 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
 import au.csiro.data61.magda.api.BaseMagdaApi
 import au.csiro.data61.magda.indexer.search.SearchIndexer
-import au.csiro.data61.magda.model.Registry.{EventType, RegistryEvent, WebHookPayload}
-import au.csiro.data61.magda.model.RegistryConverters
+import au.csiro.data61.magda.model.Registry._
 import au.csiro.data61.magda.model.misc.DataSet
+import au.csiro.data61.magda.model.TenantId.{SpecifiedTenantId}
 import au.csiro.data61.magda.util.ErrorHandling.CausedBy
 import com.typesafe.config.Config
+import au.csiro.data61.magda.client.Conversions
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class WebhookApi(indexer: SearchIndexer)(implicit system: ActorSystem, config: Config) extends BaseMagdaApi with RegistryConverters {
+class WebhookApi(indexer: SearchIndexer)(
+    implicit system: ActorSystem,
+    config: Config
+) extends BaseMagdaApi {
   implicit val ec: ExecutionContextExecutor = system.dispatcher
   override def getLogger: LoggingAdapter = system.log
 
-  implicit val defaultOffset: ZoneOffset = ZoneOffset.of(config.getString("time.defaultOffset"))
+  implicit val defaultOffset: ZoneOffset =
+    ZoneOffset.of(config.getString("time.defaultOffset"))
 
   /**
-  * @apiGroup Indexer
-  * @api {post} http://indexer/v0/registry-hook Hook endpoint (internal)
-  *
-  * @apiDescription Registry webhook endpoint - accepts webhook payloads from the registry.
-  *   This generally means datasets from the registry as they're updated. This shouldn't
-  *   be called manually, it's purely for registry use.
-  *
-  * @apiSuccess (Success 202) {String} Response (blank)
-  * @apiUse GenericError
-  */
+    * @apiGroup Indexer
+    * @api {post} http://indexer/v0/registry-hook Hook endpoint (internal)
+    *
+    * @apiDescription Registry webhook endpoint - accepts webhook payloads from the registry.
+    *   This generally means datasets from the registry as they're updated. This shouldn't
+    *   be called manually, it's purely for registry use.
+    *
+    * @apiSuccess (Success 202) {String} Response (blank)
+    * @apiUse GenericError
+    */
   val routes: Route =
     magdaRoute {
       post {
@@ -49,33 +54,43 @@ class WebhookApi(indexer: SearchIndexer)(implicit system: ActorSystem, config: C
 
         entity(as[WebHookPayload]) { payload =>
           val events = payload.events.getOrElse(List())
-          val idsToDelete = events.filter(_.eventType == EventType.DeleteRecord)
-            .map(event => {
-              val recordId = event.data.getFields("recordId").head.convertTo[String]
-              val tenantId = RegistryEvent.getTenantId(event)
-              (recordId, tenantId)
-            })
-            .map( result => DataSet.uniqueEsDocumentId(result._1 ,result._2))
+          val idsToDelete = events
+            .filter(_.eventType == EventType.DeleteRecord)
+            .map(
+              event =>
+                DataSet.uniqueEsDocumentId(
+                  event.data.getFields("recordId").head.convertTo[String],
+                  event.tenantId
+                )
+            )
 
-          val deleteOp = () => idsToDelete match {
-            case Nil  => Future.successful(Unit)
-            case list =>
-              indexer.delete(list)
-          }
+          val deleteOp = () =>
+            idsToDelete match {
+              case Nil => Future.successful(Unit)
+              case list =>
+                indexer.delete(list)
+            }
 
-          val insertOp = () => payload.records match {
-            case None | Some(Nil) => Future.successful(Unit)
-            case Some(list) =>
-              val dataSets = list.map(record => try {
-                Some(convertRegistryDataSet(record, Some(system.log)))
-              } catch {
-                case CausedBy(e: spray.json.DeserializationException) =>
-                  system.log.error(e, "When converting {}", record.id)
-                  None
-              })
+          val insertOp = () =>
+            payload.records match {
+              case None | Some(Nil) => Future.successful(Unit)
+              case Some(list) =>
+                val dataSets = list.map(
+                  record =>
+                    try {
+                      Some(
+                        Conversions
+                          .convertRegistryDataSet(record, Some(system.log))
+                      )
+                    } catch {
+                      case CausedBy(e: spray.json.DeserializationException) =>
+                        system.log.error(e, "When converting {}", record.id)
+                        None
+                    }
+                )
 
-              indexer.index(Source(dataSets.flatten))
-          }
+                indexer.index(Source(dataSets.flatten))
+            }
 
           val future = deleteOp().flatMap(_ => insertOp())
 

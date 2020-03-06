@@ -1,17 +1,17 @@
 import {} from "mocha";
 import { expect } from "chai";
-import * as sinon from "sinon";
-import * as nock from "nock";
-import jsc from "@magda/typescript-common/dist/test/jsverify";
-import * as express from "express";
-import * as _ from "lodash";
+import sinon from "sinon";
+import nock from "nock";
+import jsc from "magda-typescript-common/src/test/jsverify";
+import express from "express";
+import _ from "lodash";
 import { Server } from "http";
 
 import {
     lcAlphaNumStringArbNe,
     lcAlphaNumStringArb,
     recordArb
-} from "@magda/typescript-common/dist/test/arbitraries";
+} from "magda-typescript-common/src/test/arbitraries";
 
 import minion from "../index";
 import MinionOptions from "../MinionOptions";

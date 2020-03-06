@@ -1,8 +1,0 @@
-image: {}
-schedule: "0 0 14,28 * *"
-resources:
-  requests:
-    cpu: 50m
-    memory: 40Mi
-  limits:
-    cpu: 200m

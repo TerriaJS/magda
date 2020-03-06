@@ -29,6 +29,13 @@ const argv = yargs
         example: "registry.gitlab.com/magda-data/",
         default: ""
     })
+    .option("fromName", {
+        describe:
+            "The package name that used to generate the fromTag. Used to optionally override the docker nanme config in package.json during the auto tagging.",
+        type: "string",
+        example: "data61/magda-ckan-connector",
+        default: ""
+    })
     .option("fromVersion", {
         describe:
             "The version of the existing image that will be given a new tag",
@@ -42,6 +49,13 @@ const argv = yargs
         example: "registry.gitlab.com/magda-data/",
         default: ""
     })
+    .option("toName", {
+        describe:
+            "The package name that used to generate the toTag. Used to optionally override the docker nanme config in package.json during the auto tagging.",
+        type: "string",
+        example: "data61/magda-ckan-connector",
+        default: ""
+    })
     .option("toVersion", {
         describe: "The version for the tag to push to",
         type: "string",
@@ -49,7 +63,8 @@ const argv = yargs
         default: getVersions()[0]
     }).argv;
 
-const fromTag = argv.fromPrefix + getName() + ":" + argv.fromVersion;
+const fromTag =
+    argv.fromPrefix + getName(argv.fromName) + ":" + argv.fromVersion;
 
 const pullProcess = childProcess.spawnSync("docker", ["pull", fromTag], {
     stdio: ["pipe", "inherit", "inherit"],
@@ -60,8 +75,7 @@ if (pullProcess.status !== 0) {
     process.exit(pullProcess.status);
 }
 
-const toTag = argv.toPrefix + getName() + ":" + argv.toVersion;
-console.log(toTag);
+const toTag = argv.toPrefix + getName(argv.toName) + ":" + argv.toVersion;
 
 const tagProcess = childProcess.spawnSync("docker", ["tag", fromTag, toTag], {
     stdio: ["pipe", "inherit", "inherit"],

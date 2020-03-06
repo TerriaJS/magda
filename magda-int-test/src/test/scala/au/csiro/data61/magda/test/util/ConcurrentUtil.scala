@@ -7,6 +7,8 @@ import scala.concurrent.Future
 object ConcurrentUtil {
 
   implicit class RichFuture[T](future: Future[T]) {
-    def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)
+
+    def await(implicit duration: Duration = 10.seconds): T =
+      Await.result(future, duration)
   }
 }

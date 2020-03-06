@@ -1,15 +1,15 @@
-import mockUserDataStore from "@magda/typescript-common/dist/test/mockUserDataStore";
+import mockUserDataStore from "magda-typescript-common/src/test/mockUserDataStore";
 import {
     User,
     Role,
     Permission
-} from "@magda/typescript-common/dist/authorization-api/model";
+} from "magda-typescript-common/src/authorization-api/model";
 import { Maybe } from "tsmonad";
-import * as sinon from "sinon";
-import arrayToMaybe from "@magda/typescript-common/dist/util/arrayToMaybe";
+import sinon from "sinon";
+import arrayToMaybe from "magda-typescript-common/src/util/arrayToMaybe";
 import Database from "../Database";
 import NestedSetModelQueryer, { NodeRecord } from "../NestedSetModelQueryer";
-import * as pg from "pg";
+import pg from "pg";
 
 export default class MockDatabase {
     getUser(id: string): Promise<Maybe<User>> {

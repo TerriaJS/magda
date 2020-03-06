@@ -4,10 +4,10 @@ import com.monsanto.labs.mwundo.GeoJson._
 import spray.json.DefaultJsonProtocol
 
 /**
- * Spray json marshallers for GeoJSON spec: http://geojson.org/geojson-spec.html
- *
- * This is copy-pasted from mwundo because it hits a version conflict with spray json and causes the JVM to crash.
- */
+  * Spray json marshallers for GeoJSON spec: http://geojson.org/geojson-spec.html
+  *
+  * This is copy-pasted from mwundo because it hits a version conflict with spray json and causes the JVM to crash.
+  */
 // scalastyle:off number.of.types
 // scalastyle:off number.of.methods
 object GeoJsonFormats extends DefaultJsonProtocol {
@@ -15,8 +15,8 @@ object GeoJsonFormats extends DefaultJsonProtocol {
 
   implicit object CoordinateFormat extends JsonFormat[Coordinate] {
 
-    private def cleanNumberString(str:String):String = {
-      val cleanedStr = str.replaceAll("\"","").trim
+    private def cleanNumberString(str: String): String = {
+      val cleanedStr = str.replaceAll("\"", "").trim
       val parts = cleanedStr.split("\\.")
       if (parts.length > 2) {
         // --- drop all dots except the first one
@@ -32,11 +32,11 @@ object GeoJsonFormats extends DefaultJsonProtocol {
       * Quote all number in Json will avoid this exception and we will have the chance to convert it to
       * BigDecimal
       * */
-    def quoteNumbersInJson(str:String):String = {
+    def quoteNumbersInJson(str: String): String = {
       str.replaceAll("([\\d-+.]+)", "\"$1\"")
     }
 
-    def convertStringToDouble(str:String):Double = {
+    def convertStringToDouble(str: String): Double = {
       cleanNumberString(str).toDouble
     }
 
@@ -47,13 +47,19 @@ object GeoJsonFormats extends DefaultJsonProtocol {
 
     def read(json: JsValue): Coordinate = json match {
       case JsArray(is) =>
-        Coordinate(convertStringToDouble(is(0).toJson.toString), convertStringToDouble(is(1).toJson.toString))
+        Coordinate(
+          convertStringToDouble(is(0).toJson.toString),
+          convertStringToDouble(is(1).toJson.toString)
+        )
       case _ => deserializationError(s"'$json' is not a valid Coordinate")
     }
   }
 
   // Pass `type` and f() in explicitly to avoid using reflection
-  sealed abstract class CoordFormat[T <: Coords[C] with Typed, C](`type`: String, f: (C) => T)(implicit cFmt: JsonFormat[C])
+  sealed abstract class CoordFormat[T <: Coords[C] with Typed, C](
+      `type`: String,
+      f: (C) => T
+  )(implicit cFmt: JsonFormat[C])
       extends RootJsonFormat[T] {
 
     def write(obj: T): JsValue = JsObject(
@@ -69,14 +75,28 @@ object GeoJsonFormats extends DefaultJsonProtocol {
     }
   }
 
-  implicit object PointFormat extends CoordFormat[Point, Coordinate]("Point", Point)
-  implicit object MultiPointFormat extends CoordFormat[MultiPoint, Seq[Coordinate]]("MultiPoint", MultiPoint)
-  implicit object LineStringFormat extends CoordFormat[LineString, Seq[Coordinate]]("LineString", LineString)
-  implicit object MultiLineStringFormat extends CoordFormat[MultiLineString, Seq[Seq[Coordinate]]]("MultiLineString", MultiLineString)
-  implicit object PolygonFormat extends CoordFormat[Polygon, Seq[Seq[Coordinate]]]("Polygon", Polygon)
-  implicit object MultiPolygonFormat extends CoordFormat[MultiPolygon, Seq[Seq[Seq[Coordinate]]]]("MultiPolygon", MultiPolygon)
+  implicit object PointFormat
+      extends CoordFormat[Point, Coordinate]("Point", Point)
+  implicit object MultiPointFormat
+      extends CoordFormat[MultiPoint, Seq[Coordinate]]("MultiPoint", MultiPoint)
+  implicit object LineStringFormat
+      extends CoordFormat[LineString, Seq[Coordinate]]("LineString", LineString)
+  implicit object MultiLineStringFormat
+      extends CoordFormat[MultiLineString, Seq[Seq[Coordinate]]](
+        "MultiLineString",
+        MultiLineString
+      )
+  implicit object PolygonFormat
+      extends CoordFormat[Polygon, Seq[Seq[Coordinate]]]("Polygon", Polygon)
+  implicit object MultiPolygonFormat
+      extends CoordFormat[MultiPolygon, Seq[Seq[Seq[Coordinate]]]](
+        "MultiPolygon",
+        MultiPolygon
+      )
 
-  implicit def GeometryCollectionFormat[G <: Geometry](implicit gFmt: JsonFormat[G]) = new RootJsonFormat[GeometryCollection[G]] {
+  implicit def GeometryCollectionFormat[G <: Geometry](
+      implicit gFmt: JsonFormat[G]
+  ) = new RootJsonFormat[GeometryCollection[G]] {
 
     def write(obj: GeometryCollection[G]): JsValue = JsObject(
       ("type", JsString("GeometryCollection")),
@@ -84,16 +104,21 @@ object GeoJsonFormats extends DefaultJsonProtocol {
     )
 
     def read(json: JsValue): GeometryCollection[G] = json match {
-      case JsObject(jsObj) if jsObj.get("type").contains(JsString("GeometryCollection")) =>
+      case JsObject(jsObj)
+          if jsObj.get("type").contains(JsString("GeometryCollection")) =>
         GeometryCollection[G](
           jsObj("geometries").convertTo[Seq[G]]
         )
 
-      case _ => deserializationError(s"'$json' is not a valid GeometryCollection")
+      case _ =>
+        deserializationError(s"'$json' is not a valid GeometryCollection")
     }
   }
 
-  implicit def FeatureFormat[G <: Geometry, P](implicit gFmt: JsonFormat[G], pFmt: JsonFormat[P]) = new RootJsonFormat[Feature[G, P]] {
+  implicit def FeatureFormat[G <: Geometry, P](
+      implicit gFmt: JsonFormat[G],
+      pFmt: JsonFormat[P]
+  ) = new RootJsonFormat[Feature[G, P]] {
 
     def write(obj: Feature[G, P]): JsValue = {
       val withoutID = Seq(
@@ -104,14 +129,16 @@ object GeoJsonFormats extends DefaultJsonProtocol {
 
       JsObject(
         (
-          if (obj.id.isEmpty) withoutID else withoutID :+ (("id", obj.id.toJson))
+          if (obj.id.isEmpty) withoutID
+          else withoutID :+ (("id", obj.id.toJson))
         ): _*
       )
     }
 
     def read(json: JsValue): Feature[G, P] =
       json match {
-        case JsObject(jsObj) if jsObj.get("type").contains(JsString("Feature")) =>
+        case JsObject(jsObj)
+            if jsObj.get("type").contains(JsString("Feature")) =>
           Feature[G, P](
             jsObj("geometry").convertTo[G],
             jsObj("properties").convertTo[P],
@@ -122,7 +149,9 @@ object GeoJsonFormats extends DefaultJsonProtocol {
       }
   }
 
-  implicit def FeatureCollectionFormat[G <: Geometry, P](implicit fFmt: JsonFormat[Feature[G, P]]) = new RootJsonFormat[FeatureCollection[G, P]] {
+  implicit def FeatureCollectionFormat[G <: Geometry, P](
+      implicit fFmt: JsonFormat[Feature[G, P]]
+  ) = new RootJsonFormat[FeatureCollection[G, P]] {
 
     def write(obj: FeatureCollection[G, P]): JsValue = JsObject(
       ("type", JsString(obj.`type`)),
@@ -130,12 +159,14 @@ object GeoJsonFormats extends DefaultJsonProtocol {
     )
 
     def read(json: JsValue): FeatureCollection[G, P] = json match {
-      case JsObject(p) if p.get("type").contains(JsString("FeatureCollection")) =>
+      case JsObject(p)
+          if p.get("type").contains(JsString("FeatureCollection")) =>
         FeatureCollection[G, P](
           p("features").convertTo[Seq[Feature[G, P]]]
         )
 
-      case _ => deserializationError(s"'$json' is not a valid FeatureCollection")
+      case _ =>
+        deserializationError(s"'$json' is not a valid FeatureCollection")
     }
   }
 }

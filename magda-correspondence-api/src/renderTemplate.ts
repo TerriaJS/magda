@@ -1,7 +1,7 @@
-import * as MarkdownIt from "markdown-it";
+import MarkdownIt from "markdown-it";
 
 import { DatasetMessage } from "./model";
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
+import { Record } from "magda-typescript-common/src/generated/registry/api";
 import EmailTemplateRender from "./EmailTemplateRender";
 import { Attachment } from "./SMTPMailer";
 

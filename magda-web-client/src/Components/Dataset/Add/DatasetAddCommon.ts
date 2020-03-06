@@ -5,7 +5,7 @@ import { fetchOrganization } from "api-clients/RegistryApis";
 import { config } from "config";
 import { User } from "reducers/userManagementReducer";
 
-export type File = {
+export type Distribution = {
     title: string;
     description?: string;
     issued?: string;
@@ -19,7 +19,7 @@ export type File = {
     mediaType?: string;
     format?: string;
 
-    datasetTitle: string;
+    datasetTitle?: string;
     author?: string;
     keywords?: string[];
     themes?: string[];
@@ -29,26 +29,35 @@ export type File = {
     similarFingerprint?: any;
     equalHash?: string;
 
-    _state: FileState;
+    // --- An UUID for identify a file during the processing. array index is not a reliable id.
+    id?: string;
+    creationSource?: DistributionSource;
+    _state: DistributionState;
     _progress?: number;
 };
 
-export enum FileState {
+export enum DistributionSource {
+    File,
+    DatasetUrl,
+    Api
+}
+
+export enum DistributionState {
     Added,
     Reading,
     Processing,
     Ready
 }
 
-export function fileStateToText(state: FileState) {
+export function distributionStateToText(state: DistributionState) {
     switch (state) {
-        case FileState.Added:
+        case DistributionState.Added:
             return "Added";
-        case FileState.Reading:
+        case DistributionState.Reading:
             return "Reading";
-        case FileState.Processing:
+        case DistributionState.Processing:
             return "Processing";
-        case FileState.Ready:
+        case DistributionState.Ready:
             return "Ready";
         default:
             return "Unknown";
@@ -106,10 +115,14 @@ export type DatasetPublishing = {
     level: string;
     notesToApprover?: string;
     contactPointDisplay?: ContactPointDisplayOption;
+    publishAsOpenData?: {
+        [key: string]: boolean;
+    };
 };
 
 type SpatialCoverage = {
     bbox?: [number, number, number, number];
+    spatialDataInputMethod?: string;
     lv1Id?: string;
     lv2Id?: string;
     lv3Id?: string;
@@ -131,7 +144,7 @@ type Currency = {
 };
 
 export type State = {
-    files: File[];
+    distributions: Distribution[];
     dataset: Dataset;
     datasetPublishing: DatasetPublishing;
     processing: boolean;
@@ -146,6 +159,8 @@ export type State = {
     _createdDate: Date;
 
     licenseLevel: "dataset" | "distribution";
+
+    shouldUploadToStorageApi: boolean;
 
     isPublishing: boolean;
     error: Error | null;
@@ -167,7 +182,7 @@ type Access = {
 
 export function createBlankState(user?: User): State {
     return {
-        files: [],
+        distributions: [],
         processing: false,
         dataset: {
             title: "",
@@ -180,7 +195,17 @@ export function createBlankState(user?: User): State {
             level: "agency",
             contactPointDisplay: "team"
         },
-        spatialCoverage: {},
+        spatialCoverage: {
+            // Australia, Mainland
+            lv1Id: "1",
+            bbox: [
+                109.951171875,
+                -45.398449976304086,
+                155.0390625,
+                -9.172601695217201
+            ],
+            spatialDataInputMethod: "region"
+        },
         temporalCoverage: {
             intervals: []
         },
@@ -192,6 +217,7 @@ export function createBlankState(user?: User): State {
         },
         licenseLevel: "dataset",
         isPublishing: false,
+        shouldUploadToStorageApi: false,
         error: null,
         _createdDate: new Date(),
         _lastModifiedDate: new Date()

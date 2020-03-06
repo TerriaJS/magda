@@ -3,15 +3,15 @@ import {
     User,
     Role,
     Permission
-} from "@magda/typescript-common/dist/authorization-api/model";
+} from "magda-typescript-common/src/authorization-api/model";
 import { Maybe } from "tsmonad";
-import arrayToMaybe from "@magda/typescript-common/dist/util/arrayToMaybe";
-import * as pg from "pg";
-import * as _ from "lodash";
-import GenericError from "@magda/typescript-common/dist/authorization-api/GenericError";
-import { getUserId } from "@magda/typescript-common/dist/session/GetUserId";
+import arrayToMaybe from "magda-typescript-common/src/util/arrayToMaybe";
+import pg from "pg";
+import _ from "lodash";
+import GenericError from "magda-typescript-common/src/authorization-api/GenericError";
+import { getUserId } from "magda-typescript-common/src/session/GetUserId";
 import NestedSetModelQueryer from "./NestedSetModelQueryer";
-import isUuid from "@magda/typescript-common/dist/util/isUuid";
+import isUuid from "magda-typescript-common/src/util/isUuid";
 
 export interface DatabaseOptions {
     dbHost: string;
@@ -264,6 +264,7 @@ export default class Database {
 
     async getCurrentUserInfo(req: any, jwtSecret: string): Promise<User> {
         const userId = getUserId(req, jwtSecret).valueOr(null);
+
         if (!userId || userId === "") {
             return await this.getDefaultAnonymousUserInfo();
         }

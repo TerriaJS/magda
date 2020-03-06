@@ -1,10 +1,10 @@
-import JsonTransformer, { JsonTransformerOptions } from "src/JsonTransformer";
-import ConnectorRecordId from "src/ConnectorRecordId";
+import JsonTransformer, { JsonTransformerOptions } from "../JsonTransformer";
+import ConnectorRecordId from "../ConnectorRecordId";
 import { expect } from "chai";
 import "mocha";
-import AspectBuilder from "src/AspectBuilder";
-import * as fs from "fs";
-import { Record } from "src/generated/registry/api";
+import AspectBuilder from "../AspectBuilder";
+import fs from "fs";
+import { Record } from "../generated/registry/api";
 
 describe("JsonTransformer", () => {
     const tenantId1 = 1;

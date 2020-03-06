@@ -83,4 +83,34 @@
         border-radius: 2px;
         border: solid 1px #979797;
     }
+
+    .au-error-text {
+        font-size: 16px;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #d60000;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .react-select-with-validation-container {
+        .au-error-text {
+            font-size: 16px;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #d60000;
+            display: block;
+            margin-bottom: 10px;
+        }
+    }
+
+    .au-control-input__text:before,
+    .au-control-input__text:after {
+        border: 9px solid transparent;
+    }
+
+    .au-control-input__input[type="radio"]:focus
+        + .au-control-input__text:before {
+        box-shadow: none;
+    }
 }

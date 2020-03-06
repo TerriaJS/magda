@@ -5,9 +5,12 @@ import {
     textEditorEx,
     MultilineTextEditor
 } from "Components/Editing/Editors/textEditor";
+
+import moment from "moment";
 import {
     dateEditor,
-    multiDateIntervalEditor
+    multiDateIntervalEditor,
+    MagdaSingleDatePicker
 } from "Components/Editing/Editors/dateEditor";
 
 import ToolTip from "Components/Dataset/Add/ToolTip";
@@ -30,9 +33,14 @@ import ReactSelectStyles from "../../../../Common/react-select/ReactSelectStyles
 import { State } from "Components/Dataset/Add/DatasetAddCommon";
 import { User } from "reducers/userManagementReducer";
 
+import ValidationRequiredLabel from "../../ValidationRequiredLabel";
+
 import helpIcon from "assets/help.svg";
 
 import DatasetAutoComplete from "../People/DatasetAutocomplete";
+
+import { config } from "config";
+
 import "../People/DatasetAutocomplete.scss";
 
 import "./index.scss";
@@ -65,7 +73,10 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                 <h2>Details and Contents</h2>
                 <h3 className="with-underline">Title and language</h3>
                 <div className="question-title">
-                    <h4>What is the title of the dataset?</h4>
+                    <h4>
+                        What is the title of the dataset?
+                        <ValidationRequiredLabel validationFieldPath="$.dataset.title" />
+                    </h4>
                     <ToolTip>
                         We recommend ensuring dataset file names are descriptive
                         so users can easily understand the contents.
@@ -73,12 +84,13 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                     <div>
                         <AlwaysEditor
                             value={dataset.title}
+                            validationFieldPath="$.dataset.title"
+                            validationFieldLabel="Dataset Title"
                             onChange={editDataset("title")}
                             editor={textEditorEx({
                                 placeholder: dataset.title
                                     ? ""
-                                    : "Enter dataset title",
-                                required: true
+                                    : "Enter dataset title"
                             })}
                         />
                     </div>
@@ -130,6 +142,7 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                             onChange={editDataset("keywords")}
                             placeHolderText="Enter a keyword"
                             useVocabularyAutoCompleteInput={true}
+                            noManualInput={config.noManualKeywords}
                         />
                     </div>
                 </div>
@@ -146,13 +159,17 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                             value={dataset.themes}
                             onChange={editDataset("themes")}
                             placeHolderText="Enter a theme"
-                            useVocabularyAutoCompleteInput={false}
+                            options={config.datasetThemes}
+                            noManualInput={config.noManualThemes}
                         />
                     </div>
                 </div>
 
                 <div className="question-description">
-                    <h4>Please add a description for this dataset</h4>
+                    <h4>
+                        Please add a description for this dataset
+                        <ValidationRequiredLabel validationFieldPath="$.dataset.title" />
+                    </h4>
                     <ToolTip>
                         A good dataset description clearly and succintly
                         explains the contents, purpose and value of the dataset.
@@ -163,6 +180,8 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                     </ToolTip>
                     <div className="clearfix">
                         <MultilineTextEditor
+                            validationFieldPath="$.dataset.description"
+                            validationFieldLabel="Dataset Description"
                             value={dataset.description}
                             placeholder="Enter description text"
                             limit={250}
@@ -257,10 +276,12 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                     </div>
                     <div className="col-sm-4 question-recent-modify-date">
                         <h4>When was the dataset most recently modified?</h4>
-                        <AlwaysEditor
-                            value={dataset.modified}
-                            onChange={editDataset("modified")}
-                            editor={dateEditor}
+                        <MagdaSingleDatePicker
+                            callback={editDataset("modified")}
+                            date={dataset.modified}
+                            isOutsideRange={(date: moment.Moment) =>
+                                date.isAfter(moment().endOf("day"))
+                            }
                         />
                     </div>
                 </div>
@@ -290,7 +311,8 @@ export default function DatasetAddAccessAndUsePage(props: Props) {
                     <AlwaysEditor
                         value={temporalCoverage.intervals}
                         onChange={editTemporalCoverage("intervals")}
-                        editor={multiDateIntervalEditor}
+                        editor={multiDateIntervalEditor(true)}
+                        renderAbove={true}
                     />
                 </div>
                 <h3>Spatial extent</h3>

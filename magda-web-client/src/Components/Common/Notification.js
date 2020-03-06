@@ -1,7 +1,6 @@
 import React from "react";
 import "./Notification.scss";
 import close from "assets/close.svg";
-import AUpageAlert from "pancake/react/page-alerts";
 
 function Notification(props) {
     let type = props.type;
@@ -25,7 +24,9 @@ function Notification(props) {
 
     return (
         <div className="notification-box">
-            <AUpageAlert as={type} className="notification__inner">
+            <div
+                className={`au-page-alerts au-page-alerts--${type} notification__inner`}
+            >
                 {props.onDismiss && (
                     <button
                         onClick={props.onDismiss}
@@ -36,7 +37,7 @@ function Notification(props) {
                 )}
                 {title ? <h3>{title}</h3> : null}
                 <p>{detail}</p>
-            </AUpageAlert>
+            </div>
         </div>
     );
 }

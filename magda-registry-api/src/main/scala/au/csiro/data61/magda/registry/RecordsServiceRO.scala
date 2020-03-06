@@ -16,16 +16,18 @@ import io.swagger.annotations._
 import javax.ws.rs.Path
 import scalikejdbc.DB
 
+import au.csiro.data61.magda.client.AuthOperations
 import scala.concurrent.ExecutionContext
 
 @Path("/records")
 @io.swagger.annotations.Api(value = "records", produces = "application/json")
 class RecordsServiceRO(
+    authApiClient: RegistryAuthApiClient,
     config: Config,
-    authClient: AuthApiClient,
     system: ActorSystem,
     materializer: Materializer,
-    recordPersistence: RecordPersistence = DefaultRecordPersistence
+    recordPersistence: RecordPersistence,
+    eventPersistence: EventPersistence
 ) extends Protocols
     with SprayJsonSupport {
 
@@ -164,13 +166,16 @@ class RecordsServiceRO(
           ) =>
             val parsedAspectQueries = aspectQueries.map(AspectQuery.parse)
 
-            withRecordOpaQuery(AuthOperations.read)(
+            withRecordOpaQuery(
+              AuthOperations.read,
+              recordPersistence,
+              authApiClient
+            )(
               config,
               system,
               materializer,
               ec
             ) { opaQueries =>
-              assert(opaQueries.nonEmpty)
               complete {
                 DB readOnly { session =>
                   recordPersistence.getAllWithAspects(
@@ -270,18 +275,27 @@ class RecordsServiceRO(
       requiresTenantId { tenantId =>
         parameters('pageToken.?, 'start.as[Int].?, 'limit.as[Int].?) {
           (pageToken, start, limit) =>
-            withRecordOpaQuery(AuthOperations.read)(
+            withRecordOpaQuery(
+              AuthOperations.read,
+              recordPersistence,
+              authApiClient
+            )(
               config,
               system,
               materializer,
               ec
             ) { opaQueries =>
-              assert(opaQueries.nonEmpty)
-
               complete {
                 DB readOnly { session =>
                   recordPersistence
-                    .getAll(session, tenantId, opaQueries, pageToken, start, limit)
+                    .getAll(
+                      session,
+                      tenantId,
+                      opaQueries,
+                      pageToken,
+                      start,
+                      limit
+                    )
                 }
               }
             }
@@ -355,19 +369,27 @@ class RecordsServiceRO(
         parameters('aspect.*, 'aspectQuery.*) { (aspects, aspectQueries) =>
           val parsedAspectQueries = aspectQueries.map(AspectQuery.parse)
 
-          withRecordOpaQuery(AuthOperations.read)(
+          withRecordOpaQuery(
+            AuthOperations.read,
+            recordPersistence,
+            authApiClient
+          )(
             config,
             system,
             materializer,
             ec
           ) { opaQueries =>
-            assert(opaQueries.nonEmpty)
-
             complete {
               DB readOnly { session =>
                 CountResponse(
                   recordPersistence
-                    .getCount(session, tenantId, opaQueries, aspects, parsedAspectQueries)
+                    .getCount(
+                      session,
+                      tenantId,
+                      opaQueries,
+                      aspects,
+                      parsedAspectQueries
+                    )
                 )
               }
             }
@@ -441,13 +463,16 @@ class RecordsServiceRO(
         requiresTenantId { tenantId =>
           import scalikejdbc._
           parameters('aspect.*, 'limit.as[Int].?) { (aspect, limit) =>
-            withRecordOpaQuery(AuthOperations.read)(
+            withRecordOpaQuery(
+              AuthOperations.read,
+              recordPersistence,
+              authApiClient
+            )(
               this.config,
               system,
               materializer,
               ec
             ) { opaQueries =>
-              assert(opaQueries.nonEmpty)
               complete {
                 DB readOnly { session =>
                   "0" :: recordPersistence
@@ -551,7 +576,7 @@ class RecordsServiceRO(
       new ApiResponse(
         code = 404,
         message = "No record exists with that ID.",
-        response = classOf[BadRequest]
+        response = classOf[ApiError]
       )
     )
   )
@@ -560,13 +585,17 @@ class RecordsServiceRO(
       requiresTenantId { tenantId =>
         parameters('aspect.*, 'optionalAspect.*, 'dereference.as[Boolean].?) {
           (aspects, optionalAspects, dereference) =>
-            withRecordOpaQuery(AuthOperations.read)(
+            withRecordOpaQuery(
+              AuthOperations.read,
+              recordPersistence,
+              authApiClient,
+              Some(id)
+            )(
               config,
               system,
               materializer,
               ec
             ) { opaQueries =>
-              assert(opaQueries.nonEmpty)
               DB readOnly { session =>
                 recordPersistence.getByIdWithAspects(
                   session,
@@ -581,7 +610,7 @@ class RecordsServiceRO(
                   case None =>
                     complete(
                       StatusCodes.NotFound,
-                      BadRequest(
+                      ApiError(
                         "No record exists with that ID or it does not have the required aspects."
                       )
                     )
@@ -650,28 +679,31 @@ class RecordsServiceRO(
       new ApiResponse(
         code = 404,
         message = "No record exists with that ID.",
-        response = classOf[BadRequest]
+        response = classOf[ApiError]
       )
     )
   )
   def getByIdSummary: Route = get {
     path("summary" / Segment) { id =>
       requiresTenantId { tenantId =>
-        withRecordOpaQuery(AuthOperations.read)(
+        withRecordOpaQuery(
+          AuthOperations.read,
+          recordPersistence,
+          authApiClient,
+          Some(id)
+        )(
           config,
           system,
           materializer,
           ec
         ) { opaQueries =>
-          assert(opaQueries.nonEmpty)
-
           DB readOnly { session =>
             recordPersistence.getById(session, tenantId, opaQueries, id) match {
               case Some(record) => complete(record)
               case None =>
                 complete(
                   StatusCodes.NotFound,
-                  BadRequest("No record exists with that ID.")
+                  ApiError("No record exists with that ID.")
                 )
             }
           }
@@ -687,7 +719,19 @@ class RecordsServiceRO(
       getPageTokens ~
       getById ~
       getByIdSummary ~
-      new RecordAspectsServiceRO(system, materializer, config).route ~
-      new RecordHistoryService(config, authClient, system, materializer).route
-
+      new RecordAspectsServiceRO(
+        authApiClient,
+        system,
+        materializer,
+        config,
+        recordPersistence
+      ).route ~
+      new RecordHistoryService(
+        config,
+        authApiClient,
+        system,
+        materializer,
+        recordPersistence,
+        eventPersistence
+      ).route
 }

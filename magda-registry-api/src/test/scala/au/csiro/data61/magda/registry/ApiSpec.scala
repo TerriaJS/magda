@@ -8,20 +8,18 @@ import org.scalatest.Matchers
 import org.scalatest.fixture.FunSpec
 import org.slf4j.LoggerFactory
 
-import com.auth0.jwt.JWT
 import com.typesafe.config.Config
+import io.jsonwebtoken.Jwts;
 
 import akka.actor.ActorRef
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.marshalling.Marshal
-import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.model.HttpResponse
-import akka.http.scaladsl.model.ResponseEntity
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.server.AuthenticationFailedRejection
 import akka.http.scaladsl.server.AuthorizationFailedRejection
 import akka.http.scaladsl.server.MethodRejection
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.http.scaladsl.model._
 import au.csiro.data61.magda.Authentication
 import au.csiro.data61.magda.client.AuthApiClient
 import au.csiro.data61.magda.client.HttpFetcher
@@ -37,16 +35,25 @@ import scalikejdbc.config.TypesafeConfigReader
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import akka.pattern.gracefulStop
-import au.csiro.data61.magda.model.Registry.{MAGDA_ADMIN_PORTAL_ID, MAGDA_TENANT_ID_HEADER, MAGDA_SYSTEM_ID}
+import au.csiro.data61.magda.model.Registry._
+import io.jsonwebtoken.SignatureAlgorithm
+import java.{util => ju}
+import akka.http.scaladsl.marshalling.ToEntityMarshaller
 
-abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers with Protocols with SprayJsonSupport with MockFactory with AuthProtocols {
+abstract class ApiSpec
+    extends FunSpec
+    with ScalatestRouteTest
+    with Matchers
+    with Protocols
+    with SprayJsonSupport
+    with MockFactory
+    with AuthProtocols {
   override def beforeAll(): Unit = {
     Util.clearWebHookActorsCache()
   }
 
-  case class FixtureParam(api: Role => Api, webHookActor: ActorRef, asAdmin: HttpRequest => HttpRequest, asNonAdmin: HttpRequest => HttpRequest, fetcher: HttpFetcher, authClient: AuthApiClient)
-
-  val databaseUrl = Option(System.getenv("POSTGRES_URL")).getOrElse("jdbc:postgresql://localhost:5432/postgres")
+  val databaseUrl = Option(System.getenv("POSTGRES_URL"))
+    .getOrElse("jdbc:postgresql://localhost:5432/postgres")
 
   def addTenantIdHeader(tenantId: BigInt): RawHeader = {
     RawHeader(MAGDA_TENANT_ID_HEADER, tenantId.toString)
@@ -67,40 +74,49 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
   val DOMAIN_NAME_2: String = "test2"
 
   // Stop Flyway from producing so much spam that Travis terminates the process.
-  LoggerFactory.getLogger("org.flywaydb").asInstanceOf[Logger].setLevel(Level.WARN)
+  LoggerFactory
+    .getLogger("org.flywaydb")
+    .asInstanceOf[Logger]
+    .setLevel(Level.WARN)
 
   val flyway = new Flyway()
   flyway.setDataSource(databaseUrl, "postgres", "")
   flyway.setSchemas("test")
   flyway.setLocations("classpath:/sql")
-  flyway.setPlaceholders(Map("clientUserName" -> "client", "clientPassword" -> "password"))
+  flyway.setPlaceholders(
+    Map("clientUserName" -> "client", "clientPassword" -> "password")
+  )
 
   override def testConfigSource =
     s"""
-      |db.default.url = "${databaseUrl}?currentSchema=test"
-      |authorization.skip = false
-      |authorization.skipOpaQuery = true
-      |akka.loglevel = debug
-      |authApi.baseUrl = "http://localhost:6104"
-      |webhooks.actorTickRate=0
-      |webhooks.eventPageSize=10
-      |akka.test.timefactor=20.0
-      |trimBySourceTagTimeoutThreshold=500
+       |db.default.url = "${databaseUrl}?currentSchema=test"
+       |authorization.skip = false
+       |authorization.skipOpaQuery = true
+       |akka.loglevel = debug
+       |authApi.baseUrl = "http://localhost:6104"
+       |webhooks.actorTickRate=0
+       |webhooks.eventPageSize=10
+       |akka.test.timefactor=20.0
+       |trimBySourceTagTimeoutThreshold=500
     """.stripMargin
 
   override def withFixture(test: OneArgTest) = {
-    val httpFetcher = mock[HttpFetcher]
+    val authHttpFetcher = mock[HttpFetcher]
 
     //    webHookActorProbe.expectMsg(1 millis, WebHookActor.Process(true))
 
-    val authClient = new AuthApiClient(httpFetcher)(testConfig, system, executor, materializer)
+    val authClient =
+      new RegistryAuthApiClient(
+        authHttpFetcher
+      )(
+        testConfig,
+        system,
+        executor,
+        materializer
+      )
 
-    GlobalSettings.loggingSQLAndTime = new LoggingSQLAndTimeSettings(
-      enabled = false,
-      singleLineMode = true,
-      logLevel = 'debug)
-
-    case class DBsWithEnvSpecificConfig(configToUse: Config) extends DBs
+    case class DBsWithEnvSpecificConfig(configToUse: Config)
+        extends DBs
         with TypesafeConfigReader
         with TypesafeConfig
         with EnvPrefix {
@@ -117,21 +133,42 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
 
     flyway.migrate()
 
-    val actor = system.actorOf(WebHookActor.props("http://localhost:6101/v0/")(testConfig))
-    val api = (role: Role) => new Api(if (role == Full) Some(actor) else None, authClient, testConfig, system, executor, materializer)
+    val actor = system.actorOf(
+      WebHookActor.props("http://localhost:6101/v0/")(testConfig)
+    )
+    val api = (role: Role) =>
+      new Api(
+        if (role == Full) Some(actor) else None,
+        authClient,
+        testConfig,
+        system,
+        executor,
+        materializer
+      )
 
     def asNonAdmin(req: HttpRequest): HttpRequest = {
-      expectAdminCheck(httpFetcher, false)
+      expectAdminCheck(authHttpFetcher, false)
       asUser(req)
     }
 
     def asAdmin(req: HttpRequest): HttpRequest = {
-      expectAdminCheck(httpFetcher, true)
+      expectAdminCheck(authHttpFetcher, true)
       asUser(req)
     }
 
     try {
-      super.withFixture(test.toNoArgTest(FixtureParam(api, actor, asAdmin, asNonAdmin, httpFetcher, authClient)))
+      super.withFixture(
+        test.toNoArgTest(
+          FixtureParam(
+            api,
+            actor,
+            asAdmin,
+            asNonAdmin,
+            authHttpFetcher,
+            authClient
+          )
+        )
+      )
     } finally {
       //      Await.result(system.terminate(), 30 seconds)
       Await.result(gracefulStop(actor, 30 seconds), 30 seconds)
@@ -139,11 +176,19 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
   }
 
   def asUser(req: HttpRequest): HttpRequest = {
-    req.withHeaders(new RawHeader("X-Magda-Session", JWT.create().withClaim("userId", "1").sign(Authentication.algorithm)))
+    val jws = Authentication.signToken(
+      Jwts
+        .builder()
+        .claim("userId", "1"),
+      system.log
+    )
+    req.withHeaders(new RawHeader("X-Magda-Session", jws))
   }
 
   def expectAdminCheck(httpFetcher: HttpFetcher, isAdmin: Boolean) {
-    val resFuture = Marshal(User(isAdmin)).to[ResponseEntity].map(user => HttpResponse(status = 200, entity = user))
+    val resFuture = Marshal(User(isAdmin))
+      .to[ResponseEntity]
+      .map(user => HttpResponse(status = 200, entity = user))
 
     (httpFetcher.get _).expects("/v0/public/users/1", *).returns(resFuture)
   }
@@ -157,7 +202,9 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
       }
 
       it("rejects with credentials rejected if credentials are bad") { param =>
-        fn.withHeaders(RawHeader("X-Magda-Session", "aergiajreog")) ~> param.api(role).routes ~> check {
+        fn.withHeaders(RawHeader("X-Magda-Session", "aergiajreog")) ~> param
+          .api(role)
+          .routes ~> check {
           expectCredentialsRejectedRejection()
         }
       }
@@ -171,14 +218,20 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
 
     def expectCredentialsMissingRejection() = {
       rejection match {
-        case AuthenticationFailedRejection(AuthenticationFailedRejection.CredentialsMissing, _) => // success
+        case AuthenticationFailedRejection(
+            AuthenticationFailedRejection.CredentialsMissing,
+            _
+            )  => // success
         case _ => fail()
       }
     }
 
     def expectCredentialsRejectedRejection() = {
       rejection match {
-        case AuthenticationFailedRejection(AuthenticationFailedRejection.CredentialsRejected, _) => // success
+        case AuthenticationFailedRejection(
+            AuthenticationFailedRejection.CredentialsRejected,
+            _
+            )  => // success
         case _ => fail(s"Rejection was $rejection")
       }
     }
@@ -188,7 +241,10 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
     }
   }
 
-  def routesShouldBeNonExistentWithRole(role: Role, routes: List[(String, String => HttpRequest, String)]) {
+  def routesShouldBeNonExistentWithRole(
+      role: Role,
+      routes: List[(String, String => HttpRequest, String)]
+  ) {
     describe(s"routes should not be accessible with role ${role.toString}") {
       routes.foreach {
         case (methodName, methodFn, route) =>
@@ -203,4 +259,14 @@ abstract class ApiSpec extends FunSpec with ScalatestRouteTest with Matchers wit
       }
     }
   }
+
+  case class FixtureParam(
+      api: Role => Api,
+      webHookActor: ActorRef,
+      asAdmin: HttpRequest => HttpRequest,
+      asNonAdmin: HttpRequest => HttpRequest,
+      authFetcher: HttpFetcher,
+      authClient: RegistryAuthApiClient
+  )
+
 }

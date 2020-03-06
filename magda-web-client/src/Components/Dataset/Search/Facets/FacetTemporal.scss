@@ -1,3 +1,6 @@
+@import "variables";
+@import "./pancake/sass/core.scss";
+
 .facet-temporal-month-picker {
     display: flex;
 
@@ -5,4 +8,19 @@
         margin-top: 15px;
         width: 20px;
     }
+}
+
+.facet-temporal-prompt {
+    background-color: $magda-red;
+    color: $AU-colordark-foreground-text;
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 400;
+    display: block;
+    position: absolute;
+    padding: 4px 4px;
+    z-index: 2;
+    top: -20px;
+    right: 230px;
+    border-radius: 3px;
 }

@@ -10,14 +10,20 @@ export type OrgUnit = {
 
 type ListOrgUnitParams = {
     orgUnitsOnly?: boolean;
+    relationshipOrgUnitId?: string;
 };
 
 export async function listOrgUnits({
-    orgUnitsOnly: leafNodesOnly
-}: ListOrgUnitParams): Promise<OrgUnit[]> {
-    const uri = URI(config.authApiUrl)
+    orgUnitsOnly: leafNodesOnly,
+    relationshipOrgUnitId
+}: ListOrgUnitParams): Promise<OrgUnitWithRelationship[]> {
+    let uri = URI(config.authApiUrl)
         .segment("orgunits")
         .addQuery("leafNodesOnly", leafNodesOnly || false);
+
+    if (relationshipOrgUnitId) {
+        uri = uri.addQuery("relationshipOrgUnitId", relationshipOrgUnitId);
+    }
 
     const res = await fetch(uri.toString(), config.fetchOptions);
 
@@ -54,6 +60,26 @@ export async function listOrgUnitsAtLevel(
     }`;
 
     const res = await fetch(uri, config.fetchOptions);
+
+    if (!res.ok) {
+        throw new Error("Rejected with " + res.statusText);
+    } else {
+        return await res.json();
+    }
+}
+
+/**
+ * Get Org Unit Details By Id
+ *
+ * @export
+ * @param {string} id
+ * @returns {Promise<OrgUnit>}
+ */
+export async function getOrgUnitById(id: string): Promise<OrgUnit> {
+    const res = await fetch(
+        `${config.authApiUrl}orgunits/${id}`,
+        config.fetchOptions
+    );
 
     if (!res.ok) {
         throw new Error("Rejected with " + res.statusText);

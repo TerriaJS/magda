@@ -1,8 +1,7 @@
 {
     "$schema": "http://json-schema.org/schema#",
     "title": "The temporal period that the dataset covers",
-    "description":
-        "Specifies the temporal period that the dataset covers as a list of time intervals.",
+    "description": "Specifies the temporal period that the dataset covers as a list of time intervals.",
     "type": "object",
     "properties": {
         "intervals": {
@@ -18,8 +17,7 @@
                         "format": "date-time"
                     },
                     "startIndeterminate": {
-                        "title":
-                            "An enumeration indicating the manner in which the start date is indeterminate.  If \"before\" or \"after\", the start date is not exactly known, but it is known to be before/after the date in the `start` property.  If \"now\", the start date is usually populated from the date when the dataset was last updated.  If \"unknown\", the start date is unknown and the `start` property is expected to be blank.",
+                        "title": "An enumeration indicating the manner in which the start date is indeterminate.  If \"before\" or \"after\", the start date is not exactly known, but it is known to be before/after the date in the `start` property.  If \"now\", the start date is usually populated from the date when the dataset was last updated.  If \"unknown\", the start date is unknown and the `start` property is expected to be blank.",
                         "type": "string",
                         "enum": ["unknown", "now", "before", "after"]
                     },
@@ -29,8 +27,7 @@
                         "format": "date-time"
                     },
                     "endIndeterminate": {
-                        "title":
-                            "An enumeration indicating the manner in which the end date is indeterminate.  If \"before\" or \"after\", the end date is not exactly known, but it is known to be before/after the date in the `end` property.  If \"now\", the end date is usually populated from the date when the dataset was last updated.  If \"unknown\", the end date is unknown and the `end` property is expected to be undefined.",
+                        "title": "An enumeration indicating the manner in which the end date is indeterminate.  If \"before\" or \"after\", the end date is not exactly known, but it is known to be before/after the date in the `end` property.  If \"now\", the end date is usually populated from the date when the dataset was last updated.  If \"unknown\", the end date is unknown and the `end` property is expected to be undefined.",
                         "type": "string",
                         "enum": ["unknown", "now", "before", "after"]
                     }

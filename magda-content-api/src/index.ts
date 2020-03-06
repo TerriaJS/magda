@@ -1,9 +1,9 @@
-import * as express from "express";
-import * as yargs from "yargs";
+import express from "express";
+import yargs from "yargs";
 
 import createApiRouter from "./createApiRouter";
 import Database from "./Database";
-import addJwtSecretFromEnvVar from "@magda/typescript-common/dist/session/addJwtSecretFromEnvVar";
+import addJwtSecretFromEnvVar from "magda-typescript-common/src/session/addJwtSecretFromEnvVar";
 
 const argv = addJwtSecretFromEnvVar(
     yargs
@@ -67,7 +67,10 @@ app.use(
 app.listen(argv.listenPort);
 console.log("Contents API started on port " + argv.listenPort);
 
-process.on("unhandledRejection", (reason: string, promise: any) => {
-    console.error("Unhandled rejection:");
-    console.error(reason);
-});
+process.on(
+    "unhandledRejection",
+    (reason: {} | null | undefined, promise: Promise<any>) => {
+        console.error("Unhandled rejection:");
+        console.error(reason);
+    }
+);

@@ -1,6 +1,6 @@
-import * as express from "express";
-import Registry from "@magda/typescript-common/dist/registry/RegistryClient";
-import * as URI from "urijs";
+import express from "express";
+import Registry from "magda-typescript-common/src/registry/RegistryClient";
+import URI from "urijs";
 const sm = require("sitemap");
 
 const DATASET_REQUIRED_ASPECTS = ["dcat-dataset-strings"];

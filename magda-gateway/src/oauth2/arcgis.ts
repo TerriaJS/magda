@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import { Strategy as ArcGISStrategy } from "passport-arcgis";
 import { Authenticator, Profile } from "passport";
 

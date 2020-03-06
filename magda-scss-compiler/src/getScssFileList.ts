@@ -1,5 +1,5 @@
-import * as recursiveReadDir from "recursive-readdir";
-import * as path from "path";
+import recursiveReadDir from "recursive-readdir";
+import path from "path";
 
 const getScssFileList = async (clientRoot: string) => {
     return await recursiveReadDir(clientRoot + "/src", [

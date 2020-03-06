@@ -4,10 +4,10 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.ContentTypes.`application/json`
 import akka.http.scaladsl.model.StatusCodes.OK
 import au.csiro.data61.magda.api.model.SearchResult
-import au.csiro.data61.magda.model.RegistryConverters
+
 import au.csiro.data61.magda.test.util.MagdaMatchers
 
-class TenantDataSetSearchSpec extends BaseSearchApiSpec with RegistryConverters {
+class TenantDataSetSearchSpec extends BaseSearchApiSpec {
   blockUntilNotRed()
 
   describe("searching") {
@@ -19,15 +19,19 @@ class TenantDataSetSearchSpec extends BaseSearchApiSpec with RegistryConverters 
         val tenants = List(tenant0, tenant1, tenant2)
         forAll(tenantsIndexGen(tenants)) {
           case (_, dataSets, route) ⇒
-            tenants.flatMap( theTenant =>
-              Get(s"/v0/datasets?query=*&limit=${dataSets.length}") ~> addTenantIdHeader(theTenant) ~> route ~> check {
-                status shouldBe OK
-                contentType shouldBe `application/json`
-                val response = responseAs[SearchResult]
-                val expected = dataSets.filter(_.tenantId == theTenant)
-                response.hitCount shouldEqual expected.length
-                MagdaMatchers.dataSetsEqualIgnoreOrder(response.dataSets, expected)
-              }
+            tenants.flatMap(
+              theTenant =>
+                Get(s"/v0/datasets?query=*&limit=${dataSets.length}") ~> addTenantIdHeader(
+                  theTenant
+                ) ~> route ~> check {
+                  status shouldBe OK
+                  contentType shouldBe `application/json`
+                  val response = responseAs[SearchResult]
+                  val expected = dataSets.filter(_.tenantId == theTenant)
+                  response.hitCount shouldEqual expected.length
+                  MagdaMatchers
+                    .dataSetsEqualIgnoreOrder(response.dataSets, expected)
+                }
             )
         }
       }

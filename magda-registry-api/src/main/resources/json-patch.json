@@ -1,6 +1,5 @@
 {
-    "title":
-        "JSON schema for JSONPatch files.  This is http://json.schemastore.org/json-patch modified to work with Swagger, which doesn't support `oneOf`.",
+    "title": "JSON schema for JSONPatch files.  This is http://json.schemastore.org/json-patch modified to work with Swagger, which doesn't support `oneOf`.",
     "$schema": "http://json-schema.org/draft-04/schema#",
 
     "type": "array",
@@ -91,8 +90,7 @@
             "required": ["from"],
             "properties": {
                 "from": {
-                    "description":
-                        "A JSON Pointer path pointing to the location to move from.",
+                    "description": "A JSON Pointer path pointing to the location to move from.",
                     "type": "string"
                 }
             }
@@ -107,8 +105,7 @@
             "required": ["from"],
             "properties": {
                 "from": {
-                    "description":
-                        "A JSON Pointer path pointing to the location to copy from.",
+                    "description": "A JSON Pointer path pointing to the location to copy from.",
                     "type": "string"
                 }
             }

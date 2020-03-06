@@ -66,14 +66,14 @@ class StaticPage extends Component {
                         <div className="col-sm-12">
                             <h1>
                                 <ToggleEditor
-                                    enabled={hasEditPermissions}
+                                    editable={hasEditPermissions}
                                     value={title}
                                     onChange={save("title")}
                                     editor={textEditor}
                                 />
                             </h1>
                             <ToggleEditor
-                                enabled={hasEditPermissions}
+                                editable={hasEditPermissions}
                                 value={bodyContent}
                                 onChange={save("content")}
                                 editor={markdownEditor}
@@ -104,7 +104,7 @@ function mapStateToProps(state, old) {
             title: "Loading...",
             content: "Loading..."
         },
-        hasEditPermissions
+        hasEditPermissions: hasEditPermissions ? true : false
     };
 }
 

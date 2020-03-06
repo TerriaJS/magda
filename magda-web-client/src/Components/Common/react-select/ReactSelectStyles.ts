@@ -4,10 +4,27 @@
  * https://react-select.com/styles
  */
 const customStyles = {
-    control: provided => ({
-        ...provided,
-        minHeight: "44px"
-    }),
+    control: (provided, state) => {
+        if (state.selectProps.isValidationError) {
+            return {
+                ...provided,
+                minHeight: "44px",
+                backgroundColor: "#fdf2f2",
+                borderColor: "#d60000",
+                boxShadow: "none",
+                "&:hover": {
+                    backgroundColor: "#fdf2f2",
+                    borderColor: "#d60000",
+                    boxShadow: "none"
+                }
+            };
+        } else {
+            return {
+                ...provided,
+                minHeight: "44px"
+            };
+        }
+    },
     multiValue: provided => ({
         ...provided,
         backgroundColor: "#30384d",

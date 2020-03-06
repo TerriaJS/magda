@@ -2,7 +2,7 @@ require("isomorphic-fetch");
 
 import { User } from "./model";
 import { Maybe } from "tsmonad";
-import * as lodash from "lodash";
+import lodash from "lodash";
 import buildJwt from "../session/buildJwt";
 
 export default class ApiClient {

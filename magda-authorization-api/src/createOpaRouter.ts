@@ -1,13 +1,13 @@
-import * as express from "express";
+import express from "express";
 import { Router } from "express";
-import * as _ from "lodash";
+import _ from "lodash";
 import Database from "./Database";
-import { User } from "@magda/typescript-common/dist/authorization-api/model";
-import { getUserSession } from "@magda/typescript-common/dist/session/GetUserSession";
-import OpaCompileResponseParser from "@magda/typescript-common/dist/OpaCompileResponseParser";
-import * as request from "request-promise-native";
-import * as bodyParser from "body-parser";
-import * as objectPath from "object-path";
+import { User } from "magda-typescript-common/src/authorization-api/model";
+import { getUserSession } from "magda-typescript-common/src/session/GetUserSession";
+import OpaCompileResponseParser from "magda-typescript-common/src/OpaCompileResponseParser";
+import request from "request-promise-native";
+import bodyParser from "body-parser";
+import objectPath from "object-path";
 
 export interface OpaRouterOptions {
     opaUrl: string;

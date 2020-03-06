@@ -2,20 +2,27 @@ import React, { useState } from "react";
 import Moment from "moment";
 
 import { AlwaysEditor } from "Components/Editing/AlwaysEditor";
-import { textEditor } from "Components/Editing/Editors/textEditor";
 import { dateEditor } from "Components/Editing/Editors/dateEditor";
 
 import { getFormatIcon } from "../View/DistributionIcon";
 
 import humanFileSize from "helpers/humanFileSize";
 
-import { FileState, File, fileStateToText } from "./DatasetAddCommon";
+import {
+    Distribution,
+    DistributionState,
+    distributionStateToText
+} from "./DatasetAddCommon";
 
 import editIcon from "../../../assets/edit.svg";
 import dismissIcon from "../../../assets/dismiss.svg";
+import SlimTextInputWithValidation from "../Add/SlimTextInputWithValidation";
+import * as ValidationManager from "./ValidationManager";
 
 import PurpleToolTip from "Components/Common/TooltipWrapper";
 import helpIcon from "assets/help.svg";
+
+import ValidationRequiredLabel from "../../Dataset/Add/ValidationRequiredLabel";
 
 import "./DatasetFile.scss";
 
@@ -23,7 +30,7 @@ function FileInProgress({
     file,
     onDelete
 }: {
-    file: File;
+    file: Distribution;
     onDelete: () => void;
 }) {
     const progress = file._progress ? file._progress : 0;
@@ -65,8 +72,8 @@ function FileInProgress({
                         </div>
                     </div>
                     <div className="file-status">
-                        {fileStateToText(file._state)} - {file._progress}%
-                        complete
+                        {distributionStateToText(file._state)} -{" "}
+                        {file._progress}% complete
                     </div>
                 </div>
             </div>
@@ -74,66 +81,120 @@ function FileInProgress({
     );
 }
 
+const FileEditView = ({
+    idx,
+    file,
+    onChange,
+    editMode,
+    setEditMode
+}: {
+    idx: number;
+    file: Distribution;
+    onChange: (updater: (file: Distribution) => Distribution) => void;
+    editMode: boolean;
+    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+    const editFormat = (newValue: string | undefined) =>
+        onChange(file => ({ ...file, format: newValue }));
+    const editTitle = (newValue: string | undefined) =>
+        onChange(file => ({ ...file, title: newValue ? newValue : "" }));
+    const editModified = (newValue: Date | undefined) =>
+        onChange(file =>
+            typeof newValue === "undefined"
+                ? file
+                : { ...file, modified: newValue }
+        );
+
+    return (
+        <div>
+            <button
+                className={`au-btn dataset-file-save-button`}
+                arial-label="Save changes"
+                onClick={() => {
+                    if (
+                        ValidationManager.validateFields([
+                            `$.distributions[${idx}].title`,
+                            `$.distributions[${idx}].format`
+                        ])
+                    ) {
+                        setEditMode(!editMode);
+                    }
+                }}
+            >
+                Save
+            </button>
+            <div>
+                <span>
+                    Name:&nbsp;&nbsp;{" "}
+                    <ValidationRequiredLabel
+                        validationFieldPath={`$.distributions[${idx}].title`}
+                    />
+                </span>
+                &nbsp;&nbsp;
+                <SlimTextInputWithValidation
+                    validationFieldLabel="File Name"
+                    validationFieldPath={`$.distributions[${idx}].title`}
+                    value={file.title}
+                    onChange={editTitle}
+                    placeholder="Please enter file name..."
+                />
+            </div>
+            <div>
+                <span>
+                    Format:{" "}
+                    <ValidationRequiredLabel
+                        validationFieldPath={`$.distributions[${idx}].format`}
+                    />
+                </span>
+                &nbsp;&nbsp;
+                <SlimTextInputWithValidation
+                    validationFieldLabel="File Format"
+                    validationFieldPath={`$.distributions[${idx}].format`}
+                    value={file.format}
+                    onChange={editFormat}
+                    placeholder="Please enter file format..."
+                />
+            </div>
+            <div>
+                <span>Last Modified: </span>
+                &nbsp;&nbsp;
+                <AlwaysEditor
+                    value={file.modified}
+                    onChange={editModified}
+                    editor={dateEditor}
+                />
+            </div>
+        </div>
+    );
+};
+
 export default function DatasetFile({
+    idx,
     file,
     onDelete,
     onChange
 }: {
-    file: File;
+    idx: number;
+    file: Distribution;
     onDelete: () => void;
-    onChange: (file: File) => void;
+    onChange: (updater: (file: Distribution) => Distribution) => void;
 }) {
-    if (file._state !== FileState.Ready) {
+    const [editMode, setEditMode] = useState(false);
+
+    if (file._state !== DistributionState.Ready) {
         return <FileInProgress file={file} onDelete={onDelete} />;
     }
-
-    const editFormat = (newValue: string | undefined) =>
-        onChange({ ...file, format: newValue });
-    const editTitle = (newValue: string | undefined) =>
-        onChange({ ...file, title: newValue! });
-    const editModified = (newValue: Date | undefined) =>
-        onChange({ ...file, modified: newValue! });
-    const [editMode, setEditMode] = useState(false);
 
     return (
         <div className="dataset-file-root complete-processing">
             {editMode ? (
-                <div>
-                    <button
-                        className={`au-btn dataset-file-save-button`}
-                        arial-label="Save changes"
-                        onClick={() => setEditMode(!editMode)}
-                    >
-                        Save
-                    </button>
-                    <div>
-                        <span>Name:&nbsp;&nbsp; </span>
-                        &nbsp;&nbsp;
-                        <AlwaysEditor
-                            value={file.title}
-                            onChange={editTitle}
-                            editor={textEditor}
-                        />
-                    </div>
-                    <div>
-                        <span>Format: </span>
-                        &nbsp;&nbsp;
-                        <AlwaysEditor
-                            value={file.format}
-                            onChange={editFormat}
-                            editor={textEditor}
-                        />
-                    </div>
-                    <div>
-                        <span>Last Modified: </span>
-                        &nbsp;&nbsp;
-                        <AlwaysEditor
-                            value={file.modified}
-                            onChange={editModified}
-                            editor={dateEditor}
-                        />
-                    </div>
-                </div>
+                <FileEditView
+                    idx={idx}
+                    file={file}
+                    onChange={onChange}
+                    editMode={editMode}
+                    setEditMode={setEditMode}
+                />
             ) : (
                 <React.Fragment>
                     <button

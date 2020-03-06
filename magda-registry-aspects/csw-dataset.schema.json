@@ -1,12 +1,10 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "title":
-        "Aspect capturing a complete representation of a dataset according to a CSW server",
+    "title": "Aspect capturing a complete representation of a dataset according to a CSW server",
     "type": "object",
     "properties": {
         "xml": {
-            "title":
-                "The XML description of this dataset, according to the CSW server",
+            "title": "The XML description of this dataset, according to the CSW server",
             "type": "string"
         }
     }

@@ -1,5 +1,5 @@
-import * as express from "express";
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
+import express from "express";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
 import MinionOptions from "./MinionOptions";
 import setupWebhookEndpoint from "./setupWebhookEndpoint";
 import setupRecrawlEndpoint from "./setupRecrawlEndpoint";
@@ -8,10 +8,10 @@ import isWebhookRegistered from "./isWebhookRegistered";
 import registerWebhook from "./registerWebhook";
 import resumeWebhook from "./resumeWebhook";
 import Crawler from "./Crawler";
-import { Tenant } from "@magda/typescript-common/dist/tenant-api/Tenant";
-import AuthorizedTenantClient from "@magda/typescript-common/dist/tenant-api/AuthorizedTenantClient";
-import { MAGDA_ADMIN_PORTAL_ID } from "@magda/typescript-common/dist/registry/TenantConsts";
-import { MAGDA_SYSTEM_ID } from "@magda/typescript-common/dist/registry/TenantConsts";
+import { Tenant } from "magda-typescript-common/src/tenant-api/Tenant";
+import AuthorizedTenantClient from "magda-typescript-common/src/tenant-api/AuthorizedTenantClient";
+import { MAGDA_ADMIN_PORTAL_ID } from "magda-typescript-common/src/registry/TenantConsts";
+import { MAGDA_SYSTEM_ID } from "magda-typescript-common/src/registry/TenantConsts";
 
 export default async function minion(options: MinionOptions): Promise<void> {
     checkOptions(options);

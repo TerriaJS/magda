@@ -16,12 +16,12 @@ trait SharedElasticSugar extends HttpElasticSugar
   * index has a certain count of documents. These methods are very useful when writing
   * tests to allow for blocking, imperative coding
   */
-trait HttpElasticSugar{
+trait HttpElasticSugar {
 
-  private val esLogger : Logger = LoggerFactory getLogger getClass.getName
+  private val esLogger: Logger = LoggerFactory getLogger getClass.getName
 
   //val client = getNode.client(false)
-  def client():ElasticClient
+  def client(): ElasticClient
   def http = client
 
   // refresh all indexes
@@ -51,7 +51,7 @@ trait HttpElasticSugar{
   def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
 
     var backoff = 0
-    var done    = false
+    var done = false
 
     while (backoff <= 16 && !done) {
       if (backoff > 0) Thread.sleep(200 * backoff)
@@ -101,21 +101,17 @@ trait HttpElasticSugar{
 
   def blockUntilDocumentExists(id: String, index: String): Unit =
     blockUntil(s"Expected to find document $id") { () =>
-      val resp = http
-        .execute {
-          get(id).from(index)
-        }
-        .await
+      val resp = http.execute {
+        get(id).from(index)
+      }.await
       resp.isSuccess && resp.result.exists
     }
 
   def blockUntilCount(expected: Long, index: String): Unit =
     blockUntil(s"Expected count of $expected") { () =>
-      val result = http
-        .execute {
-          search(index).matchAllQuery().size(0)
-        }
-        .await
+      val result = http.execute {
+        search(index).matchAllQuery().size(0)
+      }.await
       expected <= result.result.totalHits
     }
 

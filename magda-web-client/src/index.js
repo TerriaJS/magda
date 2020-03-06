@@ -5,6 +5,7 @@ import "core-js/fn/symbol/iterator";
 import "core-js/es6/symbol";
 import "core-js/fn/object/entries";
 import "core-js/fn/object/values";
+import "./helpers/scroll-polyfill";
 import logger from "redux-logger";
 import "./index.scss";
 import { BrowserRouter, Route } from "react-router-dom";

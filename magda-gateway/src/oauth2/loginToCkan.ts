@@ -5,7 +5,7 @@ import { Either } from "tsmonad";
 
 const cheerio = require("cheerio");
 const gravatar = require("gravatar");
-import * as passport from "passport";
+import passport from "passport";
 
 namespace loginToCkan {
     export type Failure = string;

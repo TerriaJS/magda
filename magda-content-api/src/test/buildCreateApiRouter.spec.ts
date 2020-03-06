@@ -1,10 +1,10 @@
 import {} from "mocha";
-import * as chai from "chai";
-import * as request from "supertest";
-import * as express from "express";
-import * as nock from "nock";
-import addJwtSecretFromEnvVar from "@magda/typescript-common/dist/session/addJwtSecretFromEnvVar";
-import fakeArgv from "@magda/typescript-common/dist/test/fakeArgv";
+import chai from "chai";
+import request from "supertest";
+import express from "express";
+import nock from "nock";
+import addJwtSecretFromEnvVar from "magda-typescript-common/src/session/addJwtSecretFromEnvVar";
+import fakeArgv from "magda-typescript-common/src/test/fakeArgv";
 import createApiRouter from "../createApiRouter";
 
 import mockDatabase from "./mockDatabase";

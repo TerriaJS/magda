@@ -28,8 +28,7 @@ router.get("/private/users/:userId", function(req, res) {
     handlePromise(res, db_1.getUser(userId));
 });
 router.post("/private/users", function(req, res) {
-    db_1
-        .createUser(req.body)
+    db_1.createUser(req.body)
         .then(user => {
             res.json(user);
             res.status(201);

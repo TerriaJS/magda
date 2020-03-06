@@ -3,7 +3,6 @@ import fbLogo from "assets/login/fb-logo.svg";
 import googleLogo from "assets/login/google-logo.svg";
 import arcgisLogo from "assets/login/esri-logo.svg";
 import aafLogo from "assets/login/aaf-logo.png";
-import AUctaLink from "../../pancake/react/cta-link";
 import "./AccountLoginPage.scss";
 import { config } from "config";
 const { baseUrl } = config;
@@ -145,12 +144,15 @@ export default function Login(props) {
                     <h2>Register</h2>
                     <p>
                         To register a new data.gov.au account,{" "}
-                        <AUctaLink
-                            link="https://data.gov.au/user/register"
+                        <a
+                            className="au-cta-link"
+                            href="https://data.gov.au/user/register"
                             target="_blank"
-                            text="click here"
-                        />
-                        .
+                            rel="noopener noreferrer"
+                        >
+                            click here
+                        </a>
+                        /> .
                     </p>
                 </div>
             )}

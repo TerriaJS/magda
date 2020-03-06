@@ -1,10 +1,12 @@
 {
   "name": "@magda/content-api",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
+  "license": "Apache-2.0",
   "scripts": {
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo",
     "build": "yarn run compile",
-    "compile": "tsc -p tsconfig-build.json",
-    "watch": "tsc -p tsconfig-build.json --watch",
+    "compile": "tsc -b && ts-module-alias-transformer dist",
+    "watch": "tsc -b --watch",
     "start": "node dist/index.js",
     "dev": "run-typescript-in-nodemon src/index.ts",
     "test": "nyc mocha --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\"",
@@ -13,8 +15,8 @@
     "retag-and-push": "retag-and-push"
   },
   "dependencies": {
-    "@magda/content-schemas": "^0.0.56-terria-3",
-    "@magda/typescript-common": "^0.0.56-terria-3",
+    "@magda/content-schemas": "^0.0.57-0",
+    "@magda/typescript-common": "^0.0.57-0",
     "body-parser": "^1.13.2",
     "djv": "^2.1.1",
     "express": "^4.13.1",
@@ -28,7 +30,7 @@
     "yargs": "^12.0.5"
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-3",
+    "@magda/scripts": "^0.0.57-0",
     "@types/chai": "^4.1.2",
     "@types/express": "^4.0.35",
     "@types/lodash": "^4.14.96",
@@ -48,7 +50,7 @@
     "nyc": "^13.1.0",
     "sinon": "^4.2.1",
     "supertest": "^3.0.0",
-    "typescript": "^3.2.0"
+    "typescript": "^3.7.2"
   },
   "config": {
     "docker": {
@@ -61,7 +63,8 @@
   "magda": {
     "language": "typescript",
     "categories": {
-      "api": true
+      "api": true,
+      "testStandAlone": false
     }
   },
   "nyc": {
@@ -71,5 +74,8 @@
     "exclude": [
       "src/test/**"
     ]
+  },
+  "_moduleMappings": {
+    "magda-typescript-common/src": "@magda/typescript-common/dist"
   }
 }

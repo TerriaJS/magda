@@ -88,6 +88,10 @@ export function determineFormatIcon(distribution) {
     return matchedCategory;
 }
 
-export function getFormatIcon(distribution) {
-    return formatIcons[determineFormatIcon(distribution)];
+export function getFormatIcon(distribution, defaultIcon = "default") {
+    let matchedCategory = determineFormatIcon(distribution);
+    if (matchedCategory === "default" && defaultIcon) {
+        matchedCategory = defaultIcon;
+    }
+    return formatIcons[matchedCategory];
 }

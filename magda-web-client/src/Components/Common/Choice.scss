@@ -1,61 +1,85 @@
-.choice-buttonHeading {
-    margin: 0px 0px 28px 0px;
-    text-align: left;
-    font-size: 18px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.11;
-    letter-spacing: normal;
-    color: #ffffff;
-}
+@import "variables";
 
-.au-btn--secondary.choice-Button {
-    color: #484848 !important;
-    .choice-buttonHeading {
-        color: #484848 !important;
-    }
-}
+$fontSize: 16px;
 
-.choice-IconRow {
+.choice-icon-row {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
 }
 
-.choice-Icon {
+.choice-icon {
     width: 5em;
     height: 5em;
 }
 
-.choice-Button {
-    width: 520px;
+.au-btn.choice-button {
+    width: 540px;
     height: 220px;
-    display: block !important;
+    display: block;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 0 40px 40px 40px !important;
-    padding-left: 45px !important;
-    padding-top: 55px !important;
-    padding-right: 45px !important;
-    border: none !important;
+    padding-left: 45px;
+    padding-top: 55px;
+    padding-right: 45px;
+    border: none;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    background: $add-dataset-page-button-top-rows;
+
+    .choice-button-heading {
+        margin: 0px 0px 28px 0px;
+        text-align: left;
+        font-size: $fontSize;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.11;
+        letter-spacing: normal;
+    }
+
     .text-content {
         padding-left: 25px;
+        font-size: $fontSize;
+    }
+
+    &.choice-button.choice-button:hover {
+        text-decoration: none;
+    }
+
+    &,
+    &.choice-button.choice-button:focus {
+        border-radius: 0 40px 40px 40px;
+    }
+
+    &.au-btn--secondary {
+        border: none;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+
+        .text-content {
+            color: #484848;
+        }
+
+        .choice-button-heading {
+            color: #484848;
+        }
+
+        &:hover:not(:disabled):not(.choice-disabled) {
+            background: lighten(
+                $color: $add-dataset-page-button-top-rows,
+                $amount: 70%
+            );
+        }
     }
 }
 
-.au-btn--secondary.choice-Button {
-    border: none !important;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-.choice-Disabled {
+.choice-disabled,
+a.choice-disabled {
     opacity: 0.5;
     cursor: not-allowed;
 
-    a {
-        cursor: not-allowed;
-    }
+    // &a {
+    //     cursor: not-allowed;
+    // }
 }

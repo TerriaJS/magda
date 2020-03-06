@@ -105,7 +105,7 @@ class ContentAdminPage extends Component<any, any> {
                 ) : (
                     <div>
                         {list.length === 0 ? (
-                            <p>No {itemTitle} fround.</p>
+                            <p>No {itemTitle} found.</p>
                         ) : hasOrder ? (
                             this.renderOrdered()
                         ) : (

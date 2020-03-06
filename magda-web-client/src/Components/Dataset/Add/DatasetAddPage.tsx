@@ -7,9 +7,8 @@ import iconDocument from "assets/icon-document.svg";
 import iconSave from "assets/icon-save.svg";
 
 import iconUpload from "assets/add-files.svg";
-import iconWebsite from "assets/noun-website.png";
 import iconDataEntry from "assets/list-ul.svg";
-import iconFolders from "assets/noun-files.png";
+import iconMultiFiles from "assets/files.svg";
 
 import "./DatasetAddPage.scss";
 
@@ -31,7 +30,7 @@ class AddDataset extends React.Component<any, any> {
 
                 <div className="lower-header-wrapper">
                     <div className="container">
-                        <div className="row ">
+                        <div className="row">
                             <div className="col-sm-12">
                                 <div className="row lower-header-icons">
                                     <div className="col-sm-4 block">
@@ -129,38 +128,34 @@ class AddDataset extends React.Component<any, any> {
 
                     <div className="row main-body-row">
                         <div className="container">
-                            <Choice
-                                className={"choice-1"}
-                                heading="Have a single dataset made up of one or more files?"
-                                icon={iconUpload}
-                                blurb="Add your dataset file(s) to pre-populate metadata using the Magda Publishing Tool"
-                                href="/dataset/add/files"
-                            />
-                            <Choice
-                                className={"choice-2"}
-                                heading="Dataset exists elsewhere online?"
-                                icon={iconWebsite}
-                                blurb="Enter the URL of an online dataset to pre-populate metadata using the Magda Publishing Tool."
-                                href="/dataset/add/urls"
-                                disabled={true}
-                            />
-                            <Choice
-                                className={"choice-3"}
-                                heading="No files to upload?"
-                                icon={iconDataEntry}
-                                blurb="Manually add the dataset record and the metadata."
-                                href="/dataset/add/metadata/-/0"
-                                secondary
-                            />
-                            <Choice
-                                className={"choice-4"}
-                                heading="Adding multiple datasets?"
-                                icon={iconFolders}
-                                blurb="Add your entire dataset catalogue using our bulk CSV tool or open data catalogue"
-                                href="/catalog/add"
-                                secondary
-                                disabled={true}
-                            />
+                            <div className="row choice-row">
+                                <Choice
+                                    className={"choice-files col-sm-offset-3"}
+                                    heading="Have a single dataset comprised of multiple files or services?"
+                                    icon={iconUpload}
+                                    blurb="Add your dataset to pre-populate metadata using the Magda Publishing Tool"
+                                    href="/dataset/add/files"
+                                />
+                            </div>
+                            <div className="row choice-row">
+                                <Choice
+                                    className={"choice-no-files"}
+                                    heading="No files to upload?"
+                                    icon={iconDataEntry}
+                                    blurb="Manually add the dataset record and the metadata."
+                                    href="/dataset/add/metadata/-/0"
+                                    secondary
+                                />
+                                <Choice
+                                    className={"choice-multiple"}
+                                    heading="Adding multiple datasets?"
+                                    icon={iconMultiFiles}
+                                    blurb="Add your entire dataset catalogue using our bulk CSV tool or open data catalogue"
+                                    href="/catalog/add"
+                                    secondary
+                                    disabled={true}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

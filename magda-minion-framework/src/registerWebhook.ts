@@ -1,5 +1,5 @@
-import { WebHook } from "@magda/typescript-common/dist/generated/registry/api";
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
+import { WebHook } from "magda-typescript-common/src/generated/registry/api";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
 
 import MinionOptions from "./MinionOptions";
 import getWebhookUrl from "./getWebhookUrl";

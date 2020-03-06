@@ -38,7 +38,7 @@
     }
 
     .tab-content-container {
-        min-height: 380px;
+        min-height: auto;
     }
 
     .bbox-editor-container {
@@ -161,6 +161,9 @@
                 letter-spacing: normal;
                 color: #484848;
                 margin-bottom: 21px;
+            }
+            span {
+                color: #979797;
             }
         }
 

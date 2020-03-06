@@ -16,6 +16,8 @@ import OrgUnitDropdown from "./OrgUnitDropdown";
 import CustodianDropdown from "./CustodianDropdown";
 import YesNoReveal from "../../YesNoReveal";
 
+import ValidationRequiredLabel from "../../ValidationRequiredLabel";
+
 import ToolTip from "Components/Dataset/Add/ToolTip";
 
 import "./DatasetAddPeoplePage.scss";
@@ -51,22 +53,15 @@ export default function DatasetAddPeoplePage({
                 <h4>
                     Which organisation is responsible for publishing this
                     dataset?
+                    <ValidationRequiredLabel validationFieldPath="$.dataset.publisher" />
                 </h4>
                 <div>
                     <OrganisationAutoComplete
                         multi={false}
                         value={dataset.publisher}
                         onOrgSelected={editDataset("publisher")}
-                    />
-                </div>
-                <h4>
-                    Which business area is responsible for maintaining this
-                    dataset?
-                </h4>
-                <div>
-                    <OrgUnitDropdown
-                        orgUnitId={dataset.owningOrgUnitId}
-                        onChange={editDataset("owningOrgUnitId")}
+                        validationFieldPath="$.dataset.publisher"
+                        validationFieldLabel="Responsible Organisation"
                     />
                 </div>
                 <h4>
@@ -76,10 +71,18 @@ export default function DatasetAddPeoplePage({
                 <div>
                     <CustodianDropdown
                         orgUnitId={dataset.custodianOrgUnitId}
-                        teamOrgUnitId={dataset.owningOrgUnitId}
                         onChange={editDataset("custodianOrgUnitId")}
                     />
                 </div>
+                <h4>Which team is responsible for maintaining this dataset?</h4>
+                <div>
+                    <OrgUnitDropdown
+                        orgUnitId={dataset.owningOrgUnitId}
+                        custodianOrgUnitId={dataset.custodianOrgUnitId}
+                        onChange={editDataset("owningOrgUnitId")}
+                    />
+                </div>
+
                 <h4>
                     How should the contact point(s) be referenced in the
                     metadata?

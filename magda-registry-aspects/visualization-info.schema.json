@@ -1,7 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "title":
-        "Aspect providing information to make front-end visualisations of distributions better",
+    "title": "Aspect providing information to make front-end visualisations of distributions better",
     "type": "object",
     "properties": {
         "format": {

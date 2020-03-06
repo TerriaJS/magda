@@ -1,10 +1,10 @@
-import buildJwt from "@magda/typescript-common/dist/session/buildJwt";
-import * as rp from "request-promise-native";
-import * as mime from "mime-types";
-import * as recursiveReadDir from "recursive-readdir";
-import * as fse from "fs-extra";
-import * as path from "path";
-import * as typeis from "type-is";
+import buildJwt from "magda-typescript-common/src/session/buildJwt";
+import rp from "request-promise-native";
+import mime from "mime-types";
+import recursiveReadDir from "recursive-readdir";
+import fse from "fs-extra";
+import path from "path";
+import typeis from "type-is";
 
 /**
  * A Class attempt to create an abstract access layer between content API and local directory

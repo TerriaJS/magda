@@ -1,3 +1,63 @@
+# CHANGELOG
+
+## 0.0.57
+
+General:
+
+-   CSV Connector can now process ampersand character properly
+-   Fixed broken link minion causes json schema validation error
+-   Upgraded typescript to 3.7.2 & Use [Project References](https://www.typescriptlang.org/docs/handbook/project-references.html) to organize typescript project
+-   Upgraded prettier to 1.19.1 to [support typescript 3.7 better](https://prettier.io/blog/2019/11/09/1.19.0.html)
+-   Moved out [connectors](https://github.com/magda-io?utf8=%E2%9C%93&q=magda+connector) & [minions](https://github.com/magda-io?utf8=%E2%9C%93&q=magda-minion) from main magda repostory
+-   Broke helm chart to `magda-core` (core magda components excluding `connectors` & `minions`) & `magda` (full magda chart) and adjusted CI pipeline accordingly
+-   Release [npm packages](https://www.npmjs.com/search?q=%40magda) for building `connectors` & `minions` without depending on main repo
+-   Make recompiling and updating create secrets scripts an action in the CI
+
+UI:
+
+-   Fixed the issue of modifying date string in text input using backspaces to an empty string will cause text input to reset text input
+-   Added pre-specified options for themes on Add dataset page
+-   User can't input a future date to date of last modification on add dataset page
+-   Allow to config whether keywords / themes input can accept manual inputs (or only pre-defined phrases)
+-   Only check for validity in temporal filters (in the search dataset page)
+-   Allow a blacklist of strings to be specified for automatic keyword generation
+-   Make the global notification banner configurable
+-   Removed all references to the DTA Design System react components, so that all styles come through our SCSS compilation, which should make SCSS smaller and more consistent.
+-   Swap the order of custodian & team dropdown on add dataset page
+-   Updated text & margin of add files page to match the new design
+-   Updated Add Dataset Welcome screen options UI design
+-   Added UI for "Link to dataset already hosted online" box
+-   Added UI for "Link to an API or web service" box
+-   Added UI for storing files
+-   Added UI for "Publish as Open Data to data.gov.au"
+
+Storage:
+
+-   Add an API for storing and streaming content
+-   Add a DELETE endpoint
+-   Improves error handling (returns 404 from GET if the file doesn't exist)
+-   Add apidocs
+-   Add endpoint to create a bucket
+-   Restrict file upload to admins only
+-   Support multipart upload
+-   Fixed: minio chart will not be deployed if storage-api is not turned on
+
+Gateway:
+
+-   Add /data to ckan URL, remove the `came_from` param
+
+Authorization:
+
+-   Made integration tests for authorisation run automatically as part of CI.
+-   Added ability to set per-record authorization policies in the registry (for getting a single record)
+-   Added ability to set per-record authorization policies in the registry (for getting multiple records)
+-   Added ability to use OPA policies that use data types other than strings in the registry
+
+Others:
+
+-   Use a "Year" column from a CSV file to extract a temporal extent
+-   Fixed Registry History API Performance Issue when limit=1 & Updated Registry History API Document
+
 ## 0.0.56
 
 General:
@@ -9,6 +69,8 @@ General:
 -   Add esri portal connector. Read its README.md file before use.
 -   Lock helm version in gitlab to 2.15.2 due to issue: https://github.com/helm/helm/issues/6894
 -   Lock postgres docker image to 9.6.15 to avoid docker image build issue due to outdated patch file
+-   Changed the way of `auth-secrets` to be created in gitlab
+-   Add horizontal pod autoscalers to crucial services
 
 Registry:
 
@@ -18,13 +80,17 @@ Registry:
 -   Moved provenance and information security information out of `dcat-dataset-strings`.
 -   Removed some unused fields from `dcat-dataset-strings` - it should now be back to looking more-or-less like DCAT.
 -   Added the feature of validating aspect data against JSON Schema (Default to off)
+-   Fixed request for all tenant records returning `[]`.
+-   Made the registry treat tenant id `NULL` as equivalent to tenant id `0`
 
 Gateway:
 
 -   Add tenant ID header to client requests.
 -   Add ArcGIS/ESRI Authentication provider, including support for on-premise instances of ArcGIS Portal.
 -   Add Vanguard (WS-FED) Authentication provider
+-   Upgrade passport google strategy to 2.0.0 to solve the legacy API access issue
 -   Add `webProxyRoutesJson` command-line argument, allowing non-API proxy routes to be configured.
+-   Only start / keep sessions for logged-in users to make content cachable for non-logged-in users
 
 Search:
 
@@ -134,9 +200,20 @@ UI:
 -   Fixed warning for placeholder text being a boolean value
 -   Added unique key to the topmost `div` of `codelistEditor`
 -   Rename `license` to `licence` where appropriate
+-   Added unique keys to the props in `Stories.js`
+-   Added Mandatory Field Validation to the Add Dataset Flow
 -   Reworded `team` to `business area`
 -   Added tooltips to the `Production` section of the `People and Production` page
 -   Reworded the user access options
+-   Removed help icons without content
+-   Made print button call `window.stop` before `window.print`.
+-   Made read-only calls to the registry api use `/registry-read-only`.
+-   Fixed: if featureFlags are not set, edit buttons are always shown on dataset page
+-   Add specific color to recent search item text
+-   Improve keywords generation logic for Spreadsheet
+-   Mention that choosing state is optional
+-   Make spatial input default to Australia
+-   Render selected time intervals above the date picker so that nothing gets hidden
 
 Gateway:
 
@@ -161,6 +238,7 @@ Others:
 
 -   Made registry-api DB pool settings configurable via Helm
 -   Make broken link sleuther recrawl period configurable via Helm
+-   Set version of Helm used by GitLab CI to 2.16.1
 -   Format minion will trust dcat format if other measures indicate a ZIP format
 -   Format minion will trust dcat format if other measures indicate a ESRI REST format
 -   Added ASC to 4 stars rating list
@@ -168,6 +246,8 @@ Others:
 -   Disabled tenant-api & tenant-db when `enableMultiTenants` = false
 -   Excluded organisations that are owners of thesauruses (keyword taxonomies) from being considered as owners of datasets via CSW connector
 -   Fix data.json connector dcat-dataset-strings aspect so keywords are stored correctly
+-   Fix CSW connector may process XML response incorrectly and report `no id` error
+-   Fix: CSW connector should look for alternative location for title, keywords & spatial extend for aurin data source
 -   Upgrade Scala dependencies versions & added scalafmt support
 -   Fixed doc to reflect [lerna deprecating an option](https://github.com/lerna/lerna/commit/f2c3a92fe41b6fdc5d11269f0f2c3e27761b4c85)
 -   Fix potential memory leak by deregistering listener when Header is unmounted

@@ -137,7 +137,7 @@ Magda is also completely open-source and can be used for free - to get it runnin
 -   [CSIRO Land and Water](https://www.csiro.au/en/Research/LWF) - [Knowledge Network V2](https://knowledgenet.co/)
 -   [Department of Agriculture](http://www.agriculture.gov.au/) - Private Instance
 -   [Department of the Environment and Energy](https://www.environment.gov.au/) - Private Instance
--   [NSW Department of Customer Service](https://www.customerservice.nsw.gov.au/) - Under Development
+-   [NSW Department of Customer Service](https://www.customerservice.nsw.gov.au/) - [NSW Spatial Digital Twin](https://nsw.digitaltwin.terria.io/)
 -   [QLD Department of Natural Resources, Mines and Energy](https://www.dnrme.qld.gov.au/) - Under Development
 
 <p class="center">
@@ -151,6 +151,10 @@ A demo site exists at [demo.dev.magda.io](https://demo.dev.magda.io). This is ho
 ## Want to get it running yourself?
 
 [Try the latest version](https://github.com/magda-io/magda-config), or [build and run from source](https://magda.io/docs/building-and-running)
+
+## Want to build your connectors / minions?
+
+You can extend Madga's functionality by [building your own customised connectors / minions](https://magda.io/docs/how-to-build-your-own-connectors-minions).
 
 ## Latest Release
 

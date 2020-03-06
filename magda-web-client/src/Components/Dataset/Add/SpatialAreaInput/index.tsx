@@ -7,8 +7,8 @@ import CoordinatesPanel from "./CoordinatesPanel";
 
 import { BoundingBox } from "helpers/datasetSearch";
 
-import helpIcon from "assets/help.svg";
 import "./index.scss";
+import ToolTip from "../ToolTip";
 
 interface StateType {
     activeTabIndex: number;
@@ -148,19 +148,24 @@ const SpatialAreaInput: FunctionComponent<PropsType> = props => {
                                 case 0:
                                     return (
                                         <span>
-                                            This helps data users understand the
-                                            scope of your dataset. Select the
-                                            appropriate region that best matches
-                                            the spatial extent of your dataset:
+                                            Select the appropriate region that
+                                            best matches the spatial extent of
+                                            your dataset:
+                                            <ToolTip>
+                                                This helps data users understand
+                                                the scope of your dataset.
+                                            </ToolTip>
                                         </span>
                                     );
                                 case 1:
                                     return (
                                         <span>
-                                            This helps data users understand the
-                                            scope of your dataset. We’ve
-                                            determined that the coordinates of
-                                            your data are:
+                                            We’ve determined that the
+                                            coordinates of your data are:
+                                            <ToolTip>
+                                                This helps data users understand
+                                                the scope of your dataset.
+                                            </ToolTip>
                                         </span>
                                     );
                                 default:
@@ -170,9 +175,6 @@ const SpatialAreaInput: FunctionComponent<PropsType> = props => {
                                     );
                             }
                         })()}
-                        <div className="help-icon-container">
-                            <img src={helpIcon} />
-                        </div>
                     </div>
                     <div className="tab-content-container">
                         {(() => {

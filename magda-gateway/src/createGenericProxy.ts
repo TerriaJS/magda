@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import createBaseProxy from "./createBaseProxy";
 import { TenantMode } from "./setupTenantMode";
 

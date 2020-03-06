@@ -6,12 +6,12 @@ interface ToggleEditorProps<V> {
     value: any;
     onChange: Function;
     editor: Editor<V>;
-    enabled?: boolean;
+    editable: boolean;
 }
 
 /**
  * Will toggle between editing and viewing with an edit button.
- * Will always show if enabled is false.
+ * Will always show if editable is false.
  * Can specify custom viewer by specifying children which will be rendered instead of viewer of the editor.
  * Interchangable with AlwaysEditor.
  */
@@ -51,13 +51,18 @@ export class ToggleEditor<V> extends React.Component<ToggleEditorProps<V>> {
 
     render() {
         let { value } = this.state;
-        let { editor, enabled } = this.props;
+        let { editor, editable } = this.props;
         if (value === undefined) {
             value = this.props.value;
         }
 
-        enabled = enabled === undefined || enabled;
-        const isEditing = enabled && this.state.isEditing;
+        if (typeof editable !== "boolean") {
+            throw new Error(
+                "The `editable` property of ToggleEditor is compulsory and requires a boolean value"
+            );
+        }
+
+        const isEditing = editable && this.state.isEditing;
 
         return (
             <div className="toggle-editor-container">
@@ -82,7 +87,7 @@ export class ToggleEditor<V> extends React.Component<ToggleEditorProps<V>> {
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        {enabled && (
+                        {editable && (
                             <button
                                 className="toggle-edit-button"
                                 title="Edit data item"

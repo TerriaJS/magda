@@ -1,11 +1,10 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "title":
-        "Aspect describing source link status of a distribution (active or broken)",
+    "title": "Aspect describing source link status of a distribution (active or broken)",
     "type": "object",
     "properties": {
         "status": {
-            "enum": ["active", "broken"]
+            "enum": ["active", "broken", "unknown"]
         },
         "httpStatusCode": {
             "type": "integer"

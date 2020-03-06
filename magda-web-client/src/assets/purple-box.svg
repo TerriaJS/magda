@@ -8,6 +8,6 @@
             <use xlink:href="#a"/>
         </mask>
         <rect width="533" height="154" x=".5" y=".5" stroke="#CCCACA" rx="8"/>
-        <path fill="#4B2A85" d="M0 41L41 0H0z" mask="url(#b)"/>
+        <path fill="#0100F4" d="M0 41L41 0H0z" mask="url(#b)"/>
     </g>
 </svg>

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import uniq from "lodash/uniq";
 import reduce from "lodash/reduce";
-import AUtags from "pancake/react/tags";
 import "./TagsBox.scss";
 
 const tagSeperatorRegex = /[,|;|/||]/g;
@@ -29,22 +28,27 @@ function TagsBox(props) {
         <div className="tags-box">
             <div className="heading">Tags: </div>
             {props.tags && props.tags.length > 0 ? (
-                <AUtags
-                    tags={
-                        props.tags &&
+                <ul className="au-tags">
+                    {props.tags &&
                         mergeTags(props.tags)
                             .sort((a, b) => {
                                 if (a < b) return -1;
                                 else if (a > b) return 1;
                                 else return 0;
                             })
-                            .map((t, _) => ({
-                                link: `/search?q=${encodeURIComponent(t)}`,
-                                text: t
-                            }))
-                    }
-                    linkComponent={Link}
-                />
+                            .map((t, _) => (
+                                <li>
+                                    <Link
+                                        to={`/search?q=${encodeURIComponent(
+                                            t
+                                        )}`}
+                                        className="au-tag"
+                                    >
+                                        {t}
+                                    </Link>
+                                </li>
+                            ))}
+                </ul>
             ) : (
                 <span>No tags defined</span>
             )}

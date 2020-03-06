@@ -1,3 +1,0 @@
-return {
-    json: dataset
-};

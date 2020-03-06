@@ -8,91 +8,106 @@ global:
   enablePriorityClass: false
   defaultContactEmail: "magda-test@googlegroups.com"
   enableMultiTenants: true
+  connectors:
+    image:
+      repository: docker.io/data61
+      tag: 0.0.57-0
+      pullPolicy: IfNotPresent
+      imagePullSecret: false
+  minions:
+    image:
+      repository: docker.io/data61
+      tag: 0.0.57-0
+      pullPolicy: IfNotPresent
+      imagePullSecret: false
 
 tags:
   all: true
   ingress: true
   priorities: false
+  connectors: false
 
-ingress:
-  ingressClass: nginx
-  enableTls: true
-  useDefaultCertificate: true
+magda-core:
+  ingress:
+    ingressClass: nginx
+    enableTls: true
+    useDefaultCertificate: true
 
-registry-api:
-  skipAuthorization: false
-  
-gateway:
-  ckanRedirectionDomain: "ckan.data.gov.au"
-  ckanRedirectionPath: ""
-  enableCkanRedirection: false
-  enableAuthEndpoint: true
-  enableHttpsRedirection: true
-  auth:
-    facebookClientId: "173073926555600"
-    googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
-    ckanAuthenticationUrl: https://data.gov.au/data
-  autoscaler:
-    enabled: false
-  helmet:
-    frameguard: false
-  cors:
-    credentials: true
-    origin: true
-  csp:
-    directives:
-      scriptSrc:
-      - "''self''"
-      - "''unsafe-inline''"
-      - "*.dev.magda.io"
-      - "https://cdn.polyfill.io"
-      - "https://dev.virtualearth.net"
-      - browser-update.org
-      objectSrc:
-      - "''none''"
-      reportUri: https://sdga.report-uri.com/r/d/csp/enforce
+  registry-api:
+    skipAuthorization: false
 
-combined-db:
-  waleBackup:
-    method: WAL
-    readOnly: "TRUE"
-    recoveryMode: "immediate"
-    gsPrefix: "gs://magda-postgres-backups-asia/dev"
-    googleApplicationCreds:
-      secretName: storage-account-credentials
-      fileName: db-service-account-private-key.json
-  data:
-    storage: 250Gi
-  resources:
-    limits:
-      cpu: 2000m
+  gateway:
+    ckanRedirectionDomain: "ckan.data.gov.au"
+    ckanRedirectionPath: ""
+    enableCkanRedirection: false
+    enableAuthEndpoint: true
+    enableHttpsRedirection: true
+    auth:
+      facebookClientId: "173073926555600"
+      googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
+      ckanAuthenticationUrl: https://data.gov.au/data
+    autoscaler:
+      enabled: false
+    helmet:
+      frameguard: false
+    cors:
+      credentials: true
+      origin: true
+    csp:
+      directives:
+        scriptSrc:
+        - "''self''"
+        - "''unsafe-inline''"
+        - "*.dev.magda.io"
+        - "https://cdn.polyfill.io"
+        - "https://dev.virtualearth.net"
+        - browser-update.org
+        objectSrc:
+        - "''none''"
+        reportUri: https://sdga.report-uri.com/r/d/csp/enforce
 
-elasticsearch:
-  data:
-    heapSize: 500m
-    pluginsInstall: "repository-gcs"
-  backup:
-    googleApplicationCreds:
-      secretName: storage-account-credentials
-      fileName: db-service-account-private-key.json
-indexer:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 0
-  readSnapshots: false
-  makeSnapshots: false
+  combined-db:
+    waleBackup:
+      method: WAL
+      readOnly: "TRUE"
+      recoveryMode: "immediate"
+      gsPrefix: "gs://magda-postgres-backups-asia/dev"
+      googleApplicationCreds:
+        secretName: storage-account-credentials
+        fileName: db-service-account-private-key.json
+    data:
+      storage: 250Gi
+    resources:
+      limits:
+        cpu: 2000m
+
   elasticsearch:
-    useGcsSnapshots: true
-    gcsSnapshotBucket: "magda-es-snapshots-dev"
-    gcsSnapshotClient: "default"
+    data:
+      heapSize: 500m
+      pluginsInstall: "repository-gcs"
+    backup:
+      googleApplicationCreds:
+        secretName: storage-account-credentials
+        fileName: db-service-account-private-key.json
+  indexer:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 0
+    readSnapshots: false
+    makeSnapshots: false
+    elasticsearch:
+      useGcsSnapshots: true
+      gcsSnapshotBucket: "magda-es-snapshots-dev"
+      gcsSnapshotClient: "default"
 
-web-server:
-  fallbackUrl: "https://data.gov.au"
-  featureFlags:
-    cataloguing: true
+  web-server:
+    fallbackUrl: "https://data.gov.au"
+    featureFlags:
+      cataloguing: true
+      publishToDga: true
 
-correspondence-api:
-  alwaysSendToDefaultRecipient: true
-  smtpHostname: "smtp.mailgun.org"
-  smtpPort: 2525
+  correspondence-api:
+    alwaysSendToDefaultRecipient: true
+    smtpHostname: "smtp.mailgun.org"
+    smtpPort: 2525

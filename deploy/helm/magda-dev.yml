@@ -9,70 +9,75 @@ global:
   enablePriorityClass: true
   defaultContactEmail: "magda-test@googlegroups.com"
   enableMultiTenants: false
+  connectors:
+    includeInitialJobs: false
+    includeCronJobs: true
+    image:
+      repository: docker.io/data61
+      tag: 0.0.57-0
+      pullPolicy: IfNotPresent
+      imagePullSecret: false
+  minions:
+    image:
+      repository: docker.io/data61
+      tag: 0.0.57-0
+      pullPolicy: IfNotPresent
+      imagePullSecret: false
 
 tags:
   all: true
   ingress: true
+  connectors: true
   minion-broken-link: true
   minion-linked-data-rating: true
   minion-visualization: true
   minion-format: true
 
-ingress:
-  hostname: dev.magda.io
-  ingressClass: nginx
-  enableTls: true
-  domains:
-    - dev.magda.io
-    - "*.dev.magda.io"
+magda-core:
+  ingress:
+    hostname: dev.magda.io
+    ingressClass: nginx
+    enableTls: true
+    domains:
+      - dev.magda.io
+      - "*.dev.magda.io"
 
-gateway:
-  enableCkanRedirection: false
-  enableAuthEndpoint: true
-  enableHttpsRedirection: true
-  auth:
-    facebookClientId: "173073926555600"
-    arcgisClientId: "d0MgVUbbg5Z6vmWo"
-    googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
-    ckanAuthenticationUrl: https://data.gov.au/data
-    vanguardWsFedIdpUrl: https://thirdparty.authentication.business.gov.au/fas/v2/wsfed12/authenticate
-    vanguardWsFedRealm: https://environment.magda.io/integration-test-2
-  cors:
-    credentials: true
-    origin: true
-  helmet:
-    frameguard: false
-  csp:
-    directives:
-      scriptSrc:
-        - "''self''"
-        - browser-update.org
-        - "''unsafe-inline''"
-      objectSrc:
-        - "''none''"
-      reportUri: https://sdga.report-uri.com/r/d/csp/enforce
+  gateway:
+    enableCkanRedirection: false
+    enableAuthEndpoint: true
+    enableHttpsRedirection: true
+    auth:
+      facebookClientId: "173073926555600"
+      arcgisClientId: "d0MgVUbbg5Z6vmWo"
+      googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
+      ckanAuthenticationUrl: https://data.gov.au/data
+      vanguardWsFedIdpUrl: https://thirdparty.authentication.business.gov.au/fas/v2/wsfed12/authenticate
+      vanguardWsFedRealm: https://environment.magda.io/integration-test-2
+    cors:
+      credentials: true
+      origin: true
+    helmet:
+      frameguard: false
+    csp:
+      directives:
+        scriptSrc:
+          - "''self''"
+          - browser-update.org
+          - "''unsafe-inline''"
+        objectSrc:
+          - "''none''"
+        reportUri: https://sdga.report-uri.com/r/d/csp/enforce
 
-combined-db:
-  waleBackup:
-    method: WAL
-    gsPrefix: "gs://magda-postgres-backups-asia/dev"
-    executionTime: 03:00
-    googleApplicationCreds:
-      secretName: storage-account-credentials
-      fileName: TerriaJS-5e042b649f8a.json
-  data:
-    storage: 250Gi
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: cloud.google.com/gke-preemptible
-                operator: DoesNotExist
-
-elasticsearch:
-  data:
-    heapSize: 500m
+  combined-db:
+    waleBackup:
+      method: WAL
+      gsPrefix: "gs://magda-postgres-backups-asia/dev"
+      executionTime: 03:00
+      googleApplicationCreds:
+        secretName: storage-account-credentials
+        fileName: TerriaJS-5e042b649f8a.json
+    data:
+      storage: 250Gi
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -80,32 +85,45 @@ elasticsearch:
             - matchExpressions:
                 - key: cloud.google.com/gke-preemptible
                   operator: DoesNotExist
-  backup:
-    googleApplicationCreds:
-      secretName: storage-account-credentials
-      fileName: db-service-account-private-key.json
 
-indexer:
-  readSnapshots: false
-  makeSnapshots: false
   elasticsearch:
-    useGcsSnapshots: true
-    gcsSnapshotBucket: "magda-es-snapshots-dev"
-    gcsSnapshotClient: "default"
+    data:
+      heapSize: 500m
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: DoesNotExist
+    backup:
+      googleApplicationCreds:
+        secretName: storage-account-credentials
+        fileName: db-service-account-private-key.json
 
-web-server:
-  fallbackUrl: "https://data.gov.au"
-  featureFlags:
-    cataloguing: true
-  vocabularyApiEndpoints:
-    - "https://vocabs.ands.org.au/repository/api/lda/abares/australian-land-use-and-management-classification/version-8/concept.json"
-    - "https://vocabs.ands.org.au/repository/api/lda/neii/australian-landscape-water-balance/version-1/concept.json"
-    - "https://vocabs.ands.org.au/repository/api/lda/ands-nc/controlled-vocabulary-for-resource-type-genres/version-1-1/concept.json"
+  indexer:
+    readSnapshots: false
+    makeSnapshots: false
+    elasticsearch:
+      useGcsSnapshots: true
+      gcsSnapshotBucket: "magda-es-snapshots-dev"
+      gcsSnapshotClient: "default"
 
-correspondence-api:
-  alwaysSendToDefaultRecipient: true
-  smtpHostname: "smtp.mailgun.org"
-  smtpPort: 2525
+  web-server:
+    fallbackUrl: "https://data.gov.au"
+    showNotificationBanner: false
+    featureFlags:
+      cataloguing: true
+      publishToDga: true
+    vocabularyApiEndpoints:
+      - "https://vocabs.ands.org.au/repository/api/lda/abares/australian-land-use-and-management-classification/version-8/concept.json"
+      - "https://vocabs.ands.org.au/repository/api/lda/neii/australian-landscape-water-balance/version-1/concept.json"
+      - "https://vocabs.ands.org.au/repository/api/lda/ands-nc/controlled-vocabulary-for-resource-type-genres/version-1-1/concept.json"
+
+  correspondence-api:
+    alwaysSendToDefaultRecipient: true
+    smtpHostname: "smtp.mailgun.org"
+    smtpPort: 2525
 
 minion-broken-link:
   domainWaitTimeConfig:
@@ -113,205 +131,12 @@ minion-broken-link:
     data.gov.au: 5
     data.act.gov.au: 30
 
-connectors:
-  config:
-    ## The service's image as per the global options under "global.image", but with a "name "
-    ## currently available are magda-ckan-connector, magda-project-open-data-connector and magda-csw-connector
-    - image:
-        name: "magda-ckan-connector"
-        # tag: vx.x.x
-        # pullPolicy: IfNotPresent
-        # imagePullSecret: ""
-
-      ## Unique id to identify this connector and records that are harvested from it
-      id: dga
-      ## Friendly readable name
-      name: "data.gov.au"
-      ## The base URL of the place to source data from
-      sourceUrl: "https://data.gov.au/data/"
-      ## When crawling through from beginning to end, how big should the individual requests be in records?
-      pageSize: 1000
-      ## Crontab schedule for how often this should happen.
-      ## CKAN-specific config: what harvest sources to ignore. * will ignore everything that's been harvested
-      ## from another portal
-      ignoreHarvestSources: ["*"]
-    - image:
-        name: magda-project-open-data-connector
-      id: act
-      name: ACT Government data.act.gov.au
-      sourceUrl: https://www.data.act.gov.au/data.json
-    - image:
-        name: magda-project-open-data-connector
-      id: actmapi
-      name: ACT Government ACTMAPi
-      sourceUrl: https://actmapi-actgov.opendata.arcgis.com/data.json
-    - image:
-        name: magda-csw-connector
-      id: aims
-      name: Australian Institute of Marine Science
-      sourceUrl: https://geo.aims.gov.au/geonetwork/srv/eng/csw
-      pageSize: 100
-    - image:
-        name: magda-csw-connector
-      id: aodn
-      name: Australian Oceans Data Network
-      sourceUrl: https://catalogue.aodn.org.au/geonetwork/srv/eng/csw
-      pageSize: 100
-    - image:
-        name: magda-csw-connector
-      id: bom
-      name: Bureau of Meteorology
-      sourceUrl: http://www.bom.gov.au/geonetwork/srv/eng/csw
-      pageSize: 100
-    - image:
-        name: magda-csw-connector
-      id: aurin
-      name: Australian Urban Research Infrastructure Network
-      sourceUrl: https://openapi.aurin.org.au/public/csw
-      pageSize: 100
-    - image:
-        name: magda-ckan-connector
-      id: brisbane
-      name: Brisbane City Council
-      sourceUrl: https://www.data.brisbane.qld.gov.au/data/
-      pageSize: 100
-    - image:
-        name: magda-project-open-data-connector
-      id: hobart
-      name: City of Hobart Open Data Portal
-      sourceUrl: https://data-1-hobartcc.opendata.arcgis.com/data.json
-    - image:
-        name: magda-project-open-data-connector
-      id: launceston
-      name: City of Launceston Open Data
-      sourceUrl: https://data-launceston.opendata.arcgis.com/data.json
-    - image:
-        name: magda-csw-connector
-      id: marlin
-      name: CSIRO Marlin
-      sourceUrl: http://www.marlin.csiro.au/geonetwork/srv/eng/csw
-      pageSize: 50
-    - image:
-        name: magda-csw-connector
-      id: environment
-      name: Department of the Environment and Energy
-      sourceUrl: http://www.environment.gov.au/fed/csw
-      pageSize: 100
-    - image:
-        name: magda-project-open-data-connector
-      id: esta
-      name: ESTA Open Data
-      sourceUrl: http://data-esta000.opendata.arcgis.com/data.json
-    - image:
-        name: magda-csw-connector
-      id: ga
-      name: Geoscience Australia
-      sourceUrl: https://ecat.ga.gov.au/geonetwork/srv/eng/csw
-      outputSchema: http://standards.iso.org/iso/19115/-3/mdb/1.0
-      pageSize: 100
-    - image:
-        name: magda-project-open-data-connector
-      id: logan
-      name: Logan City Council
-      sourceUrl: https://data-logancity.opendata.arcgis.com/data.json
-    - image:
-        name: magda-project-open-data-connector
-      id: melbournewater
-      name: Melbourne Water Corporation
-      sourceUrl: https://data-melbournewater.opendata.arcgis.com/data.json
-    - image:
-        name: magda-project-open-data-connector
-      id: melbourne
-      name: Melbourne Data
-      sourceUrl: https://data.melbourne.vic.gov.au/data.json
-    - image:
-        name: magda-csw-connector
-      id: mrt
-      name: Mineral Resources Tasmania
-      sourceUrl: http://www.mrt.tas.gov.au/web-catalogue/srv/eng/csw
-      pageSize: 100
-    - image:
-        name: magda-project-open-data-connector
-      id: moretonbay
-      name: Moreton Bay Regional Council Data Portal
-      sourceUrl: http://datahub.moretonbay.qld.gov.au/data.json
-    - image:
-        name: magda-csw-connector
-      id: neii
-      name: National Environmental Information Infrastructure
-      sourceUrl: http://neii.bom.gov.au/services/catalogue/csw
-      pageSize: 100
-    - image:
-        name: magda-ckan-connector
-      id: nsw
-      name: New South Wales Government
-      sourceUrl: https://data.nsw.gov.au/data/
-      pageSize: 100
-    - image:
-        name: magda-csw-connector
-      id: sdinsw
-      name: NSW Land and Property
-      sourceUrl: https://sdi.nsw.gov.au/csw
-      pageSize: 100
-    - image:
-        name: magda-ckan-connector
-      id: qld
-      name: Queensland Government
-      sourceUrl: https://data.qld.gov.au/
-      pageSize: 100
-    - image:
-        name: magda-ckan-connector
-      id: sa
-      name: South Australia Government
-      sourceUrl: https://data.sa.gov.au/data/
-      pageSize: 100
-    - image:
-        name: magda-project-open-data-connector
-      id: southerngrampians
-      name: Southern Grampians Shire Council Smart City and Open Data portal
-      sourceUrl: https://www.connectgh.com.au/data.json
-    - image:
-        name: magda-csw-connector
-      id: listtas
-      name: Tasmania TheList
-      sourceUrl: https://data.thelist.tas.gov.au:443/datagn/srv/eng/csw
-      pageSize: 100
-    - image:
-        name: magda-csw-connector
-      id: tern
-      name: Terrestrial Ecosystem Research Network
-      sourceUrl: http://data.auscover.org.au/geonetwork/srv/eng/csw
-      pageSize: 100
-    - image:
-        name: magda-ckan-connector
-      id: vic
-      name: Victoria Government
-      sourceUrl: https://discover.data.vic.gov.au/
-      pageSize: 100
-    - image:
-        name: magda-ckan-connector
-      id: wa
-      name: Western Australia Government
-      sourceUrl: https://catalogue.data.wa.gov.au/
-      pageSize: 100
-    - image:
-        name: magda-dap-connector
-      id: dap
-      name: CSIRO
-      sourceUrl: https://data.csiro.au/dap/ws/v2/
-      pageSize: 100
-    - image:
-        name: magda-project-open-data-connector
-      id: vic-cardinia
-      name: Cardinia Shire Council
-      sourceUrl: https://data-cscgis.opendata.arcgis.com/data.json
-    - image:
-        name: magda-project-open-data-connector
-      id: nt-darwin
-      name: City of Darwin
-      sourceUrl: https://open-darwin.opendata.arcgis.com/data.json
-    - image:
-        name: magda-project-open-data-connector
-      id: southern-grampians
-      name: Southern Grampians Shire Council
-      sourceUrl: https://www.connectgh.com.au/data.json
+# Connectors settings is built in Magda chart value file but you can override as the followings:
+# e.g. dga connector:
+# connector-dga:
+#   config:
+#     id: dga
+#     name: "data.gov.au"
+#     sourceUrl: "https://data.gov.au/data/"
+#     pageSize: 1000
+#     ignoreHarvestSources: ["*"]

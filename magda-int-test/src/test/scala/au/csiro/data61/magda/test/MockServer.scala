@@ -10,6 +10,7 @@ trait MockServer { this: Suite =>
   // --- muted detailed logs from MockServer
   java.lang.System.setProperty("mockserver.logLevel", "WARN")
   val mockServer = ClientAndServer.startClientAndServer()
-  Logging(TestActorSystem.actorSystem, getClass).info(s"Mock Server started at ${mockServer.getLocalPort}......")
+  Logging(TestActorSystem.actorSystem, getClass)
+    .info(s"Mock Server started at ${mockServer.getLocalPort}......")
 
 }

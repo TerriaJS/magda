@@ -521,6 +521,28 @@ const questions = [
             trim(input).length ? true : "password cannot be empty!"
     },
     {
+        type: "input",
+        name: "accesskey",
+        message: "Please enter an access key for your MinIO server:",
+        validate: input => {
+            const trimmedInput = trim(input);
+            return trimmedInput.length && trimmedInput.length >= 5
+                ? true
+                : "MinIO access keys need to be at least 5 characters.";
+        }
+    },
+    {
+        type: "input",
+        name: "secretkey",
+        message: "Please enter a secret key for your MinIO server::",
+        validate: input => {
+            const trimmedInput = trim(input);
+            return trimmedInput.length && trimmedInput.length >= 8
+                ? true
+                : "MinIO secret keys need to be at least 8 characters.";
+        }
+    },
+    {
         type: "list",
         dataType: "boolean",
         name: "get-namespace-from-env",

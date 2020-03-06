@@ -1,7 +1,7 @@
 import { Router } from "express";
-import ApiClient from "@magda/typescript-common/dist/authorization-api/ApiClient";
+import ApiClient from "magda-typescript-common/src/authorization-api/ApiClient";
 import Authenticator from "./Authenticator";
-import * as passport from "passport";
+import passport from "passport";
 
 export interface AuthRouterOptions {
     authenticator: Authenticator;
@@ -165,10 +165,7 @@ export default function createAuthRouter(options: AuthRouterOptions): Router {
         }
     );
 
-    authRouter.get("/logout", function(req, res) {
-        req.logout();
-        res.redirect("/auth");
-    });
+    // --- /auth/logout route is now handled by Authenticator.ts
 
     return authRouter;
 }

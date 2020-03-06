@@ -1,12 +1,12 @@
-import * as express from "express";
-import * as emailValidator from "email-validator";
-import * as _ from "lodash";
+import express from "express";
+import emailValidator from "email-validator";
+import _ from "lodash";
 
-import RegistryClient from "@magda/typescript-common/dist/registry/RegistryClient";
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
-import unionToThrowable from "@magda/typescript-common/dist/util/unionToThrowable";
+import RegistryClient from "magda-typescript-common/src/registry/RegistryClient";
+import { Record } from "magda-typescript-common/src/generated/registry/api";
+import unionToThrowable from "magda-typescript-common/src/util/unionToThrowable";
 
-import { installStatusRouter } from "@magda/typescript-common/dist/express/status";
+import { installStatusRouter } from "magda-typescript-common/src/express/status";
 
 import { Router } from "express";
 import { sendMail } from "./mail";

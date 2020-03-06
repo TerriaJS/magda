@@ -1,7 +1,9 @@
-const spawn = require("cross-spawn");
-const assert = require("assert");
+import spawn from "cross-spawn";
+import assert from "assert";
+import path from "path";
 import { MockRegistry } from "./MockRegistry";
 import { MockExpressServer } from "./MockExpressServer";
+import resolvePkg from "resolve";
 
 /**
  * Hoping to re-use this functionality for all black-box style connector
@@ -13,15 +15,29 @@ export function runConnectorTest(
     options: any = {}
 ) {
     describe("connector", function() {
-        this.timeout(15000);
+        this.timeout(30000);
 
         const registryPort = 5000 + Math.round(5000 * Math.random());
         const catalogPort = registryPort + 1;
 
         function run() {
             return new Promise((resolve, reject) => {
+                const tsconfigPath = path.resolve("tsconfig.json");
+                const tsNodeExec = path.resolve(
+                    path.dirname(
+                        resolvePkg.sync("ts-node", {
+                            basedir: process.cwd()
+                        })
+                    ),
+                    "./bin.js"
+                );
+
                 const command = [
-                    "src",
+                    "-r",
+                    resolvePkg.sync("tsconfig-paths/register", {
+                        basedir: process.cwd()
+                    }),
+                    "./src",
                     "--id=connector",
                     "--name=Connector",
                     `--sourceUrl=http://localhost:${catalogPort}`,
@@ -30,8 +46,13 @@ export function runConnectorTest(
                     "--userId=user",
                     "--tenantId=1"
                 ];
-                const proc = spawn("ts-node", command, {
-                    stdio: "inherit"
+                const proc = spawn(tsNodeExec, command, {
+                    stdio: "inherit",
+                    cwd: path.dirname(tsconfigPath),
+                    env: {
+                        ...(process.env ? process.env : {}),
+                        TS_NODE_PROJECT: tsconfigPath
+                    }
                 });
                 proc.on("error", (err: any) => {
                     console.log("Failed to start subprocess.", err);

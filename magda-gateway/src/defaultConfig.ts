@@ -21,6 +21,10 @@ export default {
         content: {
             to: "http://localhost:6119/v0",
             auth: true
+        },
+        storage: {
+            to: "http://localhost:6121/v0",
+            auth: true
         }
     },
     csp: {

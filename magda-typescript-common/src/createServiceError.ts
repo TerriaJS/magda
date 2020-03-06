@@ -1,4 +1,4 @@
-import { BadRequest } from "./generated/registry/api";
+import { ApiError } from "./generated/registry/api";
 
 export class ServiceError extends Error {
     public e: any;
@@ -10,7 +10,7 @@ export class ServiceError extends Error {
 }
 
 export class BadRequestError extends ServiceError {
-    constructor(statusCode: number, errorResponse: BadRequest, e: any) {
+    constructor(statusCode: number, errorResponse: ApiError, e: any) {
         super(
             `Status code: ${statusCode}, body:\n${JSON.stringify(
                 errorResponse,

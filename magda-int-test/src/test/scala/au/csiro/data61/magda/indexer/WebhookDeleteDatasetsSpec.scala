@@ -26,21 +26,28 @@ class WebhookDeleteDatasetsSpec extends WebhookSpecBase {
       forAll(gen) {
         case (dataSets, dataSetsToDelete) =>
           val builtIndex = buildIndex()
-          Await.result(builtIndex.indexer.index(Source.fromIterator(() => dataSets.iterator)), 30 seconds)
+          Await.result(
+            builtIndex.indexer
+              .index(Source.fromIterator(() => dataSets.iterator)),
+            30 seconds
+          )
           Await.result(builtIndex.indexer.ready, 120 seconds)
           builtIndex.indexNames.foreach { idxName =>
             refresh(idxName)
           }
           blockUntilExactCount(dataSets.size, builtIndex.indexId)
 
-          val events = dataSetsToDelete.map(dataSet =>
-            RegistryEvent(
-              id = None,
-              eventTime = None,
-              eventType = EventType.DeleteRecord,
-              userId = 0,
-              data = JsObject("recordId" -> JsString(dataSet.identifier))
-            ))
+          val events = dataSetsToDelete.map(
+            dataSet =>
+              RegistryEvent(
+                id = None,
+                eventTime = None,
+                eventType = EventType.DeleteRecord,
+                userId = 0,
+                data = JsObject("recordId" -> JsString(dataSet.identifier)),
+                tenantId = MAGDA_ADMIN_PORTAL_ID
+              )
+          )
 
           val payload = WebHookPayload(
             action = "records.changed",
@@ -55,7 +62,8 @@ class WebhookDeleteDatasetsSpec extends WebhookSpecBase {
             status shouldBe Accepted
           }
 
-          val expectedDataSets = dataSets.filter(dataSet => !dataSetsToDelete.contains(dataSet))
+          val expectedDataSets =
+            dataSets.filter(dataSet => !dataSetsToDelete.contains(dataSet))
 
           builtIndex.indexNames.foreach { idxName =>
             refresh(idxName)
@@ -66,7 +74,9 @@ class WebhookDeleteDatasetsSpec extends WebhookSpecBase {
             status shouldBe OK
             val result = responseAs[SearchResult]
             result.dataSets.length shouldEqual expectedDataSets.length
-            result.dataSets.map(_.identifier).toSet shouldEqual expectedDataSets.map(_.identifier).toSet
+            result.dataSets.map(_.identifier).toSet shouldEqual expectedDataSets
+              .map(_.identifier)
+              .toSet
           }
 
           builtIndex.indexNames.foreach { idxName =>

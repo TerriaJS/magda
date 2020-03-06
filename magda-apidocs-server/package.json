@@ -1,7 +1,7 @@
 {
   "name": "@magda/apidocs-server",
   "description": "The MAGDA in-browser api documentation.",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
   "license": "Apache-2.0",
   "scripts": {
     "build": "generate-api-documentation --config ./apidoc.json --output ./build",
@@ -10,7 +10,7 @@
     "retag-and-push": "retag-and-push"
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-3"
+    "@magda/scripts": "^0.0.57-0"
   },
   "config": {
     "docker": {

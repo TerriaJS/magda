@@ -12,48 +12,56 @@ global:
   useCombinedDb: true
   enablePriorityClass: false
   defaultContactEmail: "magda@mailinator.com"
+  connectors:
+    includeInitialJobs: true
+    includeCronJobs: false
 
-gateway:
-  ckanRedirectionDomain: "ckan.data.gov.au"
-  ckanRedirectionPath: ""
-  enableCkanRedirection: true
-  enableAuthEndpoint: true
-  cors:
-    credentials: true
-    origin: true
-  auth:
-    arcgisInstanceBaseUrl: "https://beta.portal.data.nsw.gov.au/arcgis"
-    arcgisClientId: "xU0LNIvRZS2VUbFS"
-    esriOrgGroup: "esri-nsw-authenticated-user-group"
+magda-core:
+  gateway:
+    ckanRedirectionDomain: "ckan.data.gov.au"
+    ckanRedirectionPath: ""
+    enableCkanRedirection: true
+    enableAuthEndpoint: true
+    cors:
+      credentials: true
+      origin: true
+    auth:
+      arcgisInstanceBaseUrl: "https://beta.portal.data.nsw.gov.au/arcgis"
+      arcgisClientId: "xU0LNIvRZS2VUbFS"
+      esriOrgGroup: "esri-nsw-authenticated-user-group"
 
 
-registry-api:
-  skipAuthorization: false
-  skipOpa: false
-  recordPolicyId: "object.registry.record.esri_owner_groups"
-  
-correspondence-api:
-  smtpPort: 2525
-  smtpHostname: "smtp.mailgun.org"
-  
-web-server:
-  fallbackUrl: "https://data.gov.au"
-  featureFlags:
-    cataloguing: true
+  registry-api:
+    skipAuthorization: false
+    skipOpa: false
+    recordPolicyId: "object.registry.record.esri_owner_groups"
 
-connectors:
+  correspondence-api:
+    smtpPort: 2525
+    smtpHostname: "smtp.mailgun.org"
+
+  web-server:
+    fallbackUrl: "https://data.gov.au"
+    featureFlags:
+      cataloguing: true
+      publishToDga: true
+
+tags:
+  all: true
+  connectors: false
+  connector-esri-nsw: true
+
+connector-esri-nsw:
   includeCronJobs: false
   config:
-    - image:
-        name: "magda-esri-portal-connector"
-      id: esri-nsw
-      name: "beta.portal.data.nsw.gov.au/arcgis"
-      sourceUrl: "https://beta.portal.data.nsw.gov.au/arcgis"
-      esriOrgGroup: "esri-nsw-authenticated-user-group"
-      pageSize: 1000
-      registryUrl: "http://registry-api"
-      arcgisUserId: "xxxxx"
-      arcgisUserPassword: "xxxxx"
-      userId: "00000000-0000-4000-8000-000000000000"
-      schedule: "0 * * * *"
-      ignoreHarvestSources: ["*"]
+    id: esri-nsw
+    name: "beta.portal.data.nsw.gov.au/arcgis"
+    sourceUrl: "https://beta.portal.data.nsw.gov.au/arcgis"
+    esriOrgGroup: "esri-nsw-authenticated-user-group"
+    pageSize: 1000
+    registryUrl: "http://registry-api"
+    arcgisUserId: "xxxxx"
+    arcgisUserPassword: "xxxxx"
+    userId: "00000000-0000-4000-8000-000000000000"
+    schedule: "0 * * * *"
+    ignoreHarvestSources: ["*"]

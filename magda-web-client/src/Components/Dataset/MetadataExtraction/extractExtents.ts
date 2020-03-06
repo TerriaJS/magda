@@ -1,3 +1,12 @@
+const moment = require("moment");
+import { Moment } from "moment";
+import XLSX from "xlsx";
+import { uniq } from "lodash";
+import { config } from "config";
+
+const { dateFormats, dateRegexes } = config.dateConfig;
+const { dateRegex, startDateRegex, endDateRegex } = dateRegexes;
+
 /**
  * Extract spatial and temporal extent of spreadsheet files
  */
@@ -6,7 +15,7 @@ export function extractExtents(input, output) {
         // what if it has multiple sheets?
         const worksheet = input.workbook.Sheets[input.workbook.SheetNames[0]];
 
-        const rows = XLSX.utils.sheet_to_json(worksheet);
+        const rows = XLSX.utils.sheet_to_json(worksheet, { raw: false });
         if (rows.length) {
             const headersSet = new Set<string>();
             for (let row of rows) {
@@ -28,23 +37,16 @@ export function extractExtents(input, output) {
     }
 }
 
-import XLSX from "xlsx";
-import { uniq } from "lodash";
-const chrono = require("chrono-node");
+const DATE_FORMAT = "YYYY-MM-DD";
 
-const DATE_REGEX_PART = ".*(date|dt|decade|year).*";
-const DATE_REGEX = new RegExp(DATE_REGEX_PART, "i");
-const START_DATE_REGEX = new RegExp(".*(start|st)" + DATE_REGEX_PART, "i");
-const END_DATE_REGEX = new RegExp(".*(end)" + DATE_REGEX_PART, "i");
+const maxDate: Moment = moment(new Date(8640000000000000));
+const minDate: Moment = moment(new Date(-8640000000000000));
 
 const buildSpatialRegex = (part: string) =>
     new RegExp(`.*(${part})($|[^a-z^A-Z])+.*`, "i");
 
 const LONG_REGEX = buildSpatialRegex("long|lng|longitude");
 const LAT_REGEX = buildSpatialRegex("lat|latitude|lt");
-
-const EARLIEST_POSSIBLE_MOMENT = new Date(-8640000000000000);
-const LATEST_POSSIBLE_MOMENT = new Date(8640000000000000);
 
 const MAX_POSSIBLE_LAT = 90;
 const MIN_POSSIBLE_LAT = -90;
@@ -65,43 +67,6 @@ function tryFilterHeaders(headers: string[], ...regexes: RegExp[]) {
     return [];
 }
 
-function preferYears(chronoOutput: any) {
-    if (
-        !chronoOutput.knownValues.year &&
-        typeof chronoOutput.knownValues.hour !== "undefined" &&
-        typeof chronoOutput.knownValues.minute !== "undefined"
-    ) {
-        chronoOutput.knownValues.year =
-            chronoOutput.knownValues.hour.toString().padStart(2, "0") +
-            chronoOutput.knownValues.minute.toString().padStart(2, "0");
-        chronoOutput.knownValues.hour = undefined;
-        chronoOutput.knownValues.minute = undefined;
-    }
-
-    return chronoOutput;
-}
-
-function pickMoment(
-    rawDate: string,
-    toCompare: Date,
-    getBetter: (moment1: Date, moment2: Date) => Date
-) {
-    const parsed: Array<any> =
-        rawDate && rawDate.length > 0 && chrono.strict.parse(rawDate);
-
-    if (parsed && parsed.length > 0 && parsed[0].start) {
-        const startDate = preferYears(parsed[0].start).date();
-
-        const betterDate = parsed[0].end
-            ? getBetter(startDate, preferYears(parsed[0].end).date())
-            : startDate;
-
-        return getBetter(betterDate, toCompare);
-    } else {
-        return toCompare;
-    }
-}
-
 function getBetterLatLng(
     rawLatLng: string,
     toCompare: number,
@@ -118,11 +83,6 @@ function getBetterLatLng(
     }
 }
 
-type DateAggregation = {
-    earliestStart: Date;
-    latestEnd: Date;
-};
-
 type SpatialExtent = {
     minLat: number;
     maxLat: number;
@@ -131,82 +91,88 @@ type SpatialExtent = {
 };
 
 function aggregateDates(rows: any[], headers: string[]) {
-    const dateHeaders = tryFilterHeaders(headers, DATE_REGEX);
+    const dateHeaders = tryFilterHeaders(headers, dateRegex);
+    const startDateHeaders = uniq(tryFilterHeaders(headers, startDateRegex));
+    const endDateHeaders = uniq(tryFilterHeaders(headers, endDateRegex));
 
-    const startDateHeaders = tryFilterHeaders(headers, START_DATE_REGEX);
-    const endDateHeaders = tryFilterHeaders(headers, END_DATE_REGEX);
     const startDateHeadersInOrder = uniq(
         startDateHeaders.concat(dateHeaders).concat(endDateHeaders)
     );
+
     const endDateHeadersInOrder = uniq(
         endDateHeaders.concat(dateHeaders).concat(startDateHeaders)
     );
 
-    console.log(
-        "Start Date Headers: " + JSON.stringify(startDateHeadersInOrder)
-    );
-    console.log("End Date Headers: " + JSON.stringify(endDateHeadersInOrder));
+    let earliestDate = maxDate;
+    let latestDate = minDate;
 
-    const dateAgg = rows.reduce(
-        (soFar: DateAggregation, row: any) => {
-            return {
-                earliestStart: startDateHeadersInOrder.reduce(
-                    (earliestStart: Date, header: string) =>
-                        pickMoment(row[header], earliestStart, (date1, date2) =>
-                            date1.getTime() <= date2.getTime() ? date1 : date2
-                        ),
-                    soFar.earliestStart
-                ),
-                latestEnd: endDateHeadersInOrder.reduce(
-                    (latestEnd: Date, header: string) =>
-                        pickMoment(row[header], latestEnd, (date1, date2) =>
-                            date1.getTime() > date2.getTime() ? date1 : date2
-                        ),
-                    soFar.latestEnd
-                )
-            };
-        },
-        {
-            earliestStart: LATEST_POSSIBLE_MOMENT,
-            latestEnd: EARLIEST_POSSIBLE_MOMENT
-        } as DateAggregation
-    );
-    const { earliestStart, latestEnd } = dateAgg;
+    startDateHeadersInOrder.forEach(header => {
+        rows.forEach(row => {
+            var dateStr: string = row[header].toString();
+            var parsedDate: Moment = moment.utc(dateStr, dateFormats);
+            if (parsedDate) {
+                if (parsedDate.isBefore(earliestDate)) {
+                    // Updating the current earliest date
+                    earliestDate = parsedDate;
+                }
+            }
+        });
+    });
 
-    const earliestNotFound =
-        earliestStart.getTime() === LATEST_POSSIBLE_MOMENT.getTime();
-    const latestNotFound =
-        latestEnd.getTime() === EARLIEST_POSSIBLE_MOMENT.getTime();
+    endDateHeadersInOrder.forEach(header => {
+        rows.forEach(row => {
+            var dateStr: string = row[header].toString();
+            var parsedDate: Moment = moment.utc(dateStr, dateFormats);
+            if (parsedDate) {
+                let extendedTime = extendIncompleteTime(parsedDate.clone());
+                if (extendedTime.isAfter(latestDate)) {
+                    // Updating the current latest date
+                    latestDate = extendedTime;
+                }
+            }
+        });
+    });
 
-    console.log(
-        "Earliest start: " +
-            (earliestNotFound ? "Not found" : earliestStart.toString())
-    );
-    console.log(
-        "Latest end: " + (latestNotFound ? "Not found" : latestEnd.toString())
-    );
+    const foundEarliest = !maxDate.isSame(earliestDate);
+    const foundLatest = !minDate.isSame(latestDate);
 
-    if (!earliestNotFound || !latestNotFound) {
+    if (foundEarliest || foundLatest) {
         return {
             start:
-                (!earliestNotFound &&
-                    earliestStart.toISOString().substr(0, 10)) ||
+                (foundEarliest && earliestDate.format(DATE_FORMAT)) ||
                 undefined,
-            end:
-                (!latestNotFound && latestEnd.toISOString().substr(0, 10)) ||
-                undefined
+            end: (foundLatest && latestDate.format(DATE_FORMAT)) || undefined
         };
     } else {
         return undefined;
     }
 }
 
-function getGreater(num1: number, num2: number) {
-    return num1 > num2 ? num1 : num2;
-}
+/**
+ *
+ * @param m Extends an incomplete date to it's latest extent. For example, 2014 is 2014-12-31, 2014-05 is 2014-05-31
+ */
+function extendIncompleteTime(m: Moment): Moment {
+    const originalMoment = m.clone();
+    const creationData = m.creationData();
+    // YYYY, unless the original date was the very start of the year
+    if (
+        creationData.format === "YYYY" &&
+        originalMoment.isSame(m.startOf("year"))
+    ) {
+        return originalMoment.endOf("year");
+    }
 
-function getSmaller(num1: number, num2: number) {
-    return num1 <= num2 ? num1 : num2;
+    // YYYY-MM, unless the original date was the very start of the month
+    if (
+        originalMoment.date() !== 0 &&
+        originalMoment.isSame(m.startOf("month"))
+    ) {
+        return originalMoment.endOf("month");
+    }
+
+    // If it was more precise than YYYY or YYYY-MM
+    return originalMoment;
 }
 
 function calculateSpatialExtent(rows: any[], headers: string[]) {
@@ -237,7 +203,7 @@ function calculateSpatialExtent(rows: any[], headers: string[]) {
                     getBestCoordinateComponent(
                         MIN_POSSIBLE_LAT,
                         MAX_POSSIBLE_LAT,
-                        getGreater
+                        Math.max
                     ),
                     soFar.maxLat
                 ),
@@ -245,7 +211,7 @@ function calculateSpatialExtent(rows: any[], headers: string[]) {
                     getBestCoordinateComponent(
                         MIN_POSSIBLE_LAT,
                         MAX_POSSIBLE_LAT,
-                        getSmaller
+                        Math.min
                     ),
                     soFar.minLat
                 ),
@@ -253,7 +219,7 @@ function calculateSpatialExtent(rows: any[], headers: string[]) {
                     getBestCoordinateComponent(
                         MIN_POSSIBLE_LNG,
                         MAX_POSSIBLE_LNG,
-                        getGreater
+                        Math.max
                     ),
                     soFar.maxLng
                 ),
@@ -261,7 +227,7 @@ function calculateSpatialExtent(rows: any[], headers: string[]) {
                     getBestCoordinateComponent(
                         MIN_POSSIBLE_LNG,
                         MAX_POSSIBLE_LNG,
-                        getSmaller
+                        Math.min
                     ),
                     soFar.minLng
                 )

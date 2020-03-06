@@ -46,6 +46,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p>
                     Prefix:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={value.htmlContent}
                         onChange={save("htmlContent")}
@@ -54,6 +55,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p style={{ backgroundColor: "grey" }}>
                     Image:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={base64ImageEditor}
                         value={value.logoSrc}
                         onChange={save("logoSrc")}
@@ -62,6 +64,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p>
                     Link:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={value.href}
                         onChange={save("href")}
@@ -70,6 +73,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p>
                     Hover Text:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={value.logoAlt}
                         onChange={save("logoAlt")}

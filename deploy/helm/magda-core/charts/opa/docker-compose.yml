@@ -1,0 +1,9 @@
+version: "3"
+services:
+  test-opa:
+    image: openpolicyagent/opa:0.17.1
+    ports:
+      - 8181:8181
+    volumes:
+      - ./policies:/policies
+    command: ["run", "--server", "/policies"]

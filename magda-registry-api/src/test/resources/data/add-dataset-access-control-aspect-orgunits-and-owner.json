@@ -39,6 +39,11 @@
     },
 
     {
+        "id": "record-4",
+        "authnReadPolicyId": "object.registry.record.public"
+    },
+
+    {
         "id": "record-5",
         "aspects": {
             "dataset-access-control": {

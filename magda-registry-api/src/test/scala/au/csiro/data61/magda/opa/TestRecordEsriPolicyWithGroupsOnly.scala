@@ -2,9 +2,8 @@ package au.csiro.data61.magda.opa
 
 import org.scalatest.Ignore
 
-@Ignore
 class TestRecordEsriPolicyWithGroupsOnly
-    extends RecordOpaPolicyWithEsirGroupsOrMagdaOrgUnitsOnlySpec
+    extends RecordOpaPolicyWithEsriGroupsOrMagdaOrgUnitsOnlySpec
     with GroupsJwtForRecordEsriOpaPolicyTest {
 
   override def beforeAll(): Unit = {

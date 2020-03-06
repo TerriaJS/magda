@@ -1,15 +1,15 @@
 const Pwgen = require("pwgen/lib/pwgen_module");
 
-const pwgenGenerator = new Pwgen();
-pwgenGenerator.includeCapitalLetter = true;
-pwgenGenerator.includeNumber = true;
-pwgenGenerator.maxLength = 16;
-
 function generatePassword(
-    maxLength,
+    maxLength = 16,
     includeCapitalLetter = true,
     includeNumber = true
 ) {
+    const pwgenGenerator = new Pwgen();
+    pwgenGenerator.includeCapitalLetter = includeCapitalLetter;
+    pwgenGenerator.includeNumber = includeNumber;
+    pwgenGenerator.maxLength = maxLength;
+
     return pwgenGenerator.generate();
 }
 

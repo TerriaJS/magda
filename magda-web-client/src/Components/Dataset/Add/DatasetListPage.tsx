@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { State } from "./DatasetAddCommon";
 
 /**
  * Design infers the home page.
@@ -9,7 +10,7 @@ import moment from "moment";
  */
 class DatasetListPage extends React.Component<any, any> {
     render() {
-        let datasets: any[] = [];
+        let datasets: { id: string; dataset: State }[] = [];
         for (const [id, dataset] of Object.entries(localStorage)) {
             if (id.match(/^magda-ds-/)) {
                 try {
@@ -93,8 +94,11 @@ class DatasetListPage extends React.Component<any, any> {
                                                 }
                                             </td>
                                             <td>
-                                                {dataset.dataset.files.length}{" "}
-                                                file(s)
+                                                {
+                                                    dataset.dataset
+                                                        .distributions.length
+                                                }{" "}
+                                                distribution(s)
                                             </td>
                                         </tr>
                                     );

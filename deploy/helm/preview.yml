@@ -8,88 +8,108 @@ global:
   enablePriorityClass: false
   defaultContactEmail: "magda-test@googlegroups.com"
   enableMultiTenants: false
+  connectors:
+    image:
+      repository: docker.io/data61
+      tag: 0.0.57-0
+      pullPolicy: IfNotPresent
+      imagePullSecret: false
+  minions:
+    image:
+      repository: docker.io/data61
+      tag: 0.0.57-0
+      pullPolicy: IfNotPresent
+      imagePullSecret: false
 
 tags:
   all: true
   ingress: true
   priorities: false
+  connectors: false
 
-ingress:
-  ingressClass: nginx
-  enableTls: true
-  useDefaultCertificate: true
-gateway:
-  enableAuthEndpoint: true
-  enableHttpsRedirection: true
-  auth:
-    facebookClientId: "173073926555600"
-    arcgisClientId: "d0MgVUbbg5Z6vmWo"
-    googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
-    ckanAuthenticationUrl: https://data.gov.au/data
-    vanguardWsFedIdpUrl: https://thirdparty.authentication.business.gov.au/fas/v2/wsfed12/authenticate
-    vanguardWsFedRealm: https://environment.magda.io/integration-test-2
-  autoscaler:
-    enabled: false
-  helmet:
-    frameguard: false
-  cors:
-    credentials: true
-    origin: true
-  csp:
-    directives:
-      scriptSrc:
-      - "''self''"
-      - "''unsafe-inline''"
-      - browser-update.org
-      objectSrc:
-      - "''none''"
-      reportUri: https://sdga.report-uri.com/r/d/csp/enforce
-      
-combined-db:
-  waleBackup:
-    method: WAL
-    readOnly: "TRUE"
-    recoveryMode: "immediate"
-    gsPrefix: "gs://magda-postgres-backups-asia/dev"
-    googleApplicationCreds:
-      secretName: storage-account-credentials
-      fileName: db-service-account-private-key.json
-  data:
-    storage: 250Gi
-  resources:
-    limits:
-      cpu: 2000m
+magda-core:
+  ingress:
+    ingressClass: nginx
+    enableTls: true
+    useDefaultCertificate: true
+  gateway:
+    enableAuthEndpoint: true
+    enableHttpsRedirection: true
+    auth:
+      facebookClientId: "173073926555600"
+      arcgisClientId: "d0MgVUbbg5Z6vmWo"
+      googleClientId: "275237095477-f7ej2gsvbl2alb8bcqcn7r5jk0ur719p.apps.googleusercontent.com"
+      ckanAuthenticationUrl: https://data.gov.au/data
+      vanguardWsFedIdpUrl: https://thirdparty.authentication.business.gov.au/fas/v2/wsfed12/authenticate
+      vanguardWsFedRealm: https://environment.magda.io/integration-test-2
+    autoscaler:
+      enabled: false
+    helmet:
+      frameguard: false
+    cors:
+      credentials: true
+      origin: true
+    csp:
+      directives:
+        scriptSrc:
+        - "''self''"
+        - "''unsafe-inline''"
+        - browser-update.org
+        objectSrc:
+        - "''none''"
+        reportUri: https://sdga.report-uri.com/r/d/csp/enforce
 
-elasticsearch:
-  data:
-    heapSize: 500m
-    pluginsInstall: "repository-gcs"
-  backup:
-    googleApplicationCreds:
-      secretName: storage-account-credentials
-      fileName: db-service-account-private-key.json
-indexer:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 0
-  readSnapshots: false
-  makeSnapshots: false
+  combined-db:
+    waleBackup:
+      method: WAL
+      readOnly: "TRUE"
+      recoveryMode: "immediate"
+      gsPrefix: "gs://magda-postgres-backups-asia/dev"
+      googleApplicationCreds:
+        secretName: storage-account-credentials
+        fileName: db-service-account-private-key.json
+    data:
+      storage: 250Gi
+    resources:
+      limits:
+        cpu: 2000m
+
   elasticsearch:
-    useGcsSnapshots: true
-    gcsSnapshotBucket: "magda-es-snapshots-dev"
-    gcsSnapshotClient: "default"
+    data:
+      heapSize: 500m
+      pluginsInstall: "repository-gcs"
+    backup:
+      googleApplicationCreds:
+        secretName: storage-account-credentials
+        fileName: db-service-account-private-key.json
+  indexer:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 0
+    readSnapshots: false
+    makeSnapshots: false
+    elasticsearch:
+      useGcsSnapshots: true
+      gcsSnapshotBucket: "magda-es-snapshots-dev"
+      gcsSnapshotClient: "default"
 
-web-server:
-  fallbackUrl: "https://data.gov.au"
-  featureFlags:
-    cataloguing: true
-  vocabularyApiEndpoints: 
-    - "https://vocabs.ands.org.au/repository/api/lda/abares/australian-land-use-and-management-classification/version-8/concept.json"
-    - "https://vocabs.ands.org.au/repository/api/lda/neii/australian-landscape-water-balance/version-1/concept.json"
-    - "https://vocabs.ands.org.au/repository/api/lda/ands-nc/controlled-vocabulary-for-resource-type-genres/version-1-1/concept.json"
+  web-server:
+    fallbackUrl: "https://data.gov.au"
+    featureFlags:
+      cataloguing: true
+      publishToDga: true
+    vocabularyApiEndpoints:
+      - "https://vocabs.ands.org.au/repository/api/lda/abares/australian-land-use-and-management-classification/version-8/concept.json"
+      - "https://vocabs.ands.org.au/repository/api/lda/neii/australian-landscape-water-balance/version-1/concept.json"
+      - "https://vocabs.ands.org.au/repository/api/lda/ands-nc/controlled-vocabulary-for-resource-type-genres/version-1-1/concept.json"
 
-correspondence-api:
-  alwaysSendToDefaultRecipient: true
-  smtpHostname: "smtp.mailgun.org"
-  smtpPort: 2525
+  correspondence-api:
+    alwaysSendToDefaultRecipient: true
+    smtpHostname: "smtp.mailgun.org"
+    smtpPort: 2525
+
+  storage-api:
+    minio:
+      host: "localhost"
+      port: 9000

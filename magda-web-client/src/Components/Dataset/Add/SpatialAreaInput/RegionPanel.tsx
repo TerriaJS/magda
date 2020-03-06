@@ -119,9 +119,7 @@ const RegionPanel: FunctionComponent<PropsType> = props => {
                         regionId={props.countryId}
                         onChange={(option, notResetOtherRegions) =>
                             setState(state => {
-                                notResetOtherRegions = notResetOtherRegions
-                                    ? true
-                                    : false;
+                                notResetOtherRegions = !!notResetOtherRegions;
                                 const newState = {
                                     ...state,
                                     countryRegion: option
@@ -178,7 +176,9 @@ const RegionPanel: FunctionComponent<PropsType> = props => {
                 <>
                     <div className="row">
                         <div className="col-sm-4 state-select-container">
-                            <div className="state-select-heading">State</div>
+                            <div className="state-select-heading">
+                                State <span> (optional)</span>
+                            </div>
                             <StateSelect
                                 value={state.territoryOrSteRegion}
                                 regionId={props.territoryOrSteId}
@@ -260,20 +260,22 @@ const RegionPanel: FunctionComponent<PropsType> = props => {
                 </>
             ) : null}
 
-            <div className="row">
-                <div className="col-sm-12 spatial-data-previewer-container">
-                    <SpatialDataPreviewer
-                        bbox={
-                            props.countryId ||
-                            props.territoryOrSteId ||
-                            props.sa4Id ||
-                            props.sa3Id
-                                ? props.bbox
-                                : DEFAULT_BBOX
-                        }
-                    />
+            {props.countryId ? (
+                <div className="row">
+                    <div className="col-sm-12 spatial-data-previewer-container">
+                        <SpatialDataPreviewer
+                            bbox={
+                                props.countryId ||
+                                props.territoryOrSteId ||
+                                props.sa4Id ||
+                                props.sa3Id
+                                    ? props.bbox
+                                    : DEFAULT_BBOX
+                            }
+                        />
+                    </div>
                 </div>
-            </div>
+            ) : null}
         </div>
     );
 };

@@ -37,7 +37,9 @@ class WebHookActorSpec extends ApiSpec with BeforeAndAfterEach {
         includeEvents = Some(true),
         includeRecords = Some(true),
         includeAspectDefinitions = Some(true),
-        dereference = Some(true)))
+        dereference = Some(true)
+      )
+    )
 
     param.asAdmin(Post("/v0/hooks", hook)) ~> param.api(Full).routes ~> check {
       status shouldEqual StatusCodes.OK
@@ -50,34 +52,39 @@ class WebHookActorSpec extends ApiSpec with BeforeAndAfterEach {
     Util.getWebHookActor(hookId) should not be None
   }
 
-  it("Will not creates a processor for newly-created disabled web hooks") { param =>
-    Util.getWebHookActor(hookId) shouldBe None
+  it("Will not creates a processor for newly-created disabled web hooks") {
+    param =>
+      Util.getWebHookActor(hookId) shouldBe None
 
-    val hook = WebHook(
-      id = Some(hookId),
-      userId = None,
-      name = "abc",
-      active = true,
-      lastEvent = None,
-      url = "http://example.com/foo",
-      eventTypes = Set(EventType.CreateRecord),
-      isWaitingForResponse = None,
-      config = WebHookConfig(
-        optionalAspects = Some(List("aspect")),
-        includeEvents = Some(true),
-        includeRecords = Some(true),
-        includeAspectDefinitions = Some(true),
-        dereference = Some(true)),
-      enabled = false)
+      val hook = WebHook(
+        id = Some(hookId),
+        userId = None,
+        name = "abc",
+        active = true,
+        lastEvent = None,
+        url = "http://example.com/foo",
+        eventTypes = Set(EventType.CreateRecord),
+        isWaitingForResponse = None,
+        config = WebHookConfig(
+          optionalAspects = Some(List("aspect")),
+          includeEvents = Some(true),
+          includeRecords = Some(true),
+          includeAspectDefinitions = Some(true),
+          dereference = Some(true)
+        ),
+        enabled = false
+      )
 
-    param.asAdmin(Post("/v0/hooks", hook)) ~> param.api(Full).routes ~> check {
-      status shouldEqual StatusCodes.OK
-      responseAs[WebHook].enabled shouldBe false
-    }
+      param.asAdmin(Post("/v0/hooks", hook)) ~> param
+        .api(Full)
+        .routes ~> check {
+        status shouldEqual StatusCodes.OK
+        responseAs[WebHook].enabled shouldBe false
+      }
 
-    // Wait for longer time than usual to ensure the hook's processor is not created.
-    Util.waitUntilAllDone(2000)
-    Util.getWebHookActor(hookId) shouldBe None
+      // Wait for longer time than usual to ensure the hook's processor is not created.
+      Util.waitUntilAllDone(2000)
+      Util.getWebHookActor(hookId) shouldBe None
   }
 
   it("removes the processor for removed web hooks") { param =>
@@ -97,7 +104,9 @@ class WebHookActorSpec extends ApiSpec with BeforeAndAfterEach {
         includeEvents = Some(true),
         includeRecords = Some(true),
         includeAspectDefinitions = Some(true),
-        dereference = Some(true)))
+        dereference = Some(true)
+      )
+    )
 
     param.asAdmin(Post("/v0/hooks", hook)) ~> param.api(Full).routes ~> check {
       status shouldEqual StatusCodes.OK
@@ -110,8 +119,11 @@ class WebHookActorSpec extends ApiSpec with BeforeAndAfterEach {
     Util.waitUntilAllDone(minWaitTimeMs = 2000)
 
     case class DeleteProcessor(deleted: Boolean)
-    implicit val DeleteProcessorFormat: RootJsonFormat[DeleteProcessor] = jsonFormat1(DeleteProcessor.apply)
-    param.asAdmin(Delete(s"/v0/hooks/$hookId")) ~> param.api(Full).routes ~> check {
+    implicit val DeleteProcessorFormat: RootJsonFormat[DeleteProcessor] =
+      jsonFormat1(DeleteProcessor.apply)
+    param.asAdmin(Delete(s"/v0/hooks/$hookId")) ~> param
+      .api(Full)
+      .routes ~> check {
       status shouldEqual StatusCodes.OK
       responseAs[DeleteProcessor].deleted shouldBe true
     }

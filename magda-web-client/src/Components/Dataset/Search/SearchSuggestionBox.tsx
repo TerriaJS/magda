@@ -70,10 +70,10 @@ class SearchSuggestionBox extends Component<Props & any, any> {
             manuallyHidden: false
         };
         this.cacheImgs();
-        this.createSearchDataFromProps(this.props);
         this.searchInputRef = null;
         this.onSearchInputKeyDown = this.onSearchInputKeyDown.bind(this);
         this.containerRef = null;
+        this.saveRecentSearch(this.props);
     }
 
     cacheImgs() {
@@ -142,7 +142,7 @@ class SearchSuggestionBox extends Component<Props & any, any> {
         return qStr ? qStr + " " + filters.join("; ") : filters.join("; ");
     }
 
-    saveRecentSearch(newProps, prevProps) {
+    saveRecentSearch(newProps, prevProps?) {
         const searchData = this.createSearchDataFromProps(newProps);
         if (!searchData) return;
         if (
@@ -392,7 +392,7 @@ class SearchSuggestionBox extends Component<Props & any, any> {
                         role="listbox"
                         className="search-history-items"
                     >
-                        {recentSearchItems.map((item, idx) => (
+                        {recentSearchItems.map((item, idx: number) => (
                             <li
                                 key={idx}
                                 className={`search-item-container ${

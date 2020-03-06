@@ -1,8 +1,8 @@
-import * as express from "express";
-import * as yargs from "yargs";
+import express from "express";
+import yargs from "yargs";
 
 import buildApiRouter from "./buildApiRouter";
-import addJwtSecretFromEnvVar from "@magda/typescript-common/dist/session/addJwtSecretFromEnvVar";
+import addJwtSecretFromEnvVar from "magda-typescript-common/src/session/addJwtSecretFromEnvVar";
 import { K8SApiType } from "./k8sApi";
 
 const argv = addJwtSecretFromEnvVar(
@@ -95,6 +95,9 @@ app.use(
 app.listen(argv.listenPort);
 console.log("Admin API started on port " + argv.listenPort);
 
-process.on("unhandledRejection", (reason: string, promise: any) => {
-    console.error(reason);
-});
+process.on(
+    "unhandledRejection",
+    (reason: {} | null | undefined, promise: Promise<any>) => {
+        console.error(reason);
+    }
+);

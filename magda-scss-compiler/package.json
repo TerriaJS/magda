@@ -1,12 +1,13 @@
 {
   "name": "@magda/magda-scss-compiler",
   "description": "The web-client SCSS compiler pod",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
   "license": "Apache-2.0",
   "scripts": {
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo",
     "build": "yarn run compile",
-    "compile": "tsc -p tsconfig-build.json",
-    "watch": "tsc -p tsconfig-build.json --watch",
+    "compile": "tsc -b && ts-module-alias-transformer dist",
+    "watch": "tsc -b --watch",
     "start": "node dist/index.js",
     "docker-build-local": "create-docker-context-for-node-component --build --push --tag auto --local",
     "docker-build-prod": "create-docker-context-for-node-component --build --push --tag auto --repository asia.gcr.io/terriajs-automated-deployment",
@@ -14,7 +15,7 @@
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --require tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "devDependencies": {
-    "@magda/scripts": "^0.0.56-terria-3",
+    "@magda/scripts": "^0.0.57-0",
     "@types/autoprefixer": "^9.1.0",
     "@types/chai": "^4.0.1",
     "@types/clean-css": "^3.4.30",
@@ -36,11 +37,11 @@
     "mocha": "^3.4.2",
     "nock": "^9.0.14",
     "sinon": "^2.4.1",
-    "typescript": "^3.2.0"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@magda/typescript-common": "^0.0.56-terria-3",
-    "@magda/web-client": "^0.0.56-terria-3",
+    "@magda/typescript-common": "^0.0.57-0",
+    "@magda/web-client": "^0.0.57-0",
     "autoprefixer": "^9.2.1",
     "clean-css": "^4.2.1",
     "escape-string-regexp": "^1.0.5",
@@ -67,5 +68,8 @@
     "categories": {
       "ui": true
     }
+  },
+  "_moduleMappings": {
+    "magda-typescript-common/src": "@magda/typescript-common/dist"
   }
 }

@@ -1,10 +1,10 @@
 import { Strategy } from "passport-wsfed-saml2";
 
-import * as express from "express";
+import express from "express";
 import { Router } from "express";
 import { Authenticator } from "passport";
 
-import ApiClient from "@magda/typescript-common/dist/authorization-api/ApiClient";
+import ApiClient from "magda-typescript-common/src/authorization-api/ApiClient";
 import createOrGetUserToken from "../createOrGetUserToken";
 import { redirectOnSuccess } from "./redirect";
 

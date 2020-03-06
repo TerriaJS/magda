@@ -1,6 +1,6 @@
 import { isEqual } from "lodash";
 
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
 
 import MinionOptions from "./MinionOptions";
 import buildWebhookConfig from "./buildWebhookConfig";

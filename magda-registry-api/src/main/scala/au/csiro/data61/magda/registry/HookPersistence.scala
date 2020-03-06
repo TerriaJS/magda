@@ -7,9 +7,10 @@ import gnieh.diffson.sprayJson._
 import scalikejdbc._
 import au.csiro.data61.magda.model.Registry._
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 object HookPersistence extends Protocols with DiffsonProtocol {
+
   def getAll(implicit session: DBSession): List[WebHook] = {
     sql"""select
             webhookId,
@@ -29,7 +30,9 @@ object HookPersistence extends Protocols with DiffsonProtocol {
             lastRetryTime,
             retryCount
           from WebHooks"""
-      .map(rowToHook).list.apply()
+      .map(rowToHook)
+      .list
+      .apply()
   }
 
   def getById(implicit session: DBSession, id: String): Option[WebHook] = {
@@ -52,7 +55,9 @@ object HookPersistence extends Protocols with DiffsonProtocol {
             retryCount
           from WebHooks
           where webHookId=$id"""
-      .map(rowToHook).single.apply()
+      .map(rowToHook)
+      .single
+      .apply()
   }
 
   /**
@@ -81,23 +86,33 @@ object HookPersistence extends Protocols with DiffsonProtocol {
     }
 
     sql"""insert into WebHooks (webHookId, userId, name, active, lastEvent, url, config, enabled)
-          values ($theHookId, 0, ${hook.name}, ${hook.active}, (select eventId from Events order by eventId desc limit 1), ${hook.url}, ${hook.config.toJson.compactPrint}::jsonb, ${hook.enabled})"""
-      .update.apply()
+          values ($theHookId, 0, ${hook.name}, ${hook.active}, (select eventId from Events order by eventId desc limit 1), ${hook.url}, ${hook.config.toJson.compactPrint}::jsonb, ${hook.enabled})""".update
+      .apply()
 
-    val batchParameters = hook.eventTypes.map(eventType => Seq('webhookId -> theHookId, 'eventTypeId -> eventType.value)).toSeq
-    sql"""insert into WebHookEvents (webhookId, eventTypeId) values ({webhookId}, {eventTypeId})""".batchByName(batchParameters: _*).apply()
+    val batchParameters = hook.eventTypes
+      .map(
+        eventType =>
+          Seq('webhookId -> theHookId, 'eventTypeId -> eventType.value)
+      )
+      .toSeq
+    sql"""insert into WebHookEvents (webhookId, eventTypeId) values ({webhookId}, {eventTypeId})"""
+      .batchByName(batchParameters: _*)
+      .apply()
 
-    Success(WebHook(
-      id = Some(theHookId),
-      userId = Some(0),
-      name = hook.name,
-      active = hook.active,
-      lastEvent = None, // TODO: include real lastEvent
-      url = hook.url,
-      eventTypes = hook.eventTypes,
-      isWaitingForResponse = None,
-      config = hook.config,
-      enabled = hook.enabled))
+    Success(
+      WebHook(
+        id = Some(theHookId),
+        userId = Some(0),
+        name = hook.name,
+        active = hook.active,
+        lastEvent = None, // TODO: include real lastEvent
+        url = hook.url,
+        eventTypes = hook.eventTypes,
+        isWaitingForResponse = None,
+        config = hook.config,
+        enabled = hook.enabled
+      )
+    )
   }
 
   def delete(implicit session: DBSession, hookId: String): Try[Boolean] = {
@@ -107,39 +122,64 @@ object HookPersistence extends Protocols with DiffsonProtocol {
     }
   }
 
-  def setLastEvent(implicit session: DBSession, id: String, lastEventId: Long) = {
-    sql"update WebHooks set lastEvent=$lastEventId where webHookId=$id".update.apply()
+  def setLastEvent(
+      implicit session: DBSession,
+      id: String,
+      lastEventId: Long
+  ) = {
+    sql"update WebHooks set lastEvent=$lastEventId where webHookId=$id".update
+      .apply()
   }
 
-  def setIsWaitingForResponse(implicit session: DBSession, id: String, isWaitingForResponse: Boolean) = {
-    sql"update WebHooks set isWaitingForResponse=$isWaitingForResponse where webHookId=$id".update.apply()
+  def setIsWaitingForResponse(
+      implicit session: DBSession,
+      id: String,
+      isWaitingForResponse: Boolean
+  ) = {
+    sql"update WebHooks set isWaitingForResponse=$isWaitingForResponse where webHookId=$id".update
+      .apply()
   }
 
   def setActive(implicit session: DBSession, id: String, active: Boolean) = {
     sql"update WebHooks set active=$active where webHookId=$id".update.apply()
   }
 
-  def retry(implicit session: DBSession, id: String ) = {
-    sql"update WebHooks set active=${true}, lastretrytime=NOW(), retrycount=retrycount+1 where webHookId=$id".update.apply()
+  def retry(implicit session: DBSession, id: String) = {
+    sql"update WebHooks set active=${true}, lastretrytime=NOW(), retrycount=retrycount+1 where webHookId=$id".update
+      .apply()
   }
 
-  def resetRetryCount(implicit session: DBSession, id: String ) = {
-    sql"update WebHooks set lastretrytime=NULL, retrycount=0 where webHookId=$id".update.apply()
+  def resetRetryCount(implicit session: DBSession, id: String) = {
+    sql"update WebHooks set lastretrytime=NULL, retrycount=0 where webHookId=$id".update
+      .apply()
   }
 
-  def putById(implicit session: DBSession, id: String, hook: WebHook): Try[WebHook] = {
+  def putById(
+      implicit session: DBSession,
+      id: String,
+      hook: WebHook
+  ): Try[WebHook] = {
     if (id != hook.id.getOrElse("")) {
-      Failure(new RuntimeException("The provided ID does not match the web hook's ID."))
+      Failure(
+        new RuntimeException(
+          "The provided ID does not match the web hook's ID."
+        )
+      )
     } else {
       sql"""insert into WebHooks (webHookId, userId, name, active, lastevent, url, config, enabled)
           values (${hook.id.get}, 0, ${hook.name}, ${hook.active}, (select eventId from Events order by eventId desc limit 1), ${hook.url}, ${hook.config.toJson.compactPrint}::jsonb, ${hook.enabled})
           on conflict (webHookId) do update
-          set name = ${hook.name}, active = ${hook.active}, url = ${hook.url}, config = ${hook.config.toJson.compactPrint}::jsonb""".update.apply()
+          set name = ${hook.name}, active = ${hook.active}, url = ${hook.url}, config = ${hook.config.toJson.compactPrint}::jsonb""".update
+        .apply()
       Success(hook)
     }
   }
 
-  def acknowledgeRaisedHook(implicit session: DBSession, id: String, acknowledgement: WebHookAcknowledgement): Try[WebHookAcknowledgementResponse] = {
+  def acknowledgeRaisedHook(
+      implicit session: DBSession,
+      id: String,
+      acknowledgement: WebHookAcknowledgement
+  ): Try[WebHookAcknowledgementResponse] = {
     Try {
       val setActive = acknowledgement.active match {
         case Some(active) => sqls", active=${active}"
@@ -149,14 +189,24 @@ object HookPersistence extends Protocols with DiffsonProtocol {
       if (acknowledgement.succeeded) {
         acknowledgement.lastEventIdReceived match {
           case Some(eventId) =>
-            sql"update WebHooks set isWaitingForResponse=false, lastEvent=${acknowledgement.lastEventIdReceived} ${setActive} where webHookId=$id".update.apply()
+            sql"update WebHooks set isWaitingForResponse=false, lastEvent=${acknowledgement.lastEventIdReceived} ${setActive} where webHookId=$id".update
+              .apply()
             WebHookAcknowledgementResponse(eventId)
           case None =>
-            throw new Exception("If acknowledgement succeeded is true, lastEventIdReceived must be provided")
+            throw new Exception(
+              "If acknowledgement succeeded is true, lastEventIdReceived must be provided"
+            )
         }
       } else {
-        sql"update WebHooks set isWaitingForResponse=false ${setActive} where webHookId=$id".update.apply()
-        WebHookAcknowledgementResponse(sql"select lastEvent from WebHooks where webHookId=$id".map(rs => rs.long("lastEvent")).single.apply().get)
+        sql"update WebHooks set isWaitingForResponse=false ${setActive} where webHookId=$id".update
+          .apply()
+        WebHookAcknowledgementResponse(
+          sql"select lastEvent from WebHooks where webHookId=$id"
+            .map(rs => rs.long("lastEvent"))
+            .single
+            .apply()
+            .get
+        )
       }
     }
   }
@@ -168,7 +218,16 @@ object HookPersistence extends Protocols with DiffsonProtocol {
     active = rs.boolean("active"),
     lastEvent = rs.longOpt("lastEvent"),
     url = rs.string("url"),
-    eventTypes = rs.arrayOpt("eventTypes").map(a => a.getArray().asInstanceOf[Array[Integer]].map(EventType.withValue(_)).toSet).getOrElse(Set()),
+    eventTypes = rs
+      .arrayOpt("eventTypes")
+      .map(
+        a =>
+          a.getArray()
+            .asInstanceOf[Array[Integer]]
+            .map(EventType.withValue(_))
+            .toSet
+      )
+      .getOrElse(Set()),
     isWaitingForResponse = rs.booleanOpt("isWaitingForResponse"),
     config = JsonParser(rs.string("config")).convertTo[WebHookConfig],
     enabled = rs.boolean("enabled"),

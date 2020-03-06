@@ -124,6 +124,7 @@ export default class HighlightsAdminPage extends React.Component<any, any> {
                     <p>
                         Text:{" "}
                         <ToggleEditor
+                            editable={true}
                             editor={textEditor}
                             value={item.text}
                             onChange={save("text")}
@@ -131,6 +132,7 @@ export default class HighlightsAdminPage extends React.Component<any, any> {
                         <br />
                         Link:{" "}
                         <ToggleEditor
+                            editable={true}
                             editor={textEditor}
                             value={item.url}
                             onChange={save("url")}

@@ -1,8 +1,8 @@
 import { Attachment } from "./SMTPMailer";
 import ContentApiDirMapper from "./ContentApiDirMapper";
-import * as path from "path";
-import * as mimeTypes from "mime-types";
-import * as Mustache from "mustache";
+import path from "path";
+import mimeTypes from "mime-types";
+import Mustache from "mustache";
 
 /**
  * customised mustache render function.

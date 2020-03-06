@@ -1,0 +1,12 @@
+image: {}
+autoscaler:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+resources:
+  requests:
+    cpu: 50m
+    memory: 300Mi
+  limits:
+    cpu: 200m

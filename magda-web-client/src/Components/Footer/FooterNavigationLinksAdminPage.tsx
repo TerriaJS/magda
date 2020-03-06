@@ -53,6 +53,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p>
                     Edit Label:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={categoryLabel}
                         onChange={saveCategoryLabel}
@@ -82,6 +83,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p>
                     Label:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={value.label}
                         onChange={save("label")}
@@ -90,6 +92,7 @@ class StoriesAdminPage extends Component<any, any> {
                 <p>
                     Link:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={value.href}
                         onChange={save("href")}

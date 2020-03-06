@@ -1,4 +1,4 @@
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
 
 import MinionOptions from "./MinionOptions";
 

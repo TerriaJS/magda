@@ -1,0 +1,33 @@
+.SlimTextInputWithValidation {
+    display: inline-block;
+    margin: 2px;
+    position: relative;
+
+    input:focus:not(.au-text-input--invalid) {
+        outline-offset: -2px !important;
+        outline-color: -webkit-focus-ring-color !important;
+        outline-style: auto !important;
+        outline-width: 5px !important;
+    }
+    input.au-text-input--invalid {
+        background-color: #fdf2f2;
+        border-color: #d60000 !important;
+    }
+    input.au-text-input--invalid:focus {
+        outline: none !important;
+    }
+
+    input {
+        padding-right: 40px;
+    }
+
+    .edit-icon-container {
+        position: absolute;
+        display: inline;
+        .edit-icon {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+        }
+    }
+}

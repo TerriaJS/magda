@@ -8,8 +8,8 @@ import ch.qos.logback.classic.Level
 import au.csiro.data61.magda.registry.Api
 
 /**
- * Command line interface for the registry.
- */
+  * Command line interface for the registry.
+  */
 object CommandLine {
 
   val config = ConfigFactory.parseString(s"""
@@ -17,16 +17,19 @@ object CommandLine {
   """).resolve().withFallback(AppConfig.conf())
   implicit val system = ActorSystem("blah", config)
 
-  val root = org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
+  val root = org.slf4j.LoggerFactory
+    .getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME)
+    .asInstanceOf[ch.qos.logback.classic.Logger]
   root.setLevel(Level.ERROR);
 
   /**
-   * Generates a swagger.json file and writes it to the path specified in the first command line arg.
-   *
-   * Execute from the command line with sbt "registryApi/runMain au.csiro.data61.magda.registry.CommandLine ./swagger.json"
-   */
+    * Generates a swagger.json file and writes it to the path specified in the first command line arg.
+    *
+    * Execute from the command line with sbt "registryApi/runMain au.csiro.data61.magda.registry.CommandLine ./swagger.json"
+    */
   def main(args: Array[String]) = {
-    val docService = new SwaggerDocService("localhost", 9001, "/api/v0/registry/", system)
+    val docService =
+      new SwaggerDocService("localhost", 9001, "/api/v0/registry/", system)
     val swaggerJson = docService.generateSwaggerJson
     val jsonPatchJson = docService.getJsonPatchSchema
     system.terminate()
@@ -56,6 +59,10 @@ object CommandLine {
 
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
     val p = new java.io.PrintWriter(f)
-    try { op(p) } finally { p.close() }
+    try {
+      op(p)
+    } finally {
+      p.close()
+    }
   }
 }

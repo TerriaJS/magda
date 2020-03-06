@@ -1,0 +1,41 @@
+{
+  "name": "@magda/registry-client",
+  "description": "MAGDA Registry Client",
+  "version": "0.0.57-0",
+  "scripts": {
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "webpack && api-extractor run -l",
+    "npm-setup": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\" > .npmrc",
+    "release": "npm publish || echo \"Skip releasing npm package @magda/registry-client.\""
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@magda/typescript-common": "^0.0.57-0",
+    "@microsoft/api-extractor": "^7.7.8",
+    "typescript": "^3.7.2",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "@types/urijs": "^1.15.34"
+  },
+  "magda": {
+    "language": "typescript",
+    "categories": {
+      "npmPackage": true,
+      "useCommonLib": true
+    }
+  },
+  "keywords": [
+    "Magda",
+    "Registry",
+    "Client"
+  ],
+  "files": [
+    "dist"
+  ]
+}

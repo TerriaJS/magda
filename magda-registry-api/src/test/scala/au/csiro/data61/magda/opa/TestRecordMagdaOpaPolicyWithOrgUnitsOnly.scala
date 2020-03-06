@@ -2,9 +2,8 @@ package au.csiro.data61.magda.opa
 
 import org.scalatest.Ignore
 
-@Ignore
 class TestRecordMagdaOpaPolicyWithOrgUnitsOnly
-    extends RecordOpaPolicyWithEsirGroupsOrMagdaOrgUnitsOnlySpec {
+    extends RecordOpaPolicyWithEsriGroupsOrMagdaOrgUnitsOnlySpec {
   override def testConfigSource: String =
     s"""
        |opa.recordPolicyId="object.registry.record.owner_orgunit"

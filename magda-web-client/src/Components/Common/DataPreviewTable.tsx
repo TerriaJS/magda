@@ -4,7 +4,6 @@ import "./ReactTable.scss";
 import { config } from "config";
 import { Medium, Small } from "./Responsive";
 import Spinner from "Components/Common/Spinner";
-import AUpageAlert from "pancake/react/page-alerts";
 import { DataLoadingResult } from "helpers/CsvDataLoader";
 
 type PropsType = {
@@ -46,13 +45,15 @@ export default class DataPreviewTable extends Component<PropsType> {
     render() {
         if (this.props.dataLoadError) {
             return (
-                <AUpageAlert as="error" className="notification__inner">
+                <div
+                    className={`au-page-alerts au-page-alerts--error notification__inner`}
+                >
                     <h3>Oops</h3>
                     <p>
                         Either there's something wrong with the file or there's
                         an internet connection problem
                     </p>
-                </AUpageAlert>
+                </div>
             );
         }
         if (this.props.isLoading) {

@@ -23,7 +23,7 @@ git checkout -b release/0.0.x
 lerna publish --skip-npm --skip-git --force-publish
 ```
 
--   [ ] Use a text editor to do a find-and-replace-in-project for the old version to make sure that there's not extra references to the old version number lying around. In particular update the prod config to point at this new version. Also make sure to change `deploy/helm/magda/Chart.yaml`.
+-   [ ] Use a text editor to do a find-and-replace-in-project for the old version to make sure that there's not extra references to the old version number lying around. In particular update the prod config to point at this new version. Also make sure to change `deploy/helm/magda/Chart.yaml` and `deploy/helm/magda-core/Chart.yaml`.
 
 -   [ ] Commit and push.
 
@@ -36,7 +36,7 @@ git checkout master
 lerna publish --skip-npm --skip-git --force-publish
 ```
 
--   [ ] Use a text editor to do a find-and-replace-in-project for the old version to make sure that there's not extra references to the old version number lying around - we want to automate this whereever possible but it happens. Ensure that the prod config continues to point at a release version, but the dev config should point at the new version. Also make sure to change `deploy/helm/magda/Chart.yaml`.
+-   [ ] Use a text editor to do a find-and-replace-in-project for the old version to make sure that there's not extra references to the old version number lying around - we want to automate this whereever possible but it happens. Ensure that the prod config continues to point at a release version, but the dev config should point at the new version. Also make sure to change `deploy/helm/magda/Chart.yaml` and `deploy/helm/magda-core/Chart.yaml`.
 
 -   [ ] Commit the changes and create a PR against `master` for the version bump.
 

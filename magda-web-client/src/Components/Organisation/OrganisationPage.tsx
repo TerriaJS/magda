@@ -14,7 +14,6 @@ import OverviewBox from "Components/Common/OverviewBox";
 import ProgressBar from "Components/Common/ProgressBar";
 import Breadcrumbs from "Components/Common/Breadcrumbs";
 import { Medium } from "Components/Common/Responsive";
-const AUpageAlert = require("../../pancake/react/page-alerts").default;
 import {
     fetchSearchResultsIfNeeded,
     resetDatasetSearch
@@ -193,15 +192,12 @@ class PublisherDetails extends Component<any> {
                         );
                     } else {
                         return (
-                            <AUpageAlert
-                                as="info"
-                                className="notification__inner"
-                            >
+                            <div className="au-pager-alerts au-page-alerts--info notification__inner">
                                 {translate([
                                     "publisherNotFoundMessage",
                                     "Publisher not found"
                                 ])}
-                            </AUpageAlert>
+                            </div>
                         );
                     }
                 }}

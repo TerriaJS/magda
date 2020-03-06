@@ -89,7 +89,7 @@ export default class DatasetSummary extends Component {
         datasetSummaryItems = datasetSummaryItems.reduce(
             (arr, nextSummaryItem, idx) =>
                 idx < datasetSummaryItems.length - 1
-                    ? [...arr, nextSummaryItem, <Divider />]
+                    ? [...arr, nextSummaryItem, <Divider key={idx} />]
                     : [...arr, nextSummaryItem],
             []
         );

@@ -1,6 +1,6 @@
 {
   "name": "@magda/indexer",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
   "description": "Indexes the registry for searching.",
   "scripts": {
     "build": "yarn run compile",

@@ -1,0 +1,84 @@
+image: {}
+  #repository: data61/
+  #tag: latest
+  #pullPolicy: Always#
+autoscaler:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+resources:
+  requests:
+    cpu: 10m
+    memory: 30Mi
+  limits:
+    cpu: 100m
+disableAuthenticationFeatures: false
+showNotificationBanner: false
+service: {}
+useLocalStyleSheet: false
+contentApiBaseUrlInternal: "http://content-api/v0/"
+featureFlags:
+ cataloguing: false
+ previewAddDataset: false
+ publishToDga: false
+vocabularyApiEndpoints: []
+defaultContactEmail: "mail@example.com"
+custodianOrgLevel: 2
+maxChartProcessingRows: 20000
+maxTableProcessingRows: 200
+# default chunk size 2MB
+csvLoaderChunkSize: 2097152
+mandatoryFields:
+  - dataset.title
+  - dataset.description
+  - dataset.defaultLicense
+  - distributions.title
+  - distributions.format
+  - distributions.license
+  - dataset.publisher
+  - licenseLevel
+  - dataset.defaultLicense
+  - informationSecurity.classification
+  - informationSecurity.disseminationLimits
+  - publishToDga
+dateConfig:
+  dateFormats:
+    - YYYY
+    - YYYY-MM
+    - DD-MM-YYYY
+    - MM-DD-YYYY
+    - YYYY-MM-DD
+    - YYYY-MM-DDThh:mmTZD
+    - YYYY-MM-DDThh:mm:ssTZD
+    - YYYY-MM-DDThh:mm:ss.sTZD
+    - DD-MMM-YYYY
+    - MMM-DD-YYYY
+  dateRegexes:
+      dateRegex: "(date|dt|year|decade)"
+      startDateRegex: "(start|st).*(date|dt|year|decade)"
+      endDateRegex: "(end).*(date|dt|year|decade)"
+datasetThemes: []
+noManualThemes: false
+noManualKeywords: false
+keywordsBlackList:
+  - Mr
+  - Ms
+  - Mrs
+  - Miss
+  - Dr
+  - Hon
+  - Jr
+  - Prof
+  - Sr
+  - St
+  - Mr.
+  - Ms.
+  - Mrs.
+  - Miss.
+  - Dr.
+  - Hon.
+  - Jr.
+  - Prof.
+  - Sr.
+  - St.

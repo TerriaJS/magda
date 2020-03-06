@@ -15,7 +15,6 @@ import { hideTopNotification } from "./actions/topNotificationAction";
 import Routes from "./Routes";
 
 import { Medium } from "Components/Common/Responsive";
-import AUskipLink from "./pancake/react/skip-link";
 
 import "./AppContainer.scss";
 
@@ -30,19 +29,18 @@ class AppContainer extends React.Component {
             <MagdaDocumentTitle>
                 <div className="au-grid wrapper">
                     <div>
-                        <AUskipLink
-                            links={[
-                                {
-                                    link: "#content",
-                                    text: "Skip to main content"
-                                },
-                                {
-                                    link: "#nav",
-                                    text: "Skip to main navigation"
-                                }
-                            ]}
-                        />
-                        {config.fallbackUrl && (
+                        <nav
+                            className="au-skip-link"
+                            aria-label="skip links navigation"
+                        >
+                            <a className="au-skip-link__link" href="#content">
+                                Skip to main content
+                            </a>
+                            <a className="au-skip-link__link" href="#nav">
+                                Skip to main navigation
+                            </a>
+                        </nav>
+                        {config.fallbackUrl && config.showNotificationBanner && (
                             <Medium>
                                 <Banner fallbackUrl={config.fallbackUrl} />
                             </Medium>

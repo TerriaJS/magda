@@ -14,7 +14,6 @@ import Pagination from "Components/Common/Pagination";
 import "./OrganisationsPage.scss";
 import search from "assets/search-dark.svg";
 import { Medium } from "Components/Common/Responsive";
-import AUpageAlert from "../../pancake/react/page-alerts";
 import { withRouter } from "react-router-dom";
 import MagdaNamespacesConsumer from "Components/i18n/MagdaNamespacesConsumer";
 import MagdaDocumentTitle from "Components/i18n/MagdaDocumentTitle";
@@ -136,7 +135,7 @@ class OrganisationsPage extends Component {
         } else {
             if (this.props.publishers.length === 0) {
                 return (
-                    <AUpageAlert as="error">
+                    <div className="au-page-alerts au-page-alerts--error">
                         {translate([
                             "noPublishersMatchSearchMessage",
                             "No publishers match your query"
@@ -148,7 +147,7 @@ class OrganisationsPage extends Component {
                         >
                             Clear search
                         </button>
-                    </AUpageAlert>
+                    </div>
                 );
             }
             return (

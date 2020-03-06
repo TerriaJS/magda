@@ -5,8 +5,7 @@
     "type": "object",
     "properties": {
         "publisher": {
-            "title":
-                "The ID of the record representing the organization that published this dataset.",
+            "title": "The ID of the record representing the organization that published this dataset.",
             "type": "string",
             "links": [
                 {

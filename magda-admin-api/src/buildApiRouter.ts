@@ -1,14 +1,14 @@
-import * as express from "express";
+import express from "express";
 import buildConnectorManifest from "./buildConnectorManifest";
 import buildInteractiveConnectorRouter from "./buildInteractiveConnectorRouter";
-import * as _ from "lodash";
+import _ from "lodash";
 import K8SApi, { K8SApiType } from "./k8sApi";
-import { mustBeAdmin } from "@magda/typescript-common/dist/authorization-api/authMiddleware";
+import { mustBeAdmin } from "magda-typescript-common/src/authorization-api/authMiddleware";
 
 import {
     installStatusRouter,
     createServiceProbe
-} from "@magda/typescript-common/dist/express/status";
+} from "magda-typescript-common/src/express/status";
 
 export interface Options {
     dockerRepo: string;

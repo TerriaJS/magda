@@ -1,4 +1,4 @@
-import * as uuid from "uuid";
+import uuid from "uuid";
 import { User } from "../authorization-api/model";
 
 const mockUserData = [

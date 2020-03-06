@@ -1,7 +1,0 @@
-image: {}
-resources:
-  requests:
-    cpu: 50m
-    memory: 200Mi
-  limits:
-    cpu: 250m

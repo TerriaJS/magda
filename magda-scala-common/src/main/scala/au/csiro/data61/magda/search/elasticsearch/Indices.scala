@@ -8,9 +8,12 @@ import com.typesafe.config.ConfigObject
 import au.csiro.data61.magda.model.misc._
 
 trait Indices {
-  def indexVersions(config: Config) = config.getConfig("elasticSearch.indices").root().map {
-    case (name: String, config: ConfigObject) => name -> config.toConfig.getInt("version")
-  }
+
+  def indexVersions(config: Config) =
+    config.getConfig("elasticSearch.indices").root().map {
+      case (name: String, config: ConfigObject) =>
+        name -> config.toConfig.getInt("version")
+    }
 
   def getIndex(config: Config, index: Indices.Index): String = {
     (index.name + indexVersions(config)(index.name))
@@ -23,10 +26,11 @@ trait Indices {
     case Publisher => Indices.PublisherIndexType
   }
 
-  def indexForFacet(facetType: FacetType)(implicit config: Config) = facetType match {
-    case Format    => getIndex(config, Indices.FormatsIndex)
-    case Publisher => getIndex(config, Indices.PublishersIndex)
-  }
+  def indexForFacet(facetType: FacetType)(implicit config: Config) =
+    facetType match {
+      case Format    => getIndex(config, Indices.FormatsIndex)
+      case Publisher => getIndex(config, Indices.PublishersIndex)
+    }
 
 }
 

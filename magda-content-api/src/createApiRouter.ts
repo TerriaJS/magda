@@ -1,11 +1,11 @@
-import * as express from "express";
-import * as _ from "lodash";
+import express from "express";
+import _ from "lodash";
 import {
     getUser,
     mustBeAdmin
-} from "@magda/typescript-common/dist/authorization-api/authMiddleware";
-import buildJwt from "@magda/typescript-common/dist/session/buildJwt";
-import GenericError from "@magda/typescript-common/dist/authorization-api/GenericError";
+} from "magda-typescript-common/src/authorization-api/authMiddleware";
+import buildJwt from "magda-typescript-common/src/session/buildJwt";
+import GenericError from "magda-typescript-common/src/authorization-api/GenericError";
 import Database, { Query } from "./Database";
 import { Maybe } from "tsmonad";
 import { Content } from "./model";
@@ -19,8 +19,8 @@ import {
 import {
     installStatusRouter,
     createServiceProbe
-} from "@magda/typescript-common/dist/express/status";
-import AccessControlError from "@magda/typescript-common/dist/authorization-api/AccessControlError";
+} from "magda-typescript-common/src/express/status";
+import AccessControlError from "magda-typescript-common/src/authorization-api/AccessControlError";
 
 export interface ApiRouterOptions {
     database: Database;
@@ -322,7 +322,7 @@ export default function createApiRouter(options: ApiRouterOptions) {
 
         router.put.apply(
             router,
-            [route, ADMIN, body, verify, put].filter(i => i)
+            ([route, ADMIN, body, verify, put] as any).filter((i: any) => i)
         );
 
         /**

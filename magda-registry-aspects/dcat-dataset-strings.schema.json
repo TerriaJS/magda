@@ -73,8 +73,7 @@
             "items": {
                 "type": "string",
                 "minLength": 1
-            },
-            "minItems": 1
+            }
         },
         "contactPoint": {
             "title": "Free-text account of who to contact about this dataset.",

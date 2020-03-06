@@ -1,60 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { useAsyncCallback } from "react-async-hook";
+import React from "react";
+import { useAsync } from "react-async-hook";
 import Select from "react-select";
 import { config } from "config";
-import find from "lodash/find";
 
 import ReactSelectStyles from "Components/Common/react-select/ReactSelectStyles";
 
-import {
-    listOrgUnitsAtLevel,
-    OrgUnitWithRelationship
-} from "api-clients/OrgUnitApis";
+import { OrgUnit, listOrgUnitsAtLevel } from "api-clients/OrgUnitApis";
 
 type Props = {
     orgUnitId?: string;
-    teamOrgUnitId?: string;
     onChange: (orgUnitId: string) => void;
+};
+
+const getCustodians: () => Promise<OrgUnit[]> = async () => {
+    try {
+        const result = await listOrgUnitsAtLevel(config.custodianOrgLevel);
+        // --- list Custodians alphabetically
+        result.sort((b, a) => (a.name > b.name ? -1 : b.name > a.name ? 1 : 0));
+        return result;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
 };
 
 export default function CustodianDropdown({
     orgUnitId,
-    teamOrgUnitId,
     onChange: onChangeCallback
 }: Props) {
-    // If we already have a value from orgUnitId we can assume the user already picked it.
-    const [hasUserSelected, setHasUserSelected] = useState(!!orgUnitId);
-
-    // Set up the call for loading custodian org units, but don't call it yet.
-    const { loading, error, result, execute } = useAsyncCallback(() =>
-        listOrgUnitsAtLevel(config.custodianOrgLevel, teamOrgUnitId)
-    );
-
-    // We don't need to load org units unless we're starting up (!result) or
-    // the user hasn't selected a custodian yet (which means we need to do another
-    // call every time they change the team responsible in order to preselect
-    // the corresponding custodian org unit).
-    useEffect(() => {
-        if (!result || !hasUserSelected) {
-            execute();
-        }
-    }, [config.custodianOrgLevel, teamOrgUnitId]);
-
-    // If there's no org unit already set, when we know what org units exist, set it to the one
-    // above the current user in the org tree
-    useEffect(() => {
-        if (!hasUserSelected && result && teamOrgUnitId) {
-            const relatedOrgUnit = find(
-                result,
-                option =>
-                    option.relationship && option.relationship !== "unrelated"
-            ) as OrgUnitWithRelationship | undefined;
-
-            if (relatedOrgUnit) {
-                onChangeCallback(relatedOrgUnit.id);
-            }
-        }
-    }, [result, teamOrgUnitId]);
+    const { loading, error, result, execute } = useAsync(getCustodians, []);
 
     if (loading) {
         return <span>Loading...</span>;
@@ -62,7 +36,7 @@ export default function CustodianDropdown({
         return (
             <div className="au-body au-page-alerts au-page-alerts--error">
                 <span style={{ verticalAlign: "-2px" }}>
-                    Could not retrieve data custodian list, or there are no data
+                    Could not retrieve data custodians, or there are no data
                     custodians in the system.
                 </span>
                 <button className="au-btn au-btn--tertiary" onClick={execute}>
@@ -71,34 +45,24 @@ export default function CustodianDropdown({
             </div>
         );
     } else {
-        const selectedValue =
-            typeof orgUnitId !== "undefined" &&
-            find(result, option => option.id === orgUnitId);
+        const value = result.find(option => option.id === orgUnitId);
 
         return (
             <Select
                 className="react-select"
                 isMulti={false}
-                isSearchable={true}
+                isSearchable={false}
                 onChange={(rawValue, action) => {
-                    const value = rawValue as (
+                    const value = rawValue as
                         | { value: string }
                         | undefined
-                        | null);
+                        | null;
                     if (value) {
-                        setHasUserSelected(true);
                         onChangeCallback(value.value);
                     }
                 }}
                 styles={ReactSelectStyles}
-                value={
-                    selectedValue
-                        ? {
-                              label: selectedValue.name,
-                              value: selectedValue.id
-                          }
-                        : undefined
-                }
+                value={value && { label: value.name, value: value.id }}
                 options={result.map(option => ({
                     label: option.name,
                     value: option.id

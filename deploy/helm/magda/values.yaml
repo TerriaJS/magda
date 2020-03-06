@@ -1,47 +1,233 @@
-global:
-  useCombinedDb: true
-  useCloudSql: false
-  externalUrl: "http://localhost:6100"
-  rollingUpdate:
-    maxUnavailable: 0
-  exposeNodePorts: false
-  image:
-    tag: 0.0.56-0
-    repository: "data61"
-    pullPolicy: IfNotPresent
-  defaultAdminUserId: "00000000-0000-4000-8000-000000000000"
-  logLevel: INFO
-  noDbAuth: false
-  namespace: default
-  gapiIds: []
-  enablePriorityClass: false
-
 tags:
-  priorities: true
   all: true
-  apidocs-server: false
-  admin-api: false
-  authorization-api: false
-  opa: false
-  authorization-db: false
-  combined-db: false
-  content-api: false
-  content-db: false
-  correspondence-api: false
-  elasticsearch: false
-  gateway: false
-  indexer: false
-  preview-map: false
-  registry-api: false
-  registry-db: false
-  search-api: false
-  session-db: false
+  connectors: false
+  connector-esri-nsw: false
   minion-broken-link: false
   minion-linked-data-rating: false
   minion-visualization: false
   minion-format: false
-  web-server: false
-  ingress: false
-  connectors: false
-  tenant-api: false
-  tenant-db: false
+
+global:
+  connectors:
+    includeInitialJobs: false
+    includeCronJobs: true
+
+connector-dga:
+  config:
+    id: dga
+    name: "data.gov.au"
+    sourceUrl: "https://data.gov.au/data/"
+    pageSize: 1000
+    ignoreHarvestSources: ["*"]
+
+connector-act:
+  config:
+    id: act
+    name: ACT Government data.act.gov.au
+    sourceUrl: https://www.data.act.gov.au/data.json
+
+connector-actmapi:
+  config:
+    id: actmapi
+    name: ACT Government ACTMAPi
+    sourceUrl: https://actmapi-actgov.opendata.arcgis.com/data.json
+
+connector-aims:
+  config:
+    id: aims
+    name: Australian Institute of Marine Science
+    sourceUrl: https://geo.aims.gov.au/geonetwork/srv/eng/csw
+    pageSize: 100
+
+connector-aodn:
+  config:
+    id: aodn
+    name: Australian Oceans Data Network
+    sourceUrl: https://catalogue.aodn.org.au/geonetwork/srv/eng/csw
+    pageSize: 100
+
+connector-bom:
+  config:
+    id: bom
+    name: Bureau of Meteorology
+    sourceUrl: http://www.bom.gov.au/geonetwork/srv/eng/csw
+    pageSize: 100
+
+connector-aurin:
+  config:
+    id: aurin
+    name: Australian Urban Research Infrastructure Network
+    sourceUrl: https://openapi.aurin.org.au/public/csw
+    pageSize: 100
+
+connector-brisbane:
+  config:
+    id: brisbane
+    name: Brisbane City Council
+    sourceUrl: https://www.data.brisbane.qld.gov.au/data/
+    pageSize: 100
+
+connector-hobart:
+  config:
+    id: hobart
+    name: City of Hobart Open Data Portal
+    sourceUrl: https://data-1-hobartcc.opendata.arcgis.com/data.json
+
+connector-launceston:
+  config:
+    id: launceston
+    name: City of Launceston Open Data
+    sourceUrl: https://data-launceston.opendata.arcgis.com/data.json
+
+connector-marlin:
+  config:
+    id: marlin
+    name: CSIRO Marlin
+    sourceUrl: http://www.marlin.csiro.au/geonetwork/srv/eng/csw
+    pageSize: 50
+
+connector-environment:
+  config:
+    id: environment
+    name: Department of the Environment and Energy
+    sourceUrl: http://www.environment.gov.au/fed/csw
+    pageSize: 100
+
+connector-esta:
+  config:
+    id: esta
+    name: ESTA Open Data
+    sourceUrl: http://data-esta000.opendata.arcgis.com/data.json
+
+connector-ga:
+  config:
+    id: ga
+    name: Geoscience Australia
+    sourceUrl: https://ecat.ga.gov.au/geonetwork/srv/eng/csw
+    outputSchema: http://standards.iso.org/iso/19115/-3/mdb/1.0
+    pageSize: 100
+
+connector-logan:
+  config:
+    id: logan
+    name: Logan City Council
+    sourceUrl: https://data-logancity.opendata.arcgis.com/data.json
+
+connector-melbournewater:
+  config:
+    id: melbournewater
+    name: Melbourne Water Corporation
+    sourceUrl: https://data-melbournewater.opendata.arcgis.com/data.json
+
+connector-melbourne:
+  config:
+    id: melbourne
+    name: Melbourne Data
+    sourceUrl: https://data.melbourne.vic.gov.au/data.json
+
+connector-mrt:
+  config:
+    id: mrt
+    name: Mineral Resources Tasmania
+    sourceUrl: http://www.mrt.tas.gov.au/web-catalogue/srv/eng/csw
+    pageSize: 100
+
+connector-moretonbay:
+  config:
+    id: moretonbay
+    name: Moreton Bay Regional Council Data Portal
+    sourceUrl: http://datahub.moretonbay.qld.gov.au/data.json
+
+connector-neii:
+  config:
+    id: neii
+    name: National Environmental Information Infrastructure
+    sourceUrl: http://neii.bom.gov.au/services/catalogue/csw
+    pageSize: 100
+
+connector-nsw:
+  config:
+    id: nsw
+    name: New South Wales Government
+    sourceUrl: https://data.nsw.gov.au/data/
+    pageSize: 100
+
+connector-sdinsw:
+  config:
+    id: sdinsw
+    name: NSW Land and Property
+    sourceUrl: https://sdi.nsw.gov.au/csw
+    pageSize: 100
+
+connector-qld:
+  config:
+    id: qld
+    name: Queensland Government
+    sourceUrl: https://data.qld.gov.au/
+    pageSize: 100
+
+connector-sa:
+  config:
+    id: sa
+    name: South Australia Government
+    sourceUrl: https://data.sa.gov.au/data/
+    pageSize: 100
+
+connector-southerngrampians:
+  config:
+    id: southerngrampians
+    name: Southern Grampians Shire Council Smart City and Open Data portal
+    sourceUrl: https://www.connectgh.com.au/data.json
+
+connector-listtas:
+  config:
+    id: listtas
+    name: Tasmania TheList
+    sourceUrl: https://data.thelist.tas.gov.au:443/datagn/srv/eng/csw
+    pageSize: 100
+
+connector-tern:
+  config:
+    id: tern
+    name: Terrestrial Ecosystem Research Network
+    sourceUrl: http://data.auscover.org.au/geonetwork/srv/eng/csw
+    pageSize: 100
+
+connector-vic:
+  config:
+    id: vic
+    name: Victoria Government
+    sourceUrl: https://discover.data.vic.gov.au/
+    pageSize: 100
+
+connector-wa:
+  config:
+    id: wa
+    name: Western Australia Government
+    sourceUrl: https://catalogue.data.wa.gov.au/
+    pageSize: 100
+
+connector-dap:
+  config:
+    id: dap
+    name: CSIRO
+    sourceUrl: https://data.csiro.au/dap/ws/v2/
+    pageSize: 100
+
+connector-vic-cardinia:
+  config:
+    id: vic-cardinia
+    name: Cardinia Shire Council
+    sourceUrl: https://data-cscgis.opendata.arcgis.com/data.json
+
+connector-nt-darwin:
+  config:
+    id: nt-darwin
+    name: City of Darwin
+    sourceUrl: https://open-darwin.opendata.arcgis.com/data.json
+
+connector-southern-grampians:
+  config:
+    id: southern-grampians
+    name: Southern Grampians Shire Council
+    sourceUrl: https://www.connectgh.com.au/data.json

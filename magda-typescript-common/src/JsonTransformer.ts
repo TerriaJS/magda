@@ -231,7 +231,8 @@ export default abstract class JsonTransformer {
             name: name,
             aspects: generatedAspects,
             sourceTag: undefined,
-            tenantId: this.tenantId
+            tenantId: this.tenantId,
+            authnReadPolicyId: undefined
         };
     }
 }

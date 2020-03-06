@@ -1,20 +1,20 @@
 import { Server } from "http";
-import * as express from "express";
-import * as nock from "nock";
-import * as _ from "lodash";
+import express from "express";
+import nock from "nock";
+import _ from "lodash";
 import { expect } from "chai";
-import * as queryString from "query-string";
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
+import queryString from "query-string";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
 
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
-import { lcAlphaNumStringArbNe } from "@magda/typescript-common/dist/test/arbitraries";
-import jsc from "@magda/typescript-common/dist/test/jsverify";
+import { Record } from "magda-typescript-common/src/generated/registry/api";
+import { lcAlphaNumStringArbNe } from "magda-typescript-common/src/test/arbitraries";
+import jsc from "magda-typescript-common/src/test/jsverify";
 
 import MinionOptions from "../MinionOptions";
 import fakeArgv from "./fakeArgv";
 import baseSpec from "./baseSpec";
 import Crawler from "../Crawler";
-import { MAGDA_ADMIN_PORTAL_ID } from "@magda/typescript-common/dist/registry/TenantConsts";
+import { MAGDA_ADMIN_PORTAL_ID } from "magda-typescript-common/src/registry/TenantConsts";
 
 baseSpec(
     "Crawler",
@@ -156,7 +156,8 @@ baseSpec(
                             name: "",
                             aspects: {},
                             sourceTag: "",
-                            tenantId: MAGDA_ADMIN_PORTAL_ID
+                            tenantId: MAGDA_ADMIN_PORTAL_ID,
+                            authnReadPolicyId: undefined
                         })
                     );
                     return { recordsTestTable, registryRecords };
@@ -241,7 +242,8 @@ baseSpec(
                             name: "",
                             aspects: {},
                             sourceTag: "",
-                            tenantId: MAGDA_ADMIN_PORTAL_ID
+                            tenantId: MAGDA_ADMIN_PORTAL_ID,
+                            authnReadPolicyId: undefined
                         }));
                     return {
                         totalCrawledRecordsNumber,

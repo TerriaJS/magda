@@ -1,69 +1,131 @@
 import React from "react";
 import { useAsync } from "react-async-hook";
 import Select from "react-select";
+import find from "lodash/find";
+import partition from "lodash/partition";
 
 import ReactSelectStyles from "Components/Common/react-select/ReactSelectStyles";
 
-import { OrgUnit, listOrgUnits } from "api-clients/OrgUnitApis";
+import {
+    listOrgUnits,
+    getOrgUnitById,
+    OrgUnitWithRelationship
+} from "api-clients/OrgUnitApis";
 
 type Props = {
     orgUnitId?: string;
+    custodianOrgUnitId?: string;
     onChange: (orgUnitId: string) => void;
 };
 
-const getOrgUnits: () => Promise<OrgUnit[]> = async () => {
+const getOrgUnitName = async (id?: string) => {
+    if (typeof id !== "string") {
+        return undefined;
+    }
     try {
-        return await listOrgUnits({ orgUnitsOnly: true });
+        const orgUnit = await getOrgUnitById(id);
+        return orgUnit.name;
     } catch (e) {
-        console.error(e);
-        throw e;
+        return undefined;
     }
 };
 
+const orgUnitsToOptionItems = (orgUnits: OrgUnitWithRelationship[]) =>
+    orgUnits.map(option => ({
+        label: option.name,
+        value: option.id
+    }));
+
 export default function OrgUnitDropdown({
     orgUnitId,
+    custodianOrgUnitId,
     onChange: onChangeCallback
 }: Props) {
-    const { loading, error, result, execute } = useAsync(getOrgUnits, []);
+    const { loading, error, result, execute } = useAsync(async () => {
+        const orgUnits = await listOrgUnits({
+            orgUnitsOnly: true,
+            relationshipOrgUnitId: custodianOrgUnitId
+        });
+        const custodianName = await getOrgUnitName(custodianOrgUnitId);
+        return { orgUnits, custodianName };
+    }, [custodianOrgUnitId]);
 
     if (loading) {
         return <span>Loading...</span>;
-    } else if (error || !result || result.length === 0) {
+    } else if (error || !result || result.orgUnits.length === 0) {
         return (
             <div className="au-body au-page-alerts au-page-alerts--error">
                 <span style={{ verticalAlign: "-2px" }}>
-                    Could not retrieve teams, or there are no teams in the
-                    system.
+                    Could not retrieve data custodian list, or there are no data
+                    custodians in the system.
                 </span>
-                <button className="au-btn au-btn--tertiary" onClick={execute}>
+                <button
+                    className="au-btn au-btn--tertiary"
+                    onClick={() => execute(custodianOrgUnitId)}
+                >
                     Try Again
                 </button>
             </div>
         );
     } else {
-        const value = result.find(option => option.id === orgUnitId);
+        const selectedValue =
+            typeof orgUnitId !== "undefined" &&
+            find(result.orgUnits, option => option.id === orgUnitId);
+
+        // --- default to list options alphabetically
+        const sortedResult = result.orgUnits.sort((b, a) =>
+            a.name > b.name ? -1 : b.name > a.name ? 1 : 0
+        );
+
+        const options = (() => {
+            if (custodianOrgUnitId) {
+                // --- produce options in groups
+                // --- teams in selected custodian will be shown on the top of the list
+                const custodianOrgUnitLabel =
+                    typeof result.custodianName === "undefined"
+                        ? "Unknown Custodian"
+                        : result.custodianName;
+                const groups = partition(
+                    sortedResult,
+                    item => item.relationship !== "unrelated"
+                ).map((items, key) => ({
+                    label: `Teams ${
+                        key ? "outside" : "in"
+                    } ${custodianOrgUnitLabel}`,
+                    options: orgUnitsToOptionItems(items)
+                }));
+                return groups;
+            } else {
+                // --- show options without groups
+                return orgUnitsToOptionItems(sortedResult);
+            }
+        })();
 
         return (
             <Select
                 className="react-select"
                 isMulti={false}
-                isSearchable={false}
+                isSearchable={true}
                 onChange={(rawValue, action) => {
-                    const value = rawValue as (
+                    const value = rawValue as
                         | { value: string }
                         | undefined
-                        | null);
+                        | null;
                     if (value) {
                         onChangeCallback(value.value);
                     }
                 }}
                 styles={ReactSelectStyles}
-                value={value && { label: value.name, value: value.id }}
-                options={result.map(option => ({
-                    label: option.name,
-                    value: option.id
-                }))}
-                placeholder="Select a business area"
+                value={
+                    selectedValue
+                        ? {
+                              label: selectedValue.name,
+                              value: selectedValue.id
+                          }
+                        : undefined
+                }
+                options={options as any}
+                placeholder="Select a team"
             />
         );
     }

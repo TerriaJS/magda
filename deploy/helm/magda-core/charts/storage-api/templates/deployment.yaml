@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: storage-api
+spec:
+  replicas: {{ .Values.replicas | default 1 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.global.rollingUpdate.maxUnavailable | default 0 }}
+  template:
+    metadata:
+      labels:
+        service: storage-api
+    spec:
+{{- if and (.Capabilities.APIVersions.Has "scheduling.k8s.io/v1beta1") .Values.global.enablePriorityClass }}
+      priorityClassName: magda-8
+{{- end }}
+      containers:
+      - name: storage-api
+        image: {{ template "dockerimage" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | default .Values.global.image.pullPolicy }}
+        command: [
+            "node",
+            "/usr/src/app/component/dist/index.js",
+            "--listenPort", "80",
+            "--minioEnableSSL", "false",
+            "--minioHost", "magda-minio",
+            "--minioPort", "9000",
+            "--authApiUrl", "http://authorization-api/v0",
+            "--uploadLimit", "100mb",
+        ]
+        env:
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: storage-secrets
+              key: secretkey
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: storage-secrets
+              key: accesskey
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secrets
+              key: jwt-secret
+
+{{- if .Values.global.enableLivenessProbes }}
+        livenessProbe:
+          httpGet:
+            path: /v0/status/live
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /v0/status/ready
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+{{- end }}

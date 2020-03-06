@@ -2,7 +2,6 @@ package au.csiro.data61.magda.opa
 
 import org.scalatest.Ignore
 
-@Ignore
 class TestRecordMagdaOpaPolicyWithOwnerOnly
     extends RecordOpaPolicyWithOwnerOnlySpec {
   override def testConfigSource: String =

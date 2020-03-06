@@ -1,7 +1,7 @@
 require("isomorphic-fetch");
 import { throttle, Cancelable } from "lodash";
-import { Tenant } from "@magda/typescript-common/dist/tenant-api/Tenant";
-import AuthorizedTenantClient from "@magda/typescript-common/dist/tenant-api/AuthorizedTenantClient";
+import { Tenant } from "magda-typescript-common/src/tenant-api/Tenant";
+import AuthorizedTenantClient from "magda-typescript-common/src/tenant-api/AuthorizedTenantClient";
 
 type TenantsLoaderConfig = {
     tenantUrl: string;

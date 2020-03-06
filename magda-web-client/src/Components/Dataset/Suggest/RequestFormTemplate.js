@@ -1,6 +1,4 @@
 import React from "react";
-import AUtextInput from "../../../pancake/react/text-inputs";
-import AUbutton from "../../../pancake/react/buttons";
 import "./FormTemplate.scss";
 
 //This is the react form template
@@ -157,12 +155,11 @@ export default class RequestFormTemplate extends React.Component {
                         </span>
                     )}
                 </label>
-                <AUtextInput
-                    as="textarea"
+                <textarea
+                    name="message"
                     id="message"
-                    value={this.state.message}
                     className={
-                        "correspondence-message-input au-text-input--block " +
+                        "au-text-input correspondence-message-input au-text-input--block " +
                         (this.state.messageValid
                             ? ""
                             : "au-text-input--invalid")
@@ -171,7 +168,9 @@ export default class RequestFormTemplate extends React.Component {
                     type="text"
                     placeholder={this.props.textAreaPlaceHolder}
                     aria-describedby="messageFieldError"
-                />
+                >
+                    {this.state.message}
+                </textarea>
 
                 <label htmlFor="senderName" className="field-label">
                     Your Name
@@ -188,13 +187,13 @@ export default class RequestFormTemplate extends React.Component {
                     )}
                 </label>
 
-                <AUtextInput
+                <input
+                    type="text"
                     id="senderName"
                     value={this.state.senderName}
                     onChange={this.handleInputChange}
-                    type="text"
                     className={
-                        "correspondence-name-input au-text-input--width-lg " +
+                        "au-text-input correspondence-name-input au-text-input--width-lg " +
                         (this.state.senderNameValid
                             ? ""
                             : "au-text-input--invalid")
@@ -218,12 +217,13 @@ export default class RequestFormTemplate extends React.Component {
                     )}
                 </label>
 
-                <AUtextInput
+                <input
+                    type="text"
                     id="senderEmail"
                     value={this.state.senderEmail}
                     onChange={this.handleInputChange}
                     className={
-                        "correspondence-email-input au-text-input--width-lg" +
+                        "au-text-input correspondence-email-input au-text-input--width-lg" +
                         (this.state.senderEmailValid
                             ? ""
                             : "au-text-input--invalid")
@@ -231,30 +231,30 @@ export default class RequestFormTemplate extends React.Component {
                     placeholder={this.props.emailPlaceHolder}
                     aria-describedby="senderEmailFieldError"
                 />
-                <AUbutton
+                <button
                     onClick={this.handleSubmit}
-                    className="correspondence-submit-button"
+                    className="au-btn correspondence-submit-button"
                     type="submit"
                     disabled={this.props.isSending}
                 >
                     {this.props.isSending ? "Sending..." : "Send"}
-                </AUbutton>
-                <AUbutton
+                </button>
+                <button
                     onClick={this.handleClear}
-                    className="au-btn--secondary correspondence-clear-button"
+                    className="au-btn au-btn--secondary correspondence-clear-button"
                     disabled={
                         !this.state.message &&
                         this.state.message === "" &&
-                        (!this.state.senderName &&
-                            this.state.senderName === "") &&
-                        (!this.state.senderEmail &&
-                            this.state.senderEmail === "")
+                        !this.state.senderName &&
+                        this.state.senderName === "" &&
+                        !this.state.senderEmail &&
+                        this.state.senderEmail === ""
                             ? true
                             : false
                     }
                 >
                     Clear
-                </AUbutton>
+                </button>
             </form>
         );
     }

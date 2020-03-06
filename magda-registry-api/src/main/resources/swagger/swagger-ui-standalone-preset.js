@@ -2,10 +2,10 @@
     "object" == typeof exports && "object" == typeof module
         ? (module.exports = t())
         : "function" == typeof define && define.amd
-          ? define([], t)
-          : "object" == typeof exports
-            ? (exports.SwaggerUIStandalonePreset = t())
-            : (e.SwaggerUIStandalonePreset = t());
+        ? define([], t)
+        : "object" == typeof exports
+        ? (exports.SwaggerUIStandalonePreset = t())
+        : (e.SwaggerUIStandalonePreset = t());
 })(this, function() {
     return (function(e) {
         function t(r) {
@@ -716,8 +716,8 @@
                             "31",
                             "[object Object]" === _
                                 ? "object with keys {" +
-                                  Object.keys(e).join(", ") +
-                                  "}"
+                                      Object.keys(e).join(", ") +
+                                      "}"
                                 : _,
                             E
                         );
@@ -1243,26 +1243,26 @@
                             else;
                         return null == r[a]
                             ? o
-                              ? new l(
-                                    null === r[a]
-                                        ? "The " +
-                                          p +
-                                          " `" +
-                                          u +
-                                          "` is marked as required " +
-                                          ("in `" +
-                                              s +
-                                              "`, but its value is `null`.")
-                                        : "The " +
-                                          p +
-                                          " `" +
-                                          u +
-                                          "` is marked as required in " +
-                                          ("`" +
-                                              s +
-                                              "`, but its value is `undefined`.")
-                                )
-                              : null
+                                ? new l(
+                                      null === r[a]
+                                          ? "The " +
+                                            p +
+                                            " `" +
+                                            u +
+                                            "` is marked as required " +
+                                            ("in `" +
+                                                s +
+                                                "`, but its value is `null`.")
+                                          : "The " +
+                                            p +
+                                            " `" +
+                                            u +
+                                            "` is marked as required in " +
+                                            ("`" +
+                                                s +
+                                                "`, but its value is `undefined`.")
+                                  )
+                                : null
                             : e(r, a, s, p, u);
                     }
                     var r = o.bind(null, !1);
@@ -1521,9 +1521,8 @@
                 function k(e, t) {
                     return (
                         "symbol" === e ||
-                        ("Symbol" === t["@@toStringTag"] ||
-                            ("function" == typeof Symbol &&
-                                t instanceof Symbol))
+                        "Symbol" === t["@@toStringTag"] ||
+                        ("function" == typeof Symbol && t instanceof Symbol)
                     );
                 }
                 function v(e) {
@@ -1531,8 +1530,10 @@
                     return Array.isArray(e)
                         ? "array"
                         : e instanceof RegExp
-                          ? "object"
-                          : k(t, e) ? "symbol" : t;
+                        ? "object"
+                        : k(t, e)
+                        ? "symbol"
+                        : t;
                 }
                 function E(e) {
                     var t = v(e);
@@ -1685,8 +1686,8 @@
                 if ("top" === e.insertAt)
                     r
                         ? r.nextSibling
-                          ? o.insertBefore(t, r.nextSibling)
-                          : o.appendChild(t)
+                            ? o.insertBefore(t, r.nextSibling)
+                            : o.appendChild(t)
                         : o.insertBefore(t, o.firstChild),
                         h.push(t);
                 else {

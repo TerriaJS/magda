@@ -1,15 +1,15 @@
-import jsc from "@magda/typescript-common/dist/test/jsverify";
-import * as nock from "nock";
-import * as express from "express";
+import jsc from "magda-typescript-common/src/test/jsverify";
+import nock from "nock";
+import express from "express";
 import { Server } from "http";
 
-import { encodeURIComponentWithApost } from "@magda/typescript-common/dist/test/util";
+import { encodeURIComponentWithApost } from "magda-typescript-common/src/test/util";
 import {
     WebHook,
     AspectDefinition
-} from "@magda/typescript-common/dist/generated/registry/api";
-import buildJwt from "@magda/typescript-common/dist/session/buildJwt";
-import { lcAlphaNumStringArbNe } from "@magda/typescript-common/dist/test/arbitraries";
+} from "magda-typescript-common/src/generated/registry/api";
+import buildJwt from "magda-typescript-common/src/session/buildJwt";
+import { lcAlphaNumStringArbNe } from "magda-typescript-common/src/test/arbitraries";
 
 import fakeArgv from "./fakeArgv";
 import MinionOptions from "../MinionOptions";

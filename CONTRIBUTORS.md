@@ -2,7 +2,7 @@
 
 The following people have contributed to Magda:
 
--   [CSIRO Data61](http://www.csiro.au/en/Research/D61)
+-   [CSIRO's Data61](http://www.csiro.au/en/Research/D61)
     -   [Alex Gilleran](https://github.com/AlexGilleran)
     -   [Chloe Chen](https://github.com/chloeleichen)
     -   [Kevin Ring](https://github.com/kring)

@@ -1,4 +1,4 @@
-import * as childProcess from "child_process";
+import childProcess from "child_process";
 
 export default function getMinikubeIP() {
     const minikubeProcess = childProcess.spawnSync("minikube", ["ip"]);

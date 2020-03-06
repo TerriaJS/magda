@@ -1,0 +1,6 @@
+apiVersion: v1
+name: "magda-core"
+description: "A complete solution for managing, publishing and discovering government data, private and open. This chart includes all core magda modules."
+version: "0.0.57-0"
+home: "https://github.com/magda-io/magda"
+sources: ["https://github.com/magda-io/magda"]

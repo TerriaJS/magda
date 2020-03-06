@@ -49,14 +49,14 @@ class HomeAdminPage extends Component<any, any> {
                 <h2>Taglines</h2>
                 <h3>Desktop Tagline</h3>
                 <ToggleEditor
-                    enabled={hasEditPermissions}
+                    editable={hasEditPermissions}
                     value={content.desktopTagLine}
                     onChange={save("home/tagline/desktop")}
                     editor={textEditor}
                 />
                 <h3>Mobile Tagline</h3>
                 <ToggleEditor
-                    enabled={hasEditPermissions}
+                    editable={hasEditPermissions}
                     value={content.mobileTagLine}
                     onChange={save("home/tagline/mobile")}
                     editor={textEditor}
@@ -73,7 +73,7 @@ function mapStateToProps(state, old) {
         state.userManagement.user.isAdmin;
     return {
         content: state.content,
-        hasEditPermissions
+        hasEditPermissions: hasEditPermissions ? true : false
     };
 }
 

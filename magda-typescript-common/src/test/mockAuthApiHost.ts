@@ -1,11 +1,11 @@
-import * as nock from "nock";
+import nock from "nock";
 import { Scope } from "nock";
 import { getUserId } from "../session/GetUserId";
 import AuthError from "../authorization-api/AuthError";
 
 import mockUserDataStore from "./mockUserDataStore";
 import { Request } from "express";
-import * as url from "url";
+import url from "url";
 
 export default class mockAuthApiHost {
     public scope: Scope;

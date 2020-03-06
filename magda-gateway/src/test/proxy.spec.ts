@@ -1,10 +1,10 @@
 import {} from "mocha";
-import * as sinon from "sinon";
-import * as express from "express";
-import * as nock from "nock";
-import * as _ from "lodash";
-import * as supertest from "supertest";
-import * as URI from "urijs";
+import sinon from "sinon";
+import express from "express";
+import nock from "nock";
+import _ from "lodash";
+import supertest from "supertest";
+import URI from "urijs";
 
 import buildApp from "../buildApp";
 

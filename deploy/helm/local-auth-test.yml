@@ -4,11 +4,17 @@ global:
     maxUnavailable: 1
   exposeNodePorts: true
   image:
-    repository: "localhost:5000/data61"
-    tag: "latest"
+    imagePullSecret: "regcred"
     pullPolicy: Always
   noDbAuth: true
   useCloudSql: false
   useCombinedDb: true
   enablePriorityClass: false
 
+tags:
+  all: false
+  combined-db: true
+  authorization-db: true
+  registry-db: true
+  opa: true
+  authorization-api: true

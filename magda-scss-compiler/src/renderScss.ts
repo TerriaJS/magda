@@ -1,12 +1,12 @@
-import * as sass from "node-sass";
-import * as cleancss from "clean-css";
-import * as fse from "fs-extra";
-import * as escapeStringRegexp from "escape-string-regexp";
-import * as postcss from "postcss";
-import * as autoprefixer from "autoprefixer";
+import sass from "node-sass";
+import cleancss from "clean-css";
+import fse from "fs-extra";
+import escapeStringRegexp from "escape-string-regexp";
+import postcss from "postcss";
+import autoprefixer from "autoprefixer";
 
 export const renderScssData = (clientRoot: string, data: string) => {
-    return new Promise((resolve, reject) => {
+    return (new Promise((resolve, reject) => {
         sass.render(
             {
                 data,
@@ -45,7 +45,7 @@ export const renderScssData = (clientRoot: string, data: string) => {
                 }
             }
         );
-    })
+    }) as Promise<sass.Result>)
         .then((result: sass.Result) => {
             return postcss([autoprefixer])
                 .process(result.css.toString("utf-8"), {
@@ -64,7 +64,7 @@ export const renderScssData = (clientRoot: string, data: string) => {
             const cssOption: any = { returnPromise: true };
             return new cleancss(cssOption).minify(css);
         })
-        .then(cssResult => cssResult.styles);
+        .then((cssResult: any) => cssResult.styles);
 };
 
 export const renderScssFiles = async (

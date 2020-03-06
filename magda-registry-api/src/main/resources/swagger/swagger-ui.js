@@ -28,91 +28,88 @@
               require("react-remarkable")
           ))
         : "function" == typeof define && define.amd
-          ? define(
-                [
-                    "babel-polyfill",
-                    "deep-extend",
-                    "redux",
-                    "immutable",
-                    "redux-immutable",
-                    "serialize-error",
-                    "base64-js",
-                    "ieee754",
-                    "isarray",
-                    "shallowequal",
-                    "xml",
-                    "memoizee",
-                    "reselect",
-                    "js-yaml",
-                    "url-parse",
-                    "react",
-                    "react-dom",
-                    "react-redux",
-                    "yaml-js",
-                    "swagger-client",
-                    "react-split-pane",
-                    "react-immutable-proptypes",
-                    "react-addons-shallow-compare",
-                    "react-collapse",
-                    "react-remarkable"
-                ],
-                t
-            )
-          : "object" == typeof exports
-            ? (exports.SwaggerUICore = t(
-                  require("babel-polyfill"),
-                  require("deep-extend"),
-                  require("redux"),
-                  require("immutable"),
-                  require("redux-immutable"),
-                  require("serialize-error"),
-                  require("base64-js"),
-                  require("ieee754"),
-                  require("isarray"),
-                  require("shallowequal"),
-                  require("xml"),
-                  require("memoizee"),
-                  require("reselect"),
-                  require("js-yaml"),
-                  require("url-parse"),
-                  require("react"),
-                  require("react-dom"),
-                  require("react-redux"),
-                  require("yaml-js"),
-                  require("swagger-client"),
-                  require("react-split-pane"),
-                  require("react-immutable-proptypes"),
-                  require("react-addons-shallow-compare"),
-                  require("react-collapse"),
-                  require("react-remarkable")
-              ))
-            : (e.SwaggerUICore = t(
-                  e["babel-polyfill"],
-                  e["deep-extend"],
-                  e.redux,
-                  e.immutable,
-                  e["redux-immutable"],
-                  e["serialize-error"],
-                  e["base64-js"],
-                  e.ieee754,
-                  e.isarray,
-                  e.shallowequal,
-                  e.xml,
-                  e.memoizee,
-                  e.reselect,
-                  e["js-yaml"],
-                  e["url-parse"],
-                  e.react,
-                  e["react-dom"],
-                  e["react-redux"],
-                  e["yaml-js"],
-                  e["swagger-client"],
-                  e["react-split-pane"],
-                  e["react-immutable-proptypes"],
-                  e["react-addons-shallow-compare"],
-                  e["react-collapse"],
-                  e["react-remarkable"]
-              ));
+        ? define([
+              "babel-polyfill",
+              "deep-extend",
+              "redux",
+              "immutable",
+              "redux-immutable",
+              "serialize-error",
+              "base64-js",
+              "ieee754",
+              "isarray",
+              "shallowequal",
+              "xml",
+              "memoizee",
+              "reselect",
+              "js-yaml",
+              "url-parse",
+              "react",
+              "react-dom",
+              "react-redux",
+              "yaml-js",
+              "swagger-client",
+              "react-split-pane",
+              "react-immutable-proptypes",
+              "react-addons-shallow-compare",
+              "react-collapse",
+              "react-remarkable"
+          ], t)
+        : "object" == typeof exports
+        ? (exports.SwaggerUICore = t(
+              require("babel-polyfill"),
+              require("deep-extend"),
+              require("redux"),
+              require("immutable"),
+              require("redux-immutable"),
+              require("serialize-error"),
+              require("base64-js"),
+              require("ieee754"),
+              require("isarray"),
+              require("shallowequal"),
+              require("xml"),
+              require("memoizee"),
+              require("reselect"),
+              require("js-yaml"),
+              require("url-parse"),
+              require("react"),
+              require("react-dom"),
+              require("react-redux"),
+              require("yaml-js"),
+              require("swagger-client"),
+              require("react-split-pane"),
+              require("react-immutable-proptypes"),
+              require("react-addons-shallow-compare"),
+              require("react-collapse"),
+              require("react-remarkable")
+          ))
+        : (e.SwaggerUICore = t(
+              e["babel-polyfill"],
+              e["deep-extend"],
+              e.redux,
+              e.immutable,
+              e["redux-immutable"],
+              e["serialize-error"],
+              e["base64-js"],
+              e.ieee754,
+              e.isarray,
+              e.shallowequal,
+              e.xml,
+              e.memoizee,
+              e.reselect,
+              e["js-yaml"],
+              e["url-parse"],
+              e.react,
+              e["react-dom"],
+              e["react-redux"],
+              e["yaml-js"],
+              e["swagger-client"],
+              e["react-split-pane"],
+              e["react-immutable-proptypes"],
+              e["react-addons-shallow-compare"],
+              e["react-collapse"],
+              e["react-remarkable"]
+          ));
 })(this, function(
     e,
     t,
@@ -356,14 +353,14 @@
                     return (0, O.isObject)(e) && !(0, O.isArray)(e)
                         ? e
                         : (0, O.isFunc)(e)
-                          ? i(e(t), t)
-                          : (0, O.isArray)(e)
-                            ? e
-                                  .map(function(e) {
-                                      return i(e, t);
-                                  })
-                                  .reduce(s, {})
-                            : {};
+                        ? i(e(t), t)
+                        : (0, O.isArray)(e)
+                        ? e
+                              .map(function(e) {
+                                  return i(e, t);
+                              })
+                              .reduce(s, {})
+                        : {};
                 }
                 function s() {
                     var e =
@@ -945,7 +942,7 @@
                         return F(e)
                             ? e
                             : c(e)
-                              ? Array.isArray(e)
+                            ? Array.isArray(e)
                                 ? S.default
                                       .Seq(e)
                                       .map(u)
@@ -954,7 +951,7 @@
                                       .Seq(e)
                                       .map(u)
                                       .toOrderedMap()
-                              : e;
+                            : e;
                     }
                     function i(e, t) {
                         var r = {};
@@ -1169,14 +1166,14 @@
                                                 ][
                                                     h
                                                         ? h < 3
-                                                          ? 2
-                                                          : h > 6
+                                                            ? 2
+                                                            : h > 6
                                                             ? 4
                                                             : h > 3
-                                                              ? 3
-                                                              : +/^(a(bstract|lias|nd|rguments|rray|s(m|sert)?|uto)|b(ase|egin|ool(ean)?|reak|yte)|c(ase|atch|har|hecked|lass|lone|ompl|onst|ontinue)|de(bugger|cimal|clare|f(ault|er)?|init|l(egate|ete)?)|do|double|e(cho|ls?if|lse(if)?|nd|nsure|num|vent|x(cept|ec|p(licit|ort)|te(nds|nsion|rn)))|f(allthrough|alse|inal(ly)?|ixed|loat|or(each)?|riend|rom|unc(tion)?)|global|goto|guard|i(f|mp(lements|licit|ort)|n(it|clude(_once)?|line|out|stanceof|t(erface|ernal)?)?|s)|l(ambda|et|ock|ong)|m(icrolight|odule|utable)|NaN|n(amespace|ative|ext|ew|il|ot|ull)|o(bject|perator|r|ut|verride)|p(ackage|arams|rivate|rotected|rotocol|ublic)|r(aise|e(adonly|do|f|gister|peat|quire(_once)?|scue|strict|try|turn))|s(byte|ealed|elf|hort|igned|izeof|tatic|tring|truct|ubscript|uper|ynchronized|witch)|t(emplate|hen|his|hrows?|ransient|rue|ry|ype(alias|def|id|name|of))|u(n(checked|def(ined)?|ion|less|signed|til)|se|sing)|v(ar|irtual|oid|olatile)|w(char_t|hen|here|hile|ith)|xor|yield)$/[
-                                                                    o
-                                                                ](d)
+                                                            ? 3
+                                                            : +/^(a(bstract|lias|nd|rguments|rray|s(m|sert)?|uto)|b(ase|egin|ool(ean)?|reak|yte)|c(ase|atch|har|hecked|lass|lone|ompl|onst|ontinue)|de(bugger|cimal|clare|f(ault|er)?|init|l(egate|ete)?)|do|double|e(cho|ls?if|lse(if)?|nd|nsure|num|vent|x(cept|ec|p(licit|ort)|te(nds|nsion|rn)))|f(allthrough|alse|inal(ly)?|ixed|loat|or(each)?|riend|rom|unc(tion)?)|global|goto|guard|i(f|mp(lements|licit|ort)|n(it|clude(_once)?|line|out|stanceof|t(erface|ernal)?)?|s)|l(ambda|et|ock|ong)|m(icrolight|odule|utable)|NaN|n(amespace|ative|ext|ew|il|ot|ull)|o(bject|perator|r|ut|verride)|p(ackage|arams|rivate|rotected|rotocol|ublic)|r(aise|e(adonly|do|f|gister|peat|quire(_once)?|scue|strict|try|turn))|s(byte|ealed|elf|hort|igned|izeof|tatic|tring|truct|ubscript|uper|ynchronized|witch)|t(emplate|hen|his|hrows?|ransient|rue|ry|ype(alias|def|id|name|of))|u(n(checked|def(ined)?|ion|less|signed|til)|se|sing)|v(ar|irtual|oid|olatile)|w(char_t|hen|here|hile|ith)|xor|yield)$/[
+                                                                  o
+                                                              ](d)
                                                         : 0
                                                 ]
                                             ),
@@ -1376,7 +1373,7 @@
                             return (
                                 Object.keys(e).length !==
                                     Object.keys(t).length ||
-                                ((0, U.default)(e, function(e, r) {
+                                (0, U.default)(e, function(e, r) {
                                     if (n.includes(r)) return !1;
                                     var o = t[r];
                                     return S.default.Iterable.isIterable(e)
@@ -1391,9 +1388,9 @@
                                                       : O(o))) &&
                                               e !== o;
                                 }) ||
-                                    r.some(function(r) {
-                                        return !(0, L.default)(e[r], t[r]);
-                                    }))
+                                r.some(function(r) {
+                                    return !(0, L.default)(e[r], t[r]);
+                                })
                             );
                         }),
                         function(e) {
@@ -1535,11 +1532,11 @@
             function(e, t, r) {
                 (function(e) {
                     /*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
+                     * The buffer module from node.js, for the browser.
+                     *
+                     * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+                     * @license  MIT
+                     */
                     "use strict";
                     function n() {
                         try {
@@ -1594,7 +1591,9 @@
                         return "undefined" != typeof ArrayBuffer &&
                             t instanceof ArrayBuffer
                             ? d(e, t, r, n)
-                            : "string" == typeof t ? f(e, t, r) : h(e, t);
+                            : "string" == typeof t
+                            ? f(e, t, r)
+                            : h(e, t);
                     }
                     function s(e) {
                         if ("number" != typeof e)
@@ -1612,10 +1611,10 @@
                             t <= 0
                                 ? a(e, t)
                                 : void 0 !== r
-                                  ? "string" == typeof n
+                                ? "string" == typeof n
                                     ? a(e, t).fill(r, n)
                                     : a(e, t).fill(r)
-                                  : a(e, t)
+                                : a(e, t)
                         );
                     }
                     function c(e, t) {
@@ -1656,8 +1655,8 @@
                                 void 0 === r && void 0 === n
                                     ? new Uint8Array(t)
                                     : void 0 === n
-                                      ? new Uint8Array(t, r)
-                                      : new Uint8Array(t, r, n)),
+                                    ? new Uint8Array(t, r)
+                                    : new Uint8Array(t, r, n)),
                             u.TYPED_ARRAY_SUPPORT
                                 ? ((e = t), (e.__proto__ = u.prototype))
                                 : (e = p(e, t)),
@@ -1787,8 +1786,8 @@
                             ("string" == typeof r
                                 ? ((n = r), (r = 0))
                                 : r > 2147483647
-                                  ? (r = 2147483647)
-                                  : r < -2147483648 && (r = -2147483648),
+                                ? (r = 2147483647)
+                                : r < -2147483648 && (r = -2147483648),
                             (r = +r),
                             isNaN(r) && (r = o ? 0 : e.length - 1),
                             r < 0 && (r = e.length + r),
@@ -1812,16 +1811,16 @@
                                 "function" ==
                                     typeof Uint8Array.prototype.indexOf
                                     ? o
-                                      ? Uint8Array.prototype.indexOf.call(
-                                            e,
-                                            t,
-                                            r
-                                        )
-                                      : Uint8Array.prototype.lastIndexOf.call(
-                                            e,
-                                            t,
-                                            r
-                                        )
+                                        ? Uint8Array.prototype.indexOf.call(
+                                              e,
+                                              t,
+                                              r
+                                          )
+                                        : Uint8Array.prototype.lastIndexOf.call(
+                                              e,
+                                              t,
+                                              r
+                                          )
                                     : E(e, [t], r, n, o)
                             );
                         throw new TypeError(
@@ -2316,8 +2315,8 @@
                             return 0 === e
                                 ? ""
                                 : 0 === arguments.length
-                                  ? C(this, 0, e)
-                                  : b.apply(this, arguments);
+                                ? C(this, 0, e)
+                                : b.apply(this, arguments);
                         }),
                         (u.prototype.equals = function(e) {
                             if (!u.isBuffer(e))
@@ -3009,7 +3008,9 @@
             function(e, t, r) {
                 function n(e) {
                     return null == e
-                        ? void 0 === e ? s : i
+                        ? void 0 === e
+                            ? s
+                            : i
                         : ((e = Object(e)), l && l in e ? a(e) : u(e));
                 }
                 var o = r(22),
@@ -3912,10 +3913,12 @@
                     return "function" == typeof e
                         ? e
                         : null == e
-                          ? u
-                          : "object" == typeof e
-                            ? i(e) ? a(e[0], e[1]) : o(e)
-                            : s(e);
+                        ? u
+                        : "object" == typeof e
+                        ? i(e)
+                            ? a(e[0], e[1])
+                            : o(e)
+                        : s(e);
                 }
                 var o = r(85),
                     a = r(132),
@@ -4667,7 +4670,8 @@
                     return function(r) {
                         return (
                             null != r &&
-                            (r[e] === t && (void 0 !== t || e in Object(r)))
+                            r[e] === t &&
+                            (void 0 !== t || e in Object(r))
                         );
                     };
                 }
@@ -4736,9 +4740,9 @@
                             null != e &&
                             !a(e)
                         ) ||
-                        (i.test(e) ||
-                            !u.test(e) ||
-                            (null != t && e in Object(t)))
+                        i.test(e) ||
+                        !u.test(e) ||
+                        (null != t && e in Object(t))
                     );
                 }
                 var o = r(26),
@@ -5028,10 +5032,10 @@
                         return "array" === o
                             ? [e(l, { includeReadOnly: c })]
                             : t.enum
-                              ? t.default
+                            ? t.default
                                 ? t.default
                                 : (0, a.normalizeArray)(t.enum)[0]
-                              : f(t);
+                            : f(t);
                     }),
                     d = ((t.inferSchema = function(e) {
                         return (
@@ -5090,11 +5094,11 @@
                                                   d[_].push(e(s, r));
                                           })
                                         : Array.isArray(p)
-                                          ? p.forEach(function(t) {
-                                                (s.default = t),
-                                                    d[_].push(e(s, r));
-                                            })
-                                          : (d[_] = [e(s, r)]),
+                                        ? p.forEach(function(t) {
+                                              (s.default = t),
+                                                  d[_].push(e(s, r));
+                                          })
+                                        : (d[_] = [e(s, r)]),
                                     h && d[_].push({ _attr: h }),
                                     d
                                 );
@@ -5105,11 +5109,11 @@
                                   }),
                                   j)
                                 : Array.isArray(p)
-                                  ? (p.forEach(function(t) {
-                                        (s.default = t), j.push(e(s, r));
-                                    }),
-                                    j)
-                                  : e(s, r);
+                                ? (p.forEach(function(t) {
+                                      (s.default = t), j.push(e(s, r));
+                                  }),
+                                  j)
+                                : e(s, r);
                         }
                         if ("object" === o) {
                             var P = (0, a.objectify)(u);
@@ -5157,8 +5161,10 @@
                                 void 0 !== l
                                     ? l
                                     : void 0 !== p
-                                      ? p
-                                      : Array.isArray(g) ? g[0] : f(t)),
+                                    ? p
+                                    : Array.isArray(g)
+                                    ? g[0]
+                                    : f(t)),
                             (d[_] = h ? [{ _attr: h }, E] : E),
                             d
                         );
@@ -5699,8 +5705,10 @@
                         return r === n.length - 1 && n.length > 1
                             ? e + "or " + t
                             : n[r + 1] && n.length > 2
-                              ? e + t + ", "
-                              : n[r + 1] ? e + t + " " : e + t;
+                            ? e + t + ", "
+                            : n[r + 1]
+                            ? e + t + " "
+                            : e + t;
                     }, "should be a");
                 }
                 Object.defineProperty(t, "__esModule", { value: !0 }),
@@ -6089,8 +6097,8 @@
                     return o && a
                         ? e.setIn(["scheme", o, a], n)
                         : o || a
-                          ? void 0
-                          : e.setIn(["scheme", "_defaultScheme"], n);
+                        ? void 0
+                        : e.setIn(["scheme", "_defaultScheme"], n);
                 }),
                 u);
             },
@@ -6111,8 +6119,8 @@
                     return e instanceof Error
                         ? { type: O, error: !0, payload: e }
                         : "string" == typeof e
-                          ? { type: O, payload: e.replace(/\t/g, "  ") || "" }
-                          : { type: O, payload: "" };
+                        ? { type: O, payload: e.replace(/\t/g, "  ") || "" }
+                        : { type: O, payload: "" };
                 }
                 function u(e) {
                     return { type: U, payload: e };
@@ -6270,42 +6278,43 @@
                                 "undefined" == typeof t && (t = o.url());
                             var c = l.getLineNumberForPath,
                                 f = o.specStr();
-                            return s({ fetch: i, spec: e, baseDoc: t }).then(
-                                function(e) {
-                                    var t = e.spec,
-                                        r = e.errors;
-                                    if (
-                                        (a.clear({ type: "thrown" }),
-                                        r.length > 0)
-                                    ) {
-                                        var o = r.map(function(e) {
-                                            return (
-                                                console.error(e),
-                                                (e.line = e.fullPath
-                                                    ? c(f, e.fullPath)
-                                                    : null),
-                                                (e.path = e.fullPath
-                                                    ? e.fullPath.join(".")
-                                                    : null),
-                                                (e.level = "error"),
-                                                (e.type = "thrown"),
-                                                (e.source = "resolver"),
-                                                Object.defineProperty(
-                                                    e,
-                                                    "message",
-                                                    {
-                                                        enumerable: !0,
-                                                        value: e.message
-                                                    }
-                                                ),
-                                                e
-                                            );
-                                        });
-                                        a.newThrownErrBatch(o);
-                                    }
-                                    return n.updateResolved(t);
+                            return s({
+                                fetch: i,
+                                spec: e,
+                                baseDoc: t
+                            }).then(function(e) {
+                                var t = e.spec,
+                                    r = e.errors;
+                                if (
+                                    (a.clear({ type: "thrown" }), r.length > 0)
+                                ) {
+                                    var o = r.map(function(e) {
+                                        return (
+                                            console.error(e),
+                                            (e.line = e.fullPath
+                                                ? c(f, e.fullPath)
+                                                : null),
+                                            (e.path = e.fullPath
+                                                ? e.fullPath.join(".")
+                                                : null),
+                                            (e.level = "error"),
+                                            (e.type = "thrown"),
+                                            (e.source = "resolver"),
+                                            Object.defineProperty(
+                                                e,
+                                                "message",
+                                                {
+                                                    enumerable: !0,
+                                                    value: e.message
+                                                }
+                                            ),
+                                            e
+                                        );
+                                    });
+                                    a.newThrownErrBatch(o);
                                 }
-                            );
+                                return n.updateResolved(t);
+                            });
                         };
                     }),
                     (t.formatIntoYaml = function() {
@@ -6484,8 +6493,8 @@
                         a = i(o, "file")
                             ? "multipart/form-data"
                             : u(o, "formData")
-                              ? "application/x-www-form-urlencoded"
-                              : r.get("consumes_value");
+                            ? "application/x-www-form-urlencoded"
+                            : r.get("consumes_value");
                     return (0, d.fromJS)({
                         requestContentType: a,
                         responseContentType: r.get("produces_value")
@@ -7095,7 +7104,11 @@
                         );
                     var a = r(n);
                     return a
-                        ? o ? ("root" === o ? g(e, a, t()) : g(e, a)) : j(a)
+                        ? o
+                            ? "root" === o
+                                ? g(e, a, t())
+                                : g(e, a)
+                            : j(a)
                         : (e().log.warn("Could not find component", n), null);
                 };
             },
@@ -7681,7 +7694,9 @@
                     for (r || (r = a), i || (i = []); ++s < l; ) {
                         var c = e[s];
                         t > 0 && r(c)
-                            ? t > 1 ? n(c, t - 1, r, u, i) : o(i, c)
+                            ? t > 1
+                                ? n(c, t - 1, r, u, i)
+                                : o(i, c)
                             : u || (i[i.length] = c);
                     }
                     return i;
@@ -7962,11 +7977,11 @@
                                       e.start_mark.column <= t.column &&
                                       e.end_mark.column >= t.column
                                 : t.line === e.start_mark.line
-                                  ? t.column >= e.start_mark.column
-                                  : t.line === e.end_mark.line
-                                    ? t.column <= e.end_mark.column
-                                    : e.start_mark.line < t.line &&
-                                      e.end_mark.line > t.line;
+                                ? t.column >= e.start_mark.column
+                                : t.line === e.end_mark.line
+                                ? t.column <= e.end_mark.column
+                                : e.start_mark.line < t.line &&
+                                  e.end_mark.line > t.line;
                         }
                         var a = 0;
                         if (!e || [v, b].indexOf(e.tag) === -1) return o;
@@ -8151,7 +8166,9 @@
                     var r = l.test(e);
                     return r || c.test(e)
                         ? f(e.slice(2), r ? 2 : 8)
-                        : s.test(e) ? u : +e;
+                        : s.test(e)
+                        ? u
+                        : +e;
                 }
                 var o = r(58),
                     a = r(27),
@@ -8586,30 +8603,29 @@
                                     },
                                     l
                                 );
-                            r
-                                .fetch({
-                                    url: f,
-                                    method: "post",
-                                    headers: d,
-                                    query: i,
-                                    body: a
-                                })
+                            r.fetch({
+                                url: f,
+                                method: "post",
+                                headers: d,
+                                query: i,
+                                body: a
+                            })
                                 .then(function(e) {
                                     var t = JSON.parse(e.data),
                                         r = t && (t.error || ""),
                                         a = t && (t.parseError || "");
                                     return e.ok
                                         ? r || a
-                                          ? void o.newAuthErr({
-                                                authId: c,
-                                                level: "error",
-                                                source: "auth",
-                                                message: JSON.stringify(t)
-                                            })
-                                          : void n.authorizeOauth2({
-                                                auth: p,
-                                                token: t
-                                            })
+                                            ? void o.newAuthErr({
+                                                  authId: c,
+                                                  level: "error",
+                                                  source: "auth",
+                                                  message: JSON.stringify(t)
+                                              })
+                                            : void n.authorizeOauth2({
+                                                  auth: p,
+                                                  token: t
+                                              })
                                         : void o.newAuthErr({
                                               authId: c,
                                               level: "error",
@@ -9000,8 +9016,8 @@
                                     return e === d
                                         ? ((n.draggedSize = null), "0px")
                                         : e === h
-                                          ? ((n.draggedSize = null), "100%")
-                                          : n.draggedSize || t;
+                                        ? ((n.draggedSize = null), "100%")
+                                        : n.draggedSize || t;
                                 }),
                                 (u = r),
                                 a(n, u)
@@ -11340,39 +11356,39 @@
                     return "password" === d
                         ? void t.authorizePassword(e)
                         : "application" === d
-                          ? void t.authorizeApplication(e)
-                          : c
-                            ? (("implicit" !== d && "accessCode" !== d) ||
-                                  (h =
-                                      o.get("authorizationUrl") +
-                                      "?response_type=" +
-                                      ("implicit" === d ? "token" : "code")),
-                              (h +=
-                                  "&redirect_uri=" +
-                                  encodeURIComponent(c) +
-                                  "&scope=" +
-                                  encodeURIComponent(a.join(f)) +
-                                  "&state=" +
-                                  encodeURIComponent(p) +
-                                  "&client_id=" +
-                                  encodeURIComponent(l)),
-                              (u.default.swaggerUIRedirectOauth2 = {
-                                  auth: e,
-                                  state: p,
-                                  callback:
-                                      "implicit" === d
-                                          ? t.preAuthorizeImplicit
-                                          : t.authorizeAccessCode,
-                                  errCb: r.newAuthErr
-                              }),
-                              void u.default.open(h))
-                            : void r.newAuthErr({
-                                  authId: s,
-                                  source: "validation",
-                                  level: "error",
-                                  message:
-                                      "oauth2RedirectUri configuration is not passed. Oauth2 authorization cannot be performed."
-                              });
+                        ? void t.authorizeApplication(e)
+                        : c
+                        ? (("implicit" !== d && "accessCode" !== d) ||
+                              (h =
+                                  o.get("authorizationUrl") +
+                                  "?response_type=" +
+                                  ("implicit" === d ? "token" : "code")),
+                          (h +=
+                              "&redirect_uri=" +
+                              encodeURIComponent(c) +
+                              "&scope=" +
+                              encodeURIComponent(a.join(f)) +
+                              "&state=" +
+                              encodeURIComponent(p) +
+                              "&client_id=" +
+                              encodeURIComponent(l)),
+                          (u.default.swaggerUIRedirectOauth2 = {
+                              auth: e,
+                              state: p,
+                              callback:
+                                  "implicit" === d
+                                      ? t.preAuthorizeImplicit
+                                      : t.authorizeAccessCode,
+                              errCb: r.newAuthErr
+                          }),
+                          void u.default.open(h))
+                        : void r.newAuthErr({
+                              authId: s,
+                              source: "validation",
+                              level: "error",
+                              message:
+                                  "oauth2RedirectUri configuration is not passed. Oauth2 authorization cannot be performed."
+                          });
                 }
                 Object.defineProperty(t, "__esModule", { value: !0 }),
                     (t.default = o);
@@ -11878,39 +11894,39 @@
                                               this.state.url.indexOf(
                                                   "127.0.0.1"
                                               ) >= 0
-                                              ? null
-                                              : c.default.createElement(
-                                                    "span",
-                                                    {
-                                                        style: {
-                                                            float: "right"
-                                                        }
-                                                    },
-                                                    c.default.createElement(
-                                                        "a",
-                                                        {
-                                                            target: "_blank",
-                                                            href:
-                                                                this.state
-                                                                    .validatorUrl +
-                                                                "/debug?url=" +
-                                                                this.state.url
-                                                        },
-                                                        c.default.createElement(
-                                                            p,
-                                                            {
-                                                                src:
-                                                                    this.state
-                                                                        .validatorUrl +
-                                                                    "?url=" +
-                                                                    this.state
-                                                                        .url,
-                                                                alt:
-                                                                    "Online validator badge"
-                                                            }
-                                                        )
-                                                    )
-                                                );
+                                            ? null
+                                            : c.default.createElement(
+                                                  "span",
+                                                  {
+                                                      style: {
+                                                          float: "right"
+                                                      }
+                                                  },
+                                                  c.default.createElement(
+                                                      "a",
+                                                      {
+                                                          target: "_blank",
+                                                          href:
+                                                              this.state
+                                                                  .validatorUrl +
+                                                              "/debug?url=" +
+                                                              this.state.url
+                                                      },
+                                                      c.default.createElement(
+                                                          p,
+                                                          {
+                                                              src:
+                                                                  this.state
+                                                                      .validatorUrl +
+                                                                  "?url=" +
+                                                                  this.state
+                                                                      .url,
+                                                              alt:
+                                                                  "Online validator badge"
+                                                          }
+                                                      )
+                                                  )
+                                              );
                                     }
                                 }
                             ]),
@@ -11976,13 +11992,13 @@
                                               alt: "Error"
                                           })
                                         : this.state.loaded
-                                          ? c.default.createElement("img", {
-                                                src: this.props.src,
-                                                alt: this.props.alt
-                                            })
-                                          : c.default.createElement("img", {
-                                                alt: "Loading..."
-                                            });
+                                        ? c.default.createElement("img", {
+                                              src: this.props.src,
+                                              alt: this.props.alt
+                                          })
+                                        : c.default.createElement("img", {
+                                              alt: "Loading..."
+                                          });
                                 }
                             }
                         ]),
@@ -12525,10 +12541,10 @@
                                                 className: _
                                                     ? "opblock opblock-deprecated"
                                                     : z
-                                                      ? "opblock opblock-" +
-                                                        o +
-                                                        " is-open"
-                                                      : "opblock opblock-" + o,
+                                                    ? "opblock opblock-" +
+                                                      o +
+                                                      " is-open"
+                                                    : "opblock opblock-" + o,
                                                 id: t
                                             },
                                             c.default.createElement(
@@ -13374,15 +13390,15 @@
                                   })
                                   .toArray()
                             : e
-                              ? c.default.createElement(
-                                    "div",
-                                    null,
-                                    c.default.createElement(r, {
-                                        className: "example",
-                                        value: e
-                                    })
-                                )
-                              : null;
+                            ? c.default.createElement(
+                                  "div",
+                                  null,
+                                  c.default.createElement(r, {
+                                      className: "example",
+                                      value: e
+                                  })
+                              )
+                            : null;
                     },
                     h = (function(e) {
                         function t() {
@@ -14830,15 +14846,15 @@
                                                               )
                                                             : "spec" ===
                                                               e.get("type")
-                                                              ? c.default.createElement(
-                                                                    m,
-                                                                    {
-                                                                        key: r,
-                                                                        error: e,
-                                                                        jumpToLine: t
-                                                                    }
-                                                                )
-                                                              : void 0;
+                                                            ? c.default.createElement(
+                                                                  m,
+                                                                  {
+                                                                      key: r,
+                                                                      error: e,
+                                                                      jumpToLine: t
+                                                                  }
+                                                              )
+                                                            : void 0;
                                                     })
                                                 )
                                             )
@@ -14873,8 +14889,8 @@
                                           null,
                                           t.get("source") && t.get("level")
                                               ? i(t.get("source")) +
-                                                " " +
-                                                t.get("level")
+                                                    " " +
+                                                    t.get("level")
                                               : "",
                                           t.get("path")
                                               ? c.default.createElement(
@@ -15779,7 +15795,9 @@
                             (o =
                                 void 0 !== e.value
                                     ? e.value
-                                    : e.multiple ? [""] : ""),
+                                    : e.multiple
+                                    ? [""]
+                                    : ""),
                             (n.state = { value: o }),
                             n
                         );
@@ -15814,7 +15832,10 @@
                                         t.map(function(e, t) {
                                             return p.default.createElement(
                                                 "option",
-                                                { key: t, value: String(e) },
+                                                {
+                                                    key: t,
+                                                    value: String(e)
+                                                },
                                                 e
                                             );
                                         })
@@ -16557,11 +16578,14 @@
                                                           .handleOnChange
                                                   })
                                                 : g &&
-                                                  l.default.createElement(f, {
-                                                      className:
-                                                          "body-param__example",
-                                                      value: g
-                                                  }),
+                                                      l.default.createElement(
+                                                          f,
+                                                          {
+                                                              className:
+                                                                  "body-param__example",
+                                                              value: g
+                                                          }
+                                                      ),
                                             l.default.createElement(
                                                 "div",
                                                 {
@@ -17975,16 +17999,18 @@
                                         u = a && this.getModelName(a),
                                         i = void 0,
                                         l = void 0;
-                                    switch ((t &&
-                                    (t.get("type") || t.get("properties"))
-                                        ? (i = t)
-                                        : a && (i = this.getRefSchema(u)),
-                                    (l = i && i.get("type")),
-                                    !l &&
-                                        i &&
-                                        i.get("properties") &&
-                                        (l = "object"),
-                                    l)) {
+                                    switch (
+                                        (t &&
+                                        (t.get("type") || t.get("properties"))
+                                            ? (i = t)
+                                            : a && (i = this.getRefSchema(u)),
+                                        (l = i && i.get("type")),
+                                        !l &&
+                                            i &&
+                                            i.get("properties") &&
+                                            (l = "object"),
+                                        l)
+                                    ) {
                                         case "object":
                                             return p.default.createElement(
                                                 _,
@@ -19011,17 +19037,17 @@
                                         null,
                                         !f || f.count() < 1
                                             ? d.length
-                                              ? c.default.createElement(
-                                                    "span",
-                                                    {
-                                                        style: {
-                                                            color: "red",
-                                                            fortWeight: "bold"
-                                                        }
-                                                    },
-                                                    d[0]
-                                                )
-                                              : null
+                                                ? c.default.createElement(
+                                                      "span",
+                                                      {
+                                                          style: {
+                                                              color: "red",
+                                                              fortWeight: "bold"
+                                                          }
+                                                      },
+                                                      d[0]
+                                                  )
+                                                : null
                                             : f
                                                   .map(function(t, n) {
                                                       var o = Object.assign(

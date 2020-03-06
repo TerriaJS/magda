@@ -1,4 +1,4 @@
-import * as html2text from "html-to-text";
+import html2text from "html-to-text";
 
 import { Message, SMTPMailer, Attachment } from "./SMTPMailer";
 import { DatasetMessage } from "./model";

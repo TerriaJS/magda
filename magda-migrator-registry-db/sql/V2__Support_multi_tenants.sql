@@ -24,5 +24,4 @@ ALTER TABLE recordaspects ADD CONSTRAINT recordaspects_recordid_tenantid_fkey FO
     ON DELETE NO ACTION;
 
 ALTER TABLE events ADD COLUMN tenantId bigint;
-UPDATE events SET tenantId = 0 where tenantId is Null;
 

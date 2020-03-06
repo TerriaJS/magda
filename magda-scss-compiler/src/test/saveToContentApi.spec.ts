@@ -1,9 +1,9 @@
 import {} from "mocha";
 import { expect } from "chai";
-import * as nock from "nock";
-import * as URI from "urijs";
+import nock from "nock";
+import URI from "urijs";
 import saveToContentApi from "../saveToContentApi";
-import { getUserId } from "@magda/typescript-common/dist/session/GetUserId";
+import { getUserId } from "magda-typescript-common/src/session/GetUserId";
 
 describe("saveToContentApi", () => {
     const contentApiUrl = "http://contentAPI.example.com";

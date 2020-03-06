@@ -1,18 +1,18 @@
-import * as request from "supertest";
+import request from "supertest";
 import { Server } from "http";
-import * as express from "express";
-import * as nock from "nock";
-import * as sinon from "sinon";
-import * as _ from "lodash";
+import express from "express";
+import nock from "nock";
+import sinon from "sinon";
+import _ from "lodash";
 import { expect } from "chai";
 
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
+import { Record } from "magda-typescript-common/src/generated/registry/api";
 import {
     arbFlatMap,
     lcAlphaNumStringArbNe,
     recordArb
-} from "@magda/typescript-common/dist/test/arbitraries";
-import jsc from "@magda/typescript-common/dist/test/jsverify";
+} from "magda-typescript-common/src/test/arbitraries";
+import jsc from "magda-typescript-common/src/test/jsverify";
 
 import MinionOptions from "../MinionOptions";
 import minion from "../index";

@@ -56,6 +56,7 @@ import ErrorMessageBox from "./ErrorMessageBox";
 
 import helpIcon from "assets/help.svg";
 import { User } from "reducers/userManagementReducer";
+import * as ValidationManager from "../Add/ValidationManager";
 
 const aspects = {
     publishing: datasetPublishingAspect,
@@ -90,10 +91,19 @@ type Props = {
 class NewDataset extends React.Component<Props, State> {
     state: State = this.props.initialState;
 
+    constructor(props) {
+        super(props);
+        ValidationManager.setStateDataGetter(() => {
+            return this.state;
+        });
+    }
+
     componentDidMount() {
         if (this.props.isNewDataset) {
             this.props.history.replace(
-                `/dataset/add/metadata/${this.props.datasetId}/${this.props.step}`
+                `/dataset/add/metadata/${this.props.datasetId}/${
+                    this.props.step
+                }`
             );
         }
     }
@@ -121,6 +131,7 @@ class NewDataset extends React.Component<Props, State> {
                 edit={this.edit}
                 editState={this.editState}
                 stateData={this.state}
+                editStateWithUpdater={this.setState.bind(this)}
             />
         ),
         config.featureFlags.previewAddDataset
@@ -143,7 +154,7 @@ class NewDataset extends React.Component<Props, State> {
     };
 
     render() {
-        const { files } = this.state;
+        const { distributions } = this.state;
 
         let { step } = this.props;
 
@@ -184,7 +195,7 @@ class NewDataset extends React.Component<Props, State> {
                     <div className="col-sm-12">
                         <ReviewFilesList
                             key={step}
-                            files={files}
+                            files={distributions}
                             isOpen={step < 1 ? true : false}
                         />
                     </div>
@@ -231,8 +242,12 @@ class NewDataset extends React.Component<Props, State> {
     async gotoStep(step) {
         try {
             await this.resetError();
-            saveState(this.state, this.props.datasetId);
-            this.props.history.push("../" + this.props.datasetId + "/" + step);
+            if (ValidationManager.validateAll()) {
+                saveState(this.state, this.props.datasetId);
+                this.props.history.push(
+                    "../" + this.props.datasetId + "/" + step
+                );
+            }
         } catch (e) {
             this.props.createNewDatasetError(e);
         }
@@ -289,7 +304,7 @@ class NewDataset extends React.Component<Props, State> {
             datasetPublishing,
             spatialCoverage,
             temporalCoverage,
-            files,
+            distributions,
             licenseLevel,
             informationSecurity,
             datasetAccess,
@@ -312,18 +327,18 @@ class NewDataset extends React.Component<Props, State> {
             });
         }
 
-        const inputDistributions = files.map(file => {
+        const inputDistributions = distributions.map(distribution => {
             const aspect =
                 licenseLevel === "dataset"
                     ? {
-                          ...file,
+                          ...distribution,
                           license: dataset.defaultLicense
                       }
-                    : file;
+                    : distribution;
 
             return {
                 id: createId("dist"),
-                name: file.title,
+                name: distribution.title,
                 aspects: {
                     "dcat-distribution-strings": aspect
                 }

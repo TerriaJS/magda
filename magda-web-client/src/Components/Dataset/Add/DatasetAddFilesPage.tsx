@@ -5,18 +5,23 @@ import FileDrop from "react-file-drop";
 
 import ToolTip from "Components/Dataset/Add/ToolTip";
 import DatasetFile from "Components/Dataset/Add/DatasetFile";
+import AddDatasetLinkSection from "Components/Dataset/Add/AddDatasetLinkSection";
+import StorageOptionsSection from "Components/Dataset/Add/StorageOptionsSection";
 
 import { getFiles } from "helpers/readFile";
 
 import {
     State,
-    File,
-    FileState,
+    Distribution,
+    DistributionState,
+    DistributionSource,
     saveState,
     KeywordsLike
 } from "./DatasetAddCommon";
 import withAddDatasetState from "./withAddDatasetState";
 import uniq from "lodash/uniq";
+import * as ValidationManager from "../Add/ValidationManager";
+import { config } from "config";
 
 import "./DatasetAddFilesPage.scss";
 import "./DatasetAddCommon.scss";
@@ -26,6 +31,16 @@ class DatasetAddFilesPage extends React.Component<
     State
 > {
     state = this.props.initialState;
+
+    constructor(props) {
+        super(props);
+        this.addDistribution = this.addDistribution.bind(this);
+        this.editDistribution = this.editDistribution.bind(this);
+        this.deleteDistribution = this.deleteDistribution.bind(this);
+        ValidationManager.setStateDataGetter(() => {
+            return this.state;
+        });
+    }
 
     async onBrowse() {
         this.addFiles(await getFiles("*.*"));
@@ -37,7 +52,7 @@ class DatasetAddFilesPage extends React.Component<
 
     updateLastModifyDate() {
         this.setState(state => {
-            const modifiedDates = state.files
+            const modifiedDates = state.distributions
                 .filter(f => f.modified)
                 .map(f => new Date(f.modified))
                 .filter(d => !isNaN(d.getTime()))
@@ -77,152 +92,247 @@ class DatasetAddFilesPage extends React.Component<
         for (let i = 0; i < fileList.length; i++) {
             const thisFile = fileList.item(i);
 
-            if (this.isDirItem(i, event)) {
+            if (!thisFile || this.isDirItem(i, event)) {
                 // --- skip the directory item
                 continue;
             }
 
-            if (thisFile) {
-                const newFile = {
-                    datasetTitle: toTitleCase(
-                        turnPunctuationToSpaces(
-                            trimExtension(thisFile.name || "File Name")
-                        )
-                    ).trim(),
-                    title: thisFile.name,
-                    byteSize: thisFile.size,
-                    modified: new Date(thisFile.lastModified),
-                    format: fileFormat(thisFile),
-                    _state: FileState.Added,
-                    license: "world"
-                };
+            const newFile: Distribution = {
+                datasetTitle: toTitleCase(
+                    turnPunctuationToSpaces(
+                        trimExtension(thisFile.name || "File Name")
+                    )
+                ).trim(),
+                title: thisFile.name,
+                byteSize: thisFile.size,
+                modified: new Date(thisFile.lastModified),
+                format: fileFormat(thisFile),
+                _state: DistributionState.Added,
+                license: "world",
+                creationSource: DistributionSource.File
+            };
 
-                processFile(thisFile, update => {
-                    this.setState(state => {
-                        let newState = Object.assign({}, state, {
-                            files: state.files.slice(0)
-                        });
-                        Object.assign(newFile, update);
-                        return newState;
-                    });
-                }).then(() => {
-                    this.setState(state => {
-                        let newState = Object.assign({}, state, {
-                            files: state.files.slice(0)
-                        });
-
-                        let file: any = newFile;
-                        const {
-                            dataset,
-                            temporalCoverage,
-                            spatialCoverage
-                        } = state;
-                        for (const key in file) {
-                            // these fields don't belong in a distribution
-                            switch (key) {
-                                case "datasetTitle":
-                                    if (
-                                        !dataset["title"] ||
-                                        dataset["title"] === ""
-                                    ) {
-                                        dataset["title"] = file[key];
-                                    }
-                                    file[key] = undefined;
-                                    break;
-                                case "keywords":
-                                case "themes":
-                                    const existing = dataset[key]
-                                        ? (dataset[key] as KeywordsLike)
-                                        : {
-                                              keywords: [],
-                                              derived: false
-                                          };
-                                    const fileKeywords: string[] =
-                                        file[key] || [];
-
-                                    dataset[key] = {
-                                        keywords: uniq(
-                                            existing.keywords.concat(
-                                                fileKeywords
-                                            )
-                                        ),
-                                        derived:
-                                            existing.derived ||
-                                            fileKeywords.length > 0
-                                    };
-                                    file[key] = undefined;
-                                    break;
-                                case "spatialCoverage":
-                                    Object.assign(spatialCoverage, file[key]);
-                                    file[key] = undefined;
-                                    break;
-                                case "temporalCoverage":
-                                    temporalCoverage.intervals = temporalCoverage.intervals.concat(
-                                        file[key].intervals
-                                    );
-                                    file[key] = undefined;
-                                    break;
-                            }
-                        }
-
-                        return newState;
-                    });
-                });
-
+            processFile(thisFile, update => {
                 this.setState(state => {
-                    let newState = {
-                        files: state.files.slice(0)
-                    };
-                    newState.files.push(newFile);
+                    let newState: State = Object.assign({}, state, {
+                        distributions: state.distributions.slice(0)
+                    });
+                    Object.assign(newFile, update);
                     return newState;
                 });
-            }
+            }).then(() => {
+                this.setState(state => {
+                    let newState = Object.assign({}, state, {
+                        distributions: state.distributions.slice(0)
+                    });
+
+                    let file: any = newFile;
+                    const {
+                        dataset,
+                        temporalCoverage,
+                        spatialCoverage
+                    } = state;
+                    for (const key in file) {
+                        // these fields don't belong in a distribution
+                        switch (key) {
+                            case "datasetTitle":
+                                if (
+                                    !dataset["title"] ||
+                                    dataset["title"] === ""
+                                ) {
+                                    dataset["title"] = file[key];
+                                }
+                                file[key] = undefined;
+                                break;
+                            case "keywords":
+                            case "themes":
+                                const existing = dataset[key]
+                                    ? (dataset[key] as KeywordsLike)
+                                    : {
+                                          keywords: [],
+                                          derived: false
+                                      };
+                                const fileKeywords: string[] = file[key] || [];
+
+                                dataset[key] = {
+                                    keywords: uniq(
+                                        existing.keywords.concat(fileKeywords)
+                                    ),
+                                    derived:
+                                        existing.derived ||
+                                        fileKeywords.length > 0
+                                };
+                                file[key] = undefined;
+                                break;
+                            case "spatialCoverage":
+                                Object.assign(spatialCoverage, file[key]);
+                                file[key] = undefined;
+                                break;
+                            case "temporalCoverage":
+                                temporalCoverage.intervals = temporalCoverage.intervals.concat(
+                                    file[key].intervals
+                                );
+                                file[key] = undefined;
+                                break;
+                        }
+                    }
+
+                    if (
+                        config.datasetThemes &&
+                        config.datasetThemes.length &&
+                        newState.dataset &&
+                        newState.dataset.keywords &&
+                        newState.dataset.keywords.keywords &&
+                        newState.dataset.keywords.keywords.length
+                    ) {
+                        const keywords = newState.dataset.keywords.keywords.map(
+                            item => item.toLowerCase()
+                        );
+                        const themesBasedOnKeywords = config.datasetThemes.filter(
+                            theme =>
+                                keywords.indexOf(theme.toLowerCase()) !== -1
+                        );
+                        if (themesBasedOnKeywords.length) {
+                            const existingThemesKeywords = newState.dataset
+                                .themes
+                                ? newState.dataset.themes.keywords
+                                : [];
+                            newState.dataset.themes = {
+                                keywords: themesBasedOnKeywords.concat(
+                                    existingThemesKeywords
+                                ),
+                                derived: true
+                            };
+                        }
+                    }
+
+                    return newState;
+                });
+            });
+
+            this.setState(state => {
+                let newState = {
+                    distributions: state.distributions.slice(0)
+                };
+                newState.distributions.push(newFile);
+                return newState;
+            });
         }
         this.updateLastModifyDate();
     };
 
-    editFile = (index: number) => (file: File) => {
+    addDistribution = (distribution: Distribution) => {
         this.setState(state => {
-            const newFiles = state.files.concat();
-            newFiles[index] = file;
+            const newDistribution = state.distributions.concat(distribution);
             return {
-                files: newFiles
+                ...state,
+                distributions: newDistribution
+            };
+        });
+    };
+
+    editDistribution = (index: number) => (
+        updater: (distribution: Distribution) => Distribution
+    ) => {
+        this.setState(state => {
+            const newDistributions = state.distributions.concat();
+            newDistributions[index] = updater(newDistributions[index]);
+            return {
+                ...state,
+                distributions: newDistributions
             };
         });
         this.updateLastModifyDate();
     };
 
-    deleteFile = (index: number) => () => {
+    deleteDistribution = (index: number) => () => {
         this.setState(state => {
-            const newFiles = state.files.filter((item, idx) => {
+            const newDistributions = state.distributions.filter((item, idx) => {
                 if (idx === index) return false;
                 return true;
             });
             return {
-                files: newFiles
+                ...state,
+                distributions: newDistributions
             };
         });
     };
 
     render() {
+        const localFiles = this.state.distributions.filter(
+            file => file.creationSource === DistributionSource.File
+        );
+
         return (
             <div className="container-fluid dataset-add-file-page">
                 <div className="row top-area-row">
                     <div className="col-xs-12 top-text-area">
-                        <h1>Add files to pre-populate metadata</h1>
+                        <h1>Add your dataset to pre-populate metadata</h1>
                         <p>
-                            Add all the files in your dataset so our Publishing
-                            Tool can review the file contents and pre-populate
-                            metadata.
+                            Our Publishing Tool can review your dataset contents
+                            and pre-populate metadata. Just add all the files or
+                            services that make up your dataset.
+                        </p>
+                        <p>
+                            You can upload your dataset as files, add a link to
+                            files already hosted online, or add a link to a web
+                            service, or any combination of the three.
                         </p>
                         <p>
                             All our processing happens in your internet browser,
-                            so do not store a copy of your files, and you can
-                            edit or delete the metadata at any time.
+                            we only store a copy of your files if you ask us to,
+                            and you can edit or delete the metadata at any time.
+                        </p>
+                        <p>
+                            Want to upload your entire data catalogue in one go?
+                            Use our <a>Bulk Upload tool</a>
                         </p>
                     </div>
+                </div>
 
-                    {this.state.files.length > 0 && (
+                <div className="row add-files-heading">
+                    <div className="col-xs-12">
+                        <h3>Add files</h3>
+                        <StorageOptionsSection
+                            files={localFiles}
+                            shouldUploadToStorageApi={
+                                this.state.shouldUploadToStorageApi
+                            }
+                            setShouldUploadToStorageApi={value => {
+                                this.setState(state => {
+                                    const newState = {
+                                        ...state,
+                                        shouldUploadToStorageApi: value
+                                    };
+                                    if (value) {
+                                        // --- delete dataset location data when upload to storage api is selected
+                                        const {
+                                            location: originalLocation,
+                                            ...newDatasetAccess
+                                        } = { ...state.datasetAccess };
+                                        newState.datasetAccess = newDatasetAccess;
+                                    }
+                                    return newState;
+                                });
+                            }}
+                            dataAccessLocation={
+                                this.state.datasetAccess.location
+                                    ? this.state.datasetAccess.location
+                                    : ""
+                            }
+                            setDataAccessLocation={value =>
+                                this.setState(state => ({
+                                    ...state,
+                                    datasetAccess: {
+                                        ...state.datasetAccess,
+                                        location: value
+                                    }
+                                }))
+                            }
+                        />
+                    </div>
+
+                    {localFiles.length > 0 && (
                         <div className="col-xs-12 tip-area">
                             <ToolTip>
                                 We recommend ensuring dataset file names are
@@ -236,22 +346,34 @@ class DatasetAddFilesPage extends React.Component<
                 <div className="row files-area">
                     <div className="col-xs-12">
                         <div className="row">
-                            {this.state.files.map((file: File, i) => {
+                            {localFiles.map((file: Distribution, i) => {
+                                let isLastRow;
+                                if (localFiles.length % 2) {
+                                    isLastRow = i >= localFiles.length - 1;
+                                } else {
+                                    isLastRow = i >= localFiles.length - 2;
+                                }
                                 return (
                                     <div
                                         key={i}
-                                        className="col-xs-6 dataset-add-files-fileListItem"
+                                        className={`col-xs-6 dataset-add-files-fileListItem ${
+                                            isLastRow ? "last-row" : ""
+                                        }`}
                                     >
                                         <DatasetFile
+                                            idx={i}
                                             file={file}
-                                            onChange={this.editFile(i)}
-                                            onDelete={this.deleteFile(i)}
+                                            onChange={this.editDistribution(i)}
+                                            onDelete={this.deleteDistribution(
+                                                i
+                                            )}
                                         />
                                     </div>
                                 );
                             })}
                         </div>
-                        {this.state.files.length > 0 && (
+
+                        {localFiles.length > 0 && (
                             <div className="more-files-to-add-text">
                                 More files to add?
                             </div>
@@ -277,14 +399,31 @@ class DatasetAddFilesPage extends React.Component<
                     </div>
                 </div>
 
+                <AddDatasetLinkSection
+                    type={DistributionSource.DatasetUrl}
+                    distributions={this.state.distributions}
+                    addDistribution={this.addDistribution}
+                    editDistribution={this.editDistribution}
+                    deleteDistribution={this.deleteDistribution}
+                />
+
+                <AddDatasetLinkSection
+                    type={DistributionSource.Api}
+                    distributions={this.state.distributions}
+                    addDistribution={this.addDistribution}
+                    editDistribution={this.editDistribution}
+                    deleteDistribution={this.deleteDistribution}
+                />
+
                 <div
                     className="row next-save-button-row"
                     style={{ marginTop: "6em" }}
                 >
                     <div className="col-xs-12">
-                        {this.state.files.filter(
-                            (file: File) => file._state === FileState.Ready
-                        ).length === this.state.files.length && (
+                        {localFiles.filter(
+                            (file: Distribution) =>
+                                file._state === DistributionState.Ready
+                        ).length === localFiles.length && (
                             <React.Fragment>
                                 <button
                                     className="au-btn next-button"
@@ -312,8 +451,10 @@ class DatasetAddFilesPage extends React.Component<
     }
 
     reviewMetadata() {
-        const id = saveState(this.state, this.props.dataset);
-        this.props.history.push(`/dataset/add/metadata/${id}/0`);
+        if (ValidationManager.validateAll()) {
+            const id = saveState(this.state, this.props.dataset);
+            this.props.history.push(`/dataset/add/metadata/${id}/0`);
+        }
     }
 }
 
@@ -349,7 +490,7 @@ function readFileAsArrayBuffer(file: any): Promise<ArrayBuffer> {
 }
 
 async function processFile(thisFile: any, update: Function) {
-    update({ _state: FileState.Reading });
+    update({ _state: DistributionState.Reading });
 
     const input: any = {
         file: thisFile
@@ -358,7 +499,7 @@ async function processFile(thisFile: any, update: Function) {
     input.arrayBuffer = await readFileAsArrayBuffer(thisFile);
     input.array = new Uint8Array(input.arrayBuffer);
 
-    update({ _state: FileState.Processing });
+    update({ _state: DistributionState.Processing });
 
     const runExtractors = await import("Components/Dataset/MetadataExtraction").then(
         mod => mod.runExtractors
@@ -366,7 +507,7 @@ async function processFile(thisFile: any, update: Function) {
 
     await runExtractors(input, update);
 
-    update({ _state: FileState.Ready });
+    update({ _state: DistributionState.Ready });
 }
 
 function mapStateToProps(state, old) {

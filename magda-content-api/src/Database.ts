@@ -1,15 +1,19 @@
-import createPool from "./createPool";
 import { Maybe } from "tsmonad";
-import arrayToMaybe from "@magda/typescript-common/dist/util/arrayToMaybe";
-import OpaCompileResponseParser, {
-    CompleteRuleResult
-} from "@magda/typescript-common/dist/OpaCompileResponseParser";
-import SimpleOpaSQLTranslator from "@magda/typescript-common/dist/SimpleOpaSQLTranslator";
-import * as request from "request-promise-native";
-import * as pg from "pg";
-import * as _ from "lodash";
+import request from "request-promise-native";
+import pg from "pg";
+import _ from "lodash";
+
+import arrayToMaybe from "magda-typescript-common/src/util/arrayToMaybe";
+import AccessControlError from "magda-typescript-common/src/authorization-api/AccessControlError";
+import queryOpa from "magda-typescript-common/src/opa/queryOpa";
+
 import { Content } from "./model";
-import AccessControlError from "@magda/typescript-common/dist/authorization-api/AccessControlError";
+import createPool from "./createPool";
+import {
+    AuthDecision,
+    AuthAnd,
+    AuthQuery
+} from "magda-typescript-common/src/opa/getAuthDecision";
 
 const ALLOWABLE_QUERY_FIELDS = ["id", "type"];
 const allowableQueryFieldLookup = _.keyBy(ALLOWABLE_QUERY_FIELDS, _.identity);
@@ -44,10 +48,6 @@ interface QueryPattern {
     pattern: string;
 }
 
-interface QueryPatternResult extends QueryPattern {
-    opaResult?: CompleteRuleResult;
-}
-
 export default class PostgresDatabase implements Database {
     private pool: pg.Pool;
     private opaUrl: string;
@@ -60,53 +60,63 @@ export default class PostgresDatabase implements Database {
     async getContentPartialDecisionByContentId(
         id: string,
         jwtToken: string = null
-    ): Promise<CompleteRuleResult> {
+    ): Promise<AuthDecision> {
         // --- incoming id could be `header/navigation/datasets.json` or `header/logo-mobile`
         // --- or a pattern header/*
         // --- operationUri should be `object/content/header/**/read` etc.
         const resourceId = id.replace(/\.[^\.\/$]/, "");
         const operationUri = `object/content/${resourceId}/read`;
-        const requestOptions: any = {
-            json: {
-                query: "data.object.content.allowRead == true",
-                input: {
-                    operationUri
-                },
-                unknowns: ["input.object.content"]
+
+        return queryOpa(
+            "data.object.content.allowRead == true",
+            {
+                operationUri
+            },
+            ["input.object.content"],
+            jwtToken,
+            this.opaUrl
+        );
+    }
+
+    opaResultToSqlClause: (
+        result: AuthDecision,
+        genParamIndex: () => number
+    ) => { sql: string; params: (string | number | boolean)[] } = (
+        result,
+        genParamIndex
+    ) => {
+        if (result === false) {
+            return { sql: "false", params: [] };
+        } else if (result instanceof AuthQuery) {
+            // We don't want to simply put the column name into the SQL because we wouldn't be able to parameterise it, which would leave us vulnerable to SQL injection.
+            if (result.path.join(".") !== "content.id") {
+                throw new Error(
+                    "Only policies based on the id column of the content table are currently supported for the content api"
+                );
             }
-        };
-        if (jwtToken) {
-            requestOptions.headers = {
-                "X-Magda-Session": jwtToken
+
+            return {
+                sql: `content.id ${result.sign} $${genParamIndex()}`,
+                params: [result.value]
+            };
+        } else if (result.parts.length === 0) {
+            return { sql: "true", params: [] };
+        } else {
+            const flattenedParts = result.parts.map(part =>
+                this.opaResultToSqlClause(part, genParamIndex)
+            );
+
+            const sql = flattenedParts
+                .map(part => `(${part.sql})`)
+                .join(result instanceof AuthAnd ? " AND " : " OR ");
+            const params = _.flatMap(flattenedParts, part => part.params);
+
+            return {
+                sql,
+                params
             };
         }
-        const response = await request.post(
-            `${this.opaUrl}compile`,
-            requestOptions
-        );
-
-        const parser = new OpaCompileResponseParser();
-        parser.parse(response);
-
-        return parser.evaluateRule("data.partial.object.content.allowRead");
-    }
-
-    opaResultToSqlClause(result: CompleteRuleResult, sqlValues: any[]): string {
-        const translator = new SimpleOpaSQLTranslator(["input.object.content"]);
-        return translator.parse(result, sqlValues);
-    }
-
-    async getSqlClausesFromOpaByContentId(
-        id: string,
-        sqlValues: any[],
-        jwtToken: string = null
-    ): Promise<string> {
-        const result = await this.getContentPartialDecisionByContentId(
-            id,
-            jwtToken
-        );
-        return this.opaResultToSqlClause(result, sqlValues);
-    }
+    };
 
     async getContentDecisionById(
         id: string,
@@ -176,7 +186,7 @@ export default class PostgresDatabase implements Database {
             }
         }
 
-        const params: string[] = [];
+        let params: (string | boolean | number)[] = [];
         let paramCounter = 0;
         const getParamIndex = () => {
             return ++paramCounter;
@@ -197,24 +207,18 @@ export default class PostgresDatabase implements Database {
             AS content`;
         }
 
-        const queryPatterns: QueryPattern[] = [];
-        let queryPatternResults: QueryPatternResult[];
-
-        queries.forEach(q =>
-            q.patterns.forEach(p =>
-                queryPatterns.push({
-                    field: q.field,
-                    pattern: p
-                })
-            )
+        const queryPatterns = _.flatMap(queries, q =>
+            q.patterns.map(p => ({ field: q.field, pattern: p }))
         );
 
-        queryPatternResults = await Promise.all(
+        const queryPatternResults: (QueryPattern & {
+            opaResult?: AuthDecision;
+        })[] = await Promise.all(
             queryPatterns.map(qp => {
                 if (qp.field !== "id") {
                     return Promise.resolve(qp);
                 } else {
-                    return (async () => {
+                    const x = (async () => {
                         const opaResult = await this.getContentPartialDecisionByContentId(
                             // --- we used glob pattern in opa policy
                             // --- header/* should be header/** to match header/navigation/datasets
@@ -226,6 +230,8 @@ export default class PostgresDatabase implements Database {
                             opaResult
                         };
                     })();
+
+                    return x;
                 }
             })
         );
@@ -242,9 +248,10 @@ export default class PostgresDatabase implements Database {
                 patternConditions.push(patternLookupSql);
                 const accessControlSql = this.opaResultToSqlClause(
                     r.opaResult,
-                    params
+                    getParamIndex
                 );
-                patternConditions.push(accessControlSql);
+                patternConditions.push(accessControlSql.sql);
+                params = params.concat(accessControlSql.params);
                 whereClauses.push(
                     patternConditions.map(c => `(${c})`).join(" AND ")
                 );

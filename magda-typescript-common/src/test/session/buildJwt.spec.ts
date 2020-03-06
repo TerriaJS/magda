@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import "mocha";
-import * as yargs from "yargs";
+import yargs from "yargs";
 import addJwtSecretFromEnvVar from "../../session/addJwtSecretFromEnvVar";
 import { getUserId } from "../../session/GetUserId";
 import { getUserSession } from "../../session/GetUserSession";

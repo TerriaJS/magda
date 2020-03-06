@@ -94,70 +94,65 @@ function installUpdater(options: OptionsIO) {
     // so we have parallel probe checkers
     Object.entries(options.probes).forEach(probe => {
         const [id, callback] = probe;
-        if (!options._installed[id]) {
-            async function update(dontUpdate?: boolean) {
+        async function update(dontUpdate?: boolean) {
+            try {
+                const startMs = Date.now();
+                let previousState: any = options.details[id];
+                let nextState: State = {
+                    ready: false
+                };
+                // update probe state
                 try {
-                    const startMs = Date.now();
-                    let previousState: any = options.details[id];
-                    let nextState: State = {
+                    nextState = await callback();
+                } catch (e) {
+                    // lets not spam console with the same error message
+                    // report if error message changed
+                    if (!previousState || previousState.error !== e.message) {
+                        console.error("ERROR", id, e.stack);
+                        nextState.error = e.message;
+                    }
+                }
+                // --- Note: typeof null === "object"
+                if (!nextState || typeof nextState !== "object") {
+                    nextState = {
                         ready: false
                     };
-                    // update probe state
-                    try {
-                        nextState = await callback();
-                    } catch (e) {
-                        // lets not spam console with the same error message
-                        // report if error message changed
-                        if (
-                            !previousState ||
-                            previousState.error !== e.message
-                        ) {
-                            console.error("ERROR", id, e.stack);
-                            nextState.error = e.message;
-                        }
-                    }
-                    if (typeof nextState !== "object") {
-                        nextState = {
-                            ready: false
-                        };
-                    }
-                    nextState.latencyMs = Date.now() - startMs;
-                    options.last = nextState.last = new Date().toISOString();
-                    // report if status changed
-                    if (
-                        !previousState ||
-                        nextState.ready !== previousState.ready
-                    ) {
-                        nextState.since = new Date(startMs).toISOString();
-                        console.log(
-                            "STATUS",
-                            id,
-                            "is",
-                            nextState.ready ? "up" : "down",
-                            "on",
-                            nextState.since
-                        );
-                    } else {
-                        nextState.since = previousState.since;
-                    }
-                    // we want to report internal details
-                    options.details[id] = nextState;
-                    // update global state
-                    let isReady = true;
-                    for (const oid of Object.keys(options.probes)) {
-                        isReady =
-                            isReady &&
-                            options.details[oid] &&
-                            options.details[oid].ready;
-                    }
-                    options.ready = isReady;
-                } catch (e) {
-                    console.error("ERROR", id, e.stack);
                 }
-                if (!dontUpdate) {
-                    setTimeout(update, options.probeUpdateMs).unref();
+                nextState.latencyMs = Date.now() - startMs;
+                options.last = nextState.last = new Date().toISOString();
+                // report if status changed
+                if (!previousState || nextState.ready !== previousState.ready) {
+                    nextState.since = new Date(startMs).toISOString();
+                    console.log(
+                        "STATUS",
+                        id,
+                        "is",
+                        nextState.ready ? "up" : "down",
+                        "on",
+                        nextState.since
+                    );
+                } else {
+                    nextState.since = previousState.since;
                 }
+                // we want to report internal details
+                options.details[id] = nextState;
+                // update global state
+                let isReady = true;
+                for (const oid of Object.keys(options.probes)) {
+                    isReady =
+                        isReady &&
+                        options.details[oid] &&
+                        options.details[oid].ready;
+                }
+                options.ready = isReady;
+            } catch (e) {
+                console.error("ERROR", id, e.stack);
             }
+            if (!dontUpdate) {
+                (setTimeout(update, options.probeUpdateMs) as any).unref();
+            }
+        }
+        if (!options._installed[id]) {
             // let's not bother running this inside test cases
             const isInTest = typeof it === "function";
             if (!isInTest || options.forceRun) {

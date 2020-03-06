@@ -2,8 +2,8 @@
   "lerna": "2.5.1",
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "packages": ["deploy/", "magda-*", "scripts/"],
-  "version": "0.0.56-terria-3",
+  "packages": ["deploy/", "magda-*", "scripts/", "packages/*"],
+  "version": "0.0.57-0",
   "hoist": [
     "tsmonad",
     "urijs",

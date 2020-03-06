@@ -1,4 +1,3 @@
-
 package au.csiro.data61.magda.indexer
 
 import akka.actor.Actor
@@ -14,7 +13,11 @@ import au.csiro.data61.magda.search.elasticsearch.DefaultClientProvider
 import au.csiro.data61.magda.search.elasticsearch.DefaultIndices
 import akka.http.scaladsl.Http
 
-import au.csiro.data61.magda.indexer.external.registry.RegisterWebhook.{ initWebhook, ShouldCrawl, ShouldNotCrawl }
+import au.csiro.data61.magda.indexer.external.registry.RegisterWebhook.{
+  initWebhook,
+  ShouldCrawl,
+  ShouldNotCrawl
+}
 import au.csiro.data61.magda.indexer.crawler.RegistryCrawler
 import au.csiro.data61.magda.client.RegistryExternalInterface
 import scala.concurrent.Future
@@ -43,8 +46,14 @@ object IndexerApp extends App {
 
   val api = new IndexerApi(crawler, indexer)
 
-  logger.info(s"Listening on ${config.getString("http.interface")}:${config.getInt("http.port")}")
-  Http().bindAndHandle(api.routes, config.getString("http.interface"), config.getInt("http.port"))
+  logger.info(
+    s"Listening on ${config.getString("http.interface")}:${config.getInt("http.port")}"
+  )
+  Http().bindAndHandle(
+    api.routes,
+    config.getString("http.interface"),
+    config.getInt("http.port")
+  )
 
   {
     if (config.getBoolean("registry.registerForWebhooks")) {
@@ -56,13 +65,18 @@ object IndexerApp extends App {
     case ShouldCrawl => Future(ShouldCrawl)
     case ShouldNotCrawl => {
       logger.info("Checking to see if datasets index is empty")
-      indexer.isEmpty(Indices.DataSetsIndex).map(isEmpty => if (isEmpty) {
-        logger.info("Datasets index is empty, recrawling")
-        ShouldCrawl
-      } else {
-        logger.info("Datasets index is NOT empty. No need to recrawl.")
-        ShouldNotCrawl
-      })
+      indexer
+        .isEmpty(Indices.DataSetsIndex)
+        .map(
+          isEmpty =>
+            if (isEmpty) {
+              logger.info("Datasets index is empty, recrawling")
+              ShouldCrawl
+            } else {
+              logger.info("Datasets index is NOT empty. No need to recrawl.")
+              ShouldNotCrawl
+            }
+        )
     }
   } map {
     case ShouldCrawl => {
@@ -75,12 +89,15 @@ object IndexerApp extends App {
 
       // This is a super massive problem - might as well just crash to make it super-obvious and to
       // use K8S' restart logic
-      logger.error("Failure to register webhook or perform initial crawl is an unrecoverable and drastic error, crashing")
+      logger.error(
+        "Failure to register webhook or perform initial crawl is an unrecoverable and drastic error, crashing"
+      )
       System.exit(1)
   }
 }
 
 class Listener extends Actor with ActorLogging {
+
   def receive = {
     case d: DeadLetter => log.debug(d.message.toString())
   }

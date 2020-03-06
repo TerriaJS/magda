@@ -1,13 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1122" height="179" viewBox="0 0 1122 179">
-    <defs>
-        <path id="a" d="M21.5 14.5v6h-6v2h6v6h2v-6h6v-2h-6v-6z"/>
-    </defs>
-    <g fill="none" fill-rule="evenodd">
-        <path fill="#F4F4F4" stroke="#979797" stroke-dasharray="10,10" stroke-width="2" d="M6 1h1110a5 5 0 0 1 5 5v167a5 5 0 0 1-5 5H6a5 5 0 0 1-5-5V6a5 5 0 0 1 5-5z"/>
-        <text fill="#3C3C3C" font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="18" transform="translate(1 1)">
-            <tspan x="546.247" y="117.323">Drag your files here</tspan>
-        </text>
-        <path stroke="#979797" stroke-dasharray="10,10" stroke-linecap="square" stroke-width="2" d="M139.333 1l-.39 177"/>
-        <path fill="#000" fill-rule="nonzero" d="M622.569 62.153L626 58.866v13.705c0 .79.671 1.429 1.499 1.429.827 0 1.498-.64 1.498-1.43V58.867l3.432 3.287c.281.27.664.423 1.064.423s.782-.153 1.064-.423c.283-.268.443-.634.443-1.015 0-.38-.16-.746-.443-1.014l-5.994-5.717a1.51 1.51 0 0 0-.495-.3 1.566 1.566 0 0 0-1.139 0 1.51 1.51 0 0 0-.494.3l-5.994 5.717a1.39 1.39 0 0 0-.39 1.386c.14.495.545.882 1.064 1.014a1.555 1.555 0 0 0 1.454-.371zM640.55 69c-.8 0-1.45.627-1.45 1.4v8.4c0 .773-.65 1.4-1.45 1.4h-20.3c-.8 0-1.45-.627-1.45-1.4v-8.4c0-.773-.65-1.4-1.45-1.4-.8 0-1.45.627-1.45 1.4v8.4c0 2.32 1.948 4.2 4.35 4.2h20.3c2.402 0 4.35-1.88 4.35-4.2v-8.4c0-.773-.65-1.4-1.45-1.4z"/>
+<svg xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" width="1122" height="179" viewBox="0 0 1122 179">
+  <defs>
+    <path id="a" d="M21.5 14.5v6h-6v2h6v6h2v-6h6v-2h-6v-6z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <path fill="#F4F4F4" stroke="#979797" stroke-dasharray="10,10" stroke-width="2" d="M6 1h1110a5 5 0 0 1 5 5v167a5 5 0 0 1-5 5H6a5 5 0 0 1-5-5V6a5 5 0 0 1 5-5z"/>
+    <text fill="#484848" font-family="-apple-system, system-ui, &quot;Segoe UI&quot;, Helvetica, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;" font-size="18" letter-spacing="-.3" transform="translate(1 1)">
+      <tspan x="546.406" y="117.858">Drag your files here</tspan>
+    </text>
+    <g transform="translate(46.492 70)">
+      <mask id="b" fill="#fff">
+        <use xlink:href="#a"/>
+      </mask>
+      <g fill="#30384D" mask="url(#b)">
+        <path d="M0 0h45v43H0z"/>
+      </g>
     </g>
+    <path stroke="#979797" stroke-dasharray="10,10" stroke-linecap="square" stroke-width="2" d="M139.333 1l-.391 177"/>
+    <path fill="#000" fill-rule="nonzero" d="M622.569 62.153L626 58.866v13.705c0 .79.671 1.429 1.499 1.429.827 0 1.498-.64 1.498-1.43V58.867l3.432 3.287c.281.27.664.423 1.064.423s.782-.153 1.064-.423c.283-.268.443-.634.443-1.015 0-.38-.16-.746-.443-1.014l-5.994-5.717a1.51 1.51 0 0 0-.495-.3 1.566 1.566 0 0 0-1.139 0 1.51 1.51 0 0 0-.494.3l-5.994 5.717a1.39 1.39 0 0 0-.39 1.386c.14.495.545.882 1.064 1.014a1.555 1.555 0 0 0 1.454-.371zM640.55 69c-.8 0-1.45.627-1.45 1.4v8.4c0 .773-.65 1.4-1.45 1.4h-20.3c-.8 0-1.45-.627-1.45-1.4v-8.4c0-.773-.65-1.4-1.45-1.4-.8 0-1.45.627-1.45 1.4v8.4c0 2.32 1.948 4.2 4.35 4.2h20.3c2.402 0 4.35-1.88 4.35-4.2v-8.4c0-.773-.65-1.4-1.45-1.4z"/>
+  </g>
 </svg>

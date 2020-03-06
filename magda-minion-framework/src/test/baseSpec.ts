@@ -1,6 +1,6 @@
 import {} from "mocha";
-import * as sinon from "sinon";
-import * as express from "express";
+import sinon from "sinon";
+import express from "express";
 const portfinder = require("portfinder");
 import { Server } from "http";
 

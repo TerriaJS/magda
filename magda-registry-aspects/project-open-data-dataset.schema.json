@@ -1,7 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "title":
-        "Aspect capturing a complete representation of a dataset according to Project Open Data (data.json).",
+    "title": "Aspect capturing a complete representation of a dataset according to Project Open Data (data.json).",
     "type": "object",
     "allOf": [
         {

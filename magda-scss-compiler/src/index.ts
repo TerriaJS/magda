@@ -1,5 +1,5 @@
-import * as yargs from "yargs";
-import * as path from "path";
+import yargs from "yargs";
+import path from "path";
 import getScssFileList from "./getScssFileList";
 import { renderScssFilesExtra } from "./renderScss";
 import saveToContentApi from "./saveToContentApi";

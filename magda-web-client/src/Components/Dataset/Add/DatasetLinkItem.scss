@@ -1,0 +1,224 @@
+.dataset-add-file-page {
+    .dataset-link-item-container:not(:first-child) {
+        margin-top: 30px !important;
+    }
+    .dataset-link-item-container {
+        .distribution-in-progress {
+            height: 105px;
+            display: flex;
+            align-items: center;
+            .distribution-icon-area {
+                margin-right: 52px;
+                .format-icon {
+                    width: 48px;
+                }
+                .format-text {
+                    text-transform: uppercase;
+                    text-align: center;
+                }
+            }
+            .distribution-info {
+                float: left;
+                .distribution-name-size {
+                    font-size: 15px;
+                    font-weight: normal;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.33;
+                    letter-spacing: normal;
+                    color: #484848;
+                    div {
+                        float: left;
+                    }
+                }
+                .distribution-name {
+                    width: 325px;
+                    text-overflow: ellipsis;
+                    overflow-wrap: break-word;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                .distribution-status {
+                    font-size: 14px;
+                    font-weight: 300;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: normal;
+                    letter-spacing: normal;
+                    color: #636363;
+                }
+                .distribution-progress-bar {
+                    position: relative;
+                    height: 24px;
+                    border-radius: 8px;
+                    margin-top: 10px;
+                    margin-bottom: 9px;
+                    width: 330px;
+                    border: 1px solid #c0bebe;
+
+                    .distribution-progress-bar-content {
+                        position: absolute;
+                        border-radius: 8px;
+                        height: 24px;
+                        left: -1px;
+                        top: -1px;
+                        background-image: linear-gradient(
+                                to left,
+                                rgba(255, 255, 255, 0.5),
+                                rgba(0, 0, 0, 0.5)
+                            ),
+                            linear-gradient(
+                                to bottom,
+                                rgba(65, 49, 87, 0.68),
+                                rgba(65, 49, 87, 0.68)
+                            );
+                    }
+                }
+            }
+        }
+
+        .dataset-link-item-complete {
+            position: relative;
+            background-image: url("../../../assets/link-item-box.svg");
+            background-repeat: no-repeat;
+            padding-left: 58px;
+            padding-top: 14px;
+            width: 790px;
+            height: 171px;
+            background-color: #f4f4f4;
+
+            h3 {
+                margin-top: 0px;
+            }
+
+            .edit-button {
+                position: absolute;
+                width: 26px;
+                height: 26px;
+                border: none;
+                right: 38px;
+                top: 5px;
+                padding: 1px 0px 0px 0px;
+
+                border: 1px solid transparent;
+                border-radius: 4px;
+                background-color: transparent !important;
+            }
+
+            .delete-button {
+                position: absolute;
+                width: 26px;
+                height: 26px;
+                border: none;
+                right: 10px;
+                top: 14px;
+                padding: 1px 0px 0px 0px;
+            }
+
+            .edit-button,
+            .delete-button {
+                &:hover {
+                    border: 1px solid #cccaca;
+                }
+            }
+
+            .link-item-title {
+                width: 642px;
+                font-size: 15px;
+                font-weight: normal;
+                font-stretch: normal;
+                font-style: normal;
+                line-height: 1.33;
+                letter-spacing: normal;
+                color: #484848;
+
+                text-overflow: ellipsis;
+                overflow-wrap: break-word;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .link-item-details {
+                div {
+                    width: 645px;
+                    font-size: 13px;
+                    font-weight: 300;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: 1.54;
+                    letter-spacing: normal;
+                    color: #484848;
+
+                    text-overflow: ellipsis;
+                    overflow-wrap: break-word;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                div:last-child {
+                    text-overflow: initial;
+                    white-space: normal;
+                }
+                b {
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .dataset-link-item-edit {
+            position: relative;
+            background-image: url("../../../assets/link-item-box.svg");
+            background-repeat: no-repeat;
+            padding-left: 58px;
+            padding-top: 14px;
+            width: 790px;
+            height: 171px;
+            background-color: #f4f4f4;
+
+            .au-text-input {
+                height: 35px;
+                width: 250px;
+                border-radius: 8px;
+                border: solid 1px #cccaca;
+            }
+
+            .link-item-save-button {
+                position: absolute;
+                z-index: 1;
+                right: 25px;
+                bottom: 18px;
+                background-color: #30384d !important;
+                border-radius: 5px;
+                border: none;
+            }
+
+            .date-editor-wrapper {
+                border: none;
+                .SingleDatePickerInput {
+                    border-radius: 8px;
+                    height: 39px;
+                    border: solid 1px #cccaca;
+                }
+            }
+
+            .description-input-area {
+                padding-top: 8px;
+                .multilineTextEditor-outter-container {
+                    width: 600px;
+                    margin: 0px;
+                    textarea {
+                        height: 60px;
+                        width: 600px;
+                        min-height: 60px;
+                        padding-top: 5px;
+                        padding-bottom: 5px;
+                        padding-left: 10px;
+                    }
+                    .edit-icon {
+                        right: 12px;
+                        top: 32px;
+                    }
+                }
+            }
+        }
+    }
+}

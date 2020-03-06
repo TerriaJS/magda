@@ -59,6 +59,7 @@ export default class HeaderNavigationAdminPage extends Component {
                 <p>
                     Type:{" "}
                     <ToggleEditor
+                        editable={true}
                         editor={codelistEditor({
                             default: "Regular",
                             auth: "Authentication"
@@ -74,6 +75,7 @@ export default class HeaderNavigationAdminPage extends Component {
                         <p>
                             Label:{" "}
                             <ToggleEditor
+                                editable={true}
                                 editor={textEditor}
                                 value={value.label}
                                 onChange={save("label")}
@@ -82,6 +84,7 @@ export default class HeaderNavigationAdminPage extends Component {
                         <p>
                             Link:{" "}
                             <ToggleEditor
+                                editable={true}
                                 editor={textEditor}
                                 value={value.href}
                                 onChange={save("href")}
@@ -90,6 +93,7 @@ export default class HeaderNavigationAdminPage extends Component {
                         <p>
                             rel:{" "}
                             <ToggleEditor
+                                editable={true}
                                 editor={textEditor}
                                 value={value.rel}
                                 onChange={save("rel")}
@@ -98,6 +102,7 @@ export default class HeaderNavigationAdminPage extends Component {
                         <p>
                             target:{" "}
                             <ToggleEditor
+                                editable={true}
                                 editor={textEditor}
                                 value={value.target}
                                 onChange={save("target")}

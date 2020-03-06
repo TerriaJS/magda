@@ -1,4 +1,4 @@
-import { WebHookConfig } from "@magda/typescript-common/dist/generated/registry/api";
+import { WebHookConfig } from "magda-typescript-common/src/generated/registry/api";
 import MinionOptions from "./MinionOptions";
 
 export default function buildWebhookConfig(

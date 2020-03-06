@@ -1,0 +1,31 @@
+export {
+    stringArb,
+    lowerCaseAlphaCharArb,
+    numArb,
+    lcAlphaNumCharArb,
+    lcAlphaNumStringArb,
+    lcAlphaNumStringArbNe,
+    lcAlphaStringArb,
+    lcAlphaStringArbNe,
+    peopleNameArb,
+    recordArb,
+    specificRecordArb,
+    MonadicArb,
+    arbFlatMap,
+    arrayOfSizeArb,
+    distUrlArb,
+    DistStringsOverrideArbs,
+    SourceLinkOverrideArbs,
+    DatasetFormatOverrideArbs,
+    distStringsArb,
+    sourceLinkArb,
+    datasetFormatArb,
+    recordArbWithDistArbs,
+    recordArbWithDists,
+    someOf,
+    fuzzStringArb,
+    fuzzStringArbResult,
+    dateStringArb
+} from "@magda/typescript-common/dist/test/arbitraries";
+
+export { Record } from "@magda/typescript-common/dist/generated/registry/api";

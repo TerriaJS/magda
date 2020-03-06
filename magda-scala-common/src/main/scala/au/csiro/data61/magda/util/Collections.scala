@@ -6,8 +6,13 @@ import scala.util.Failure
 import akka.event.LoggingAdapter
 
 object Collections {
+
   // TODO: Make this work for all traversibles... somehow.
-  def mapCatching[I, O](seq: List[I], fn: I => O, onError: (Throwable, I) => Any): List[O] = {
+  def mapCatching[I, O](
+      seq: List[I],
+      fn: I => O,
+      onError: (Throwable, I) => Any
+  ): List[O] = {
     seq.map { item =>
       try {
         Seq(fn(item))

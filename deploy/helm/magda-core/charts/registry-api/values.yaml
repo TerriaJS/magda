@@ -1,0 +1,20 @@
+image: {}
+# autoscaler is only for readonly instance
+autoscaler:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+livenessProbe: {}
+db: {}
+resources: 
+  requests:
+    cpu: 250m
+    memory: 500Mi
+  limits:
+    cpu: 750m
+deployments:
+  full: {}
+  readOnly:
+    enable: false
+validateJsonSchema: true

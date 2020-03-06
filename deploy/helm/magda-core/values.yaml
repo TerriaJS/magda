@@ -1,0 +1,43 @@
+global:
+  useCombinedDb: true
+  useCloudSql: false
+  externalUrl: "http://localhost:6100"
+  rollingUpdate:
+    maxUnavailable: 0
+  exposeNodePorts: false
+  image:
+    tag: 0.0.57-0
+    repository: "data61"
+    pullPolicy: IfNotPresent
+  defaultAdminUserId: "00000000-0000-4000-8000-000000000000"
+  logLevel: INFO
+  noDbAuth: false
+  namespace: default
+  gapiIds: []
+  enablePriorityClass: false
+
+tags:
+  priorities: true
+  all: true
+  apidocs-server: false
+  admin-api: false
+  authorization-api: false
+  opa: false
+  authorization-db: false
+  combined-db: false
+  content-api: false
+  content-db: false
+  correspondence-api: false
+  elasticsearch: false
+  gateway: false
+  indexer: false
+  preview-map: false
+  registry-api: false
+  registry-db: false
+  search-api: false
+  session-db: false
+  web-server: false
+  ingress: false
+  storage-api: false
+  tenant-api: false
+  tenant-db: false

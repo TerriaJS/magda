@@ -1,8 +1,12 @@
 {
   "name": "@magda/registry-aspects",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
   "description": "Common aspects for use with the registry.",
-  "scripts": {},
+  "scripts": {
+    "build": "echo \"ok\"",
+    "npm-setup": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\" > .npmrc",
+    "release": "npm publish || echo \"Skip releasing npm package @magda/registry-aspects.\""
+  },
   "author": "",
   "license": "Apache-2.0",
   "config": {
@@ -12,7 +16,16 @@
   },
   "magda": {
     "categories": {
-      "library": true
+      "library": true,
+      "npmPackage": true
     }
-  }
+  },
+  "keywords": [
+    "Magda",
+    "Registry",
+    "Json Schema"
+  ],
+  "files": [
+    "*.schema.json"
+  ]
 }

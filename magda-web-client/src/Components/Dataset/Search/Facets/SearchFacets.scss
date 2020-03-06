@@ -1,4 +1,5 @@
 @import "variables";
+@import "./pancake/sass/core.scss";
 .search-facets-desktop {
     display: flex;
     justify-content: flex-start;
@@ -121,6 +122,10 @@
     margin: 0;
 }
 
+.btn-facet {
+    @include remove-btn-underline;
+}
+
 .btn-facet-option {
     position: relative;
     width: 100%;
@@ -139,9 +144,6 @@
     &:hover {
         background-color: $AU-color-foreground-action;
         color: $AU-color-background;
-    }
-    &:focus {
-        outline: none;
     }
 }
 

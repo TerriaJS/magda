@@ -7,9 +7,10 @@ export function getUserId(req: Request, jwtSecret: string): Maybe<string> {
 
     if (jwtToken) {
         try {
-            const { userId } = jwt.verify(jwtToken, jwtSecret);
-            return Maybe.just(userId);
+            const jwtPayload = jwt.verify(jwtToken, jwtSecret);
+            return Maybe.just(jwtPayload.userId);
         } catch (e) {
+            console.error(e);
             return Maybe.nothing<string>();
         }
     } else {

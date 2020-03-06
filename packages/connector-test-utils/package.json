@@ -1,0 +1,43 @@
+{
+  "name": "@magda/connector-test-utils",
+  "description": "MAGDA Connector Utils for Test Cases",
+  "version": "0.0.57-0",
+  "scripts": {
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "webpack && api-extractor run -l",
+    "npm-setup": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\" > .npmrc",
+    "release": "npm publish || echo \"Skip releasing npm package @magda/connector-test-utils.\""
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@magda/typescript-common": "^0.0.57-0",
+    "@microsoft/api-extractor": "^7.7.8",
+    "typescript": "^3.7.2",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "ts-node": "^8.5.2",
+    "tsconfig-paths": "^3.9.0"
+  },
+  "magda": {
+    "language": "typescript",
+    "categories": {
+      "npmPackage": true,
+      "useCommonLib": true
+    }
+  },
+  "keywords": [
+    "Magda",
+    "Connector",
+    "Test",
+    "SDK"
+  ],
+  "files": [
+    "dist"
+  ]
+}

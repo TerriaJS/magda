@@ -1,11 +1,11 @@
 import {} from "mocha";
-//import * as sinon from "sinon";
-import * as express from "express";
+//import sinon from "sinon";
+import express from "express";
 import { expect } from "chai";
-import * as _ from "lodash";
-import * as URI from "urijs";
-import * as supertest from "supertest";
-import * as randomstring from "randomstring";
+import _ from "lodash";
+import URI from "urijs";
+import supertest from "supertest";
+import randomstring from "randomstring";
 import createHttpsRedirectionMiddleware from "../createHttpsRedirectionMiddleware";
 
 describe("Test createHttpsRedirectionMiddleware", () => {

@@ -1,10 +1,10 @@
-import * as request from "supertest";
+import request from "supertest";
 import * as fixtures from "./fixtures";
-import mockAuthorization from "@magda/typescript-common/dist/test/mockAuthorization";
+import mockAuthorization from "magda-typescript-common/src/test/mockAuthorization";
 import { State, ConnectorState, ConfigState, JobState } from "./arbitraries";
-import * as express from "express";
-import * as nock from "nock";
-import * as _ from "lodash";
+import express from "express";
+import nock from "nock";
+import _ from "lodash";
 
 export function getConnectors(
     app: express.Application,

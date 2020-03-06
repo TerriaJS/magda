@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import MagdaDocumentTitle from "Components/i18n/MagdaDocumentTitle";
-import AUpageAlert from "../../pancake/react/page-alerts";
 
 type Props = {
     error: {
@@ -10,18 +9,16 @@ type Props = {
     };
 };
 
-const AUpageAlertAny = AUpageAlert as any;
-
 class ErrorHandler extends React.Component<Props> {
     render() {
         return (
             <MagdaDocumentTitle prefixes={["Error"]}>
-                <AUpageAlertAny as="error">
+                <div className="au-page-alerts au-page-alerts--error">
                     {this.props.error.title ? (
                         <h3>{this.props.error.title}</h3>
                     ) : null}
                     <p>{this.props.error.detail}</p>
-                </AUpageAlertAny>
+                </div>
             </MagdaDocumentTitle>
         );
     }

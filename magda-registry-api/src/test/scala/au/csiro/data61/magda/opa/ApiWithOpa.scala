@@ -14,19 +14,22 @@ import au.csiro.data61.magda.client.{AuthApiClient, HttpFetcher, HttpFetcherImpl
 import au.csiro.data61.magda.model.Auth.AuthProtocols
 import au.csiro.data61.magda.model.Registry.{AspectDefinition, MAGDA_TENANT_ID_HEADER, Record}
 import au.csiro.data61.magda.registry._
-import com.auth0.jwt.JWT
 import com.typesafe.config.Config
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{Matchers, Outcome, fixture}
-import scalikejdbc.{GlobalSettings, LoggingSQLAndTimeSettings}
 import scalikejdbc._
 import scalikejdbc.config.{DBs, EnvPrefix, TypesafeConfig, TypesafeConfigReader}
 import spray.json.{JsObject, JsString, JsonParser}
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Serializer
+import spray.json._
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.io.BufferedSource
 import scala.io.Source.fromFile
+import io.jsonwebtoken.SignatureAlgorithm
+import java.{util => ju}
 
 abstract class ApiWithOpa
     extends fixture.FunSpec
@@ -36,8 +39,14 @@ abstract class ApiWithOpa
     with SprayJsonSupport
     with MockFactory
     with AuthProtocols {
+  override def testConfigSource: String =
+    super.testConfigSource + s"""
+                                |opa.recordPolicyId="object.registry.record.esri_owner_groups"
+    """.stripMargin
+
   implicit def default(implicit system: ActorSystem): RouteTestTimeout =
     RouteTestTimeout(300 seconds)
+
   override def beforeAll(): Unit = {
     super.beforeAll()
   }
@@ -58,7 +67,7 @@ abstract class ApiWithOpa
       WebHookActor.props("http://localhost:6101/v0/")(testConfig)
     )
     val authClient =
-      new AuthApiClient()(testConfig, system, executor, materializer)
+      new RegistryAuthApiClient()(testConfig, system, executor, materializer)
     val api = (role: Role) =>
       new Api(
         if (role == Full) Some(actor) else None,
@@ -74,7 +83,6 @@ abstract class ApiWithOpa
         test.toNoArgTest(FixtureParam(api, actor, authClient, testConfig))
       )
     } finally {
-      //      Await.result(system.terminate(), 30 seconds)
       Await.result(gracefulStop(actor, 30 seconds), 30 seconds)
     }
   }
@@ -94,18 +102,17 @@ abstract class ApiWithOpa
     if (userId.equals(anonymous))
       return RawHeader("", "")
 
-    val jwtToken =
-      JWT
-        .create()
-        .withClaim("userId", userId)
-        .sign(Authentication.algorithm)
-    //      println(s"userId: $userId")
-    //      println(s"jwtToken: $jwtToken")
+    val jwtToken = Authentication.signToken(
+      Jwts
+        .builder()
+        .claim("userId", userId),
+      system.log
+    )
+
     RawHeader(
       Authentication.headerName,
       jwtToken
     )
-
   }
 
   val httpFetcher: HttpFetcher = new HttpFetcherImpl(new URL("http://localhost:6104"))
@@ -322,9 +329,13 @@ abstract class ApiWithOpa
   }
 
   def getTestRecords(file: String): List[Record] = {
+
+    /** File that has the base json for records (this doesn't vary from test to test) */
     val baseFile = dataPath + "records.json"
     val baseRecordsSource = fromFile(baseFile)
-    val recordsAccessControlAspectSource = fromFile(file)
+
+    /** File that has extra information around access control for records (this is test-specific) */
+    val recordsAccessControlSource = fromFile(file)
 
     val baseRecordsJsonStr = try {
       baseRecordsSource.mkString
@@ -335,34 +346,46 @@ abstract class ApiWithOpa
     val baseRecords = JsonParser(baseRecordsJsonStr).convertTo[List[Record]]
 
     val recordsAccessControlAspectJsonStr = try {
-      recordsAccessControlAspectSource.mkString
+      recordsAccessControlSource.mkString
     } finally {
-      recordsAccessControlAspectSource.close()
+      recordsAccessControlSource.close()
     }
 
     val accessControlAspects = JsonParser(recordsAccessControlAspectJsonStr)
       .convertTo[List[JsObject]]
 
-    val recordAccessControlAspectMap = accessControlAspects
+    val recordAccessControlMap = accessControlAspects
       .map(each => {
-        each.fields("id") -> each.fields("aspects").asJsObject
+        each.fields("id") -> each
       })
       .toMap
 
     baseRecords.map(record => {
-      val accessControlAspect =
-        recordAccessControlAspectMap.get(JsString(record.id))
-      if (accessControlAspect.nonEmpty) {
-        val key = accessControlAspect.get.fields.keys.toList.head
-        val keys = record.aspects.keys.toList
-        val theAspectList = keys
-          .map(k => k -> record.aspects(k)) :+ key -> accessControlAspect.get
-          .fields(key)
-          .asJsObject
+      val accessControlValues = recordAccessControlMap.get(JsString(record.id))
 
-        record.copy(aspects = theAspectList.toMap)
-      } else {
-        record
+      val authControlReadPolicy =
+        accessControlValues.flatMap(_.fields.get("authnReadPolicyId"))
+
+      val recordWithPolicy = authControlReadPolicy match {
+        case Some(JsString(policy)) =>
+          record.copy(authnReadPolicyId = Some(policy))
+        case _ => record
+      }
+
+      val accessControlAspects =
+        accessControlValues.flatMap(_.fields.get("aspects")).map(_.asJsObject)
+
+      accessControlAspects match {
+        case Some(aspects) =>
+          val key = accessControlAspects.get.fields.keys.toList.head
+          val keys = recordWithPolicy.aspects.keys.toList
+          val theAspectList = keys
+            .map(k => k -> recordWithPolicy.aspects(k)) :+ key -> accessControlAspects.get
+            .fields(key)
+            .asJsObject
+
+          recordWithPolicy.copy(aspects = theAspectList.toMap)
+        case None => recordWithPolicy
       }
     })
   }
@@ -372,17 +395,14 @@ abstract class ApiWithOpa
   var hasRecords = false
 
   def createRecords(param: FixtureParam): AnyVal = {
-    if (hasRecords)
-      return
-
     DB localTx { implicit session =>
-      sql"Delete from public.recordaspects".update
+      sql"Delete from recordaspects".update
         .apply()
-      sql"Delete from public.records".update
+      sql"Delete from records".update
         .apply()
     }
 
-    testRecords.map(record => {
+    testRecords.foreach(record => {
       Get(s"/v0/records/${record.id}") ~> addTenantIdHeader(TENANT_0) ~> addJwtToken(
         adminUser
       ) ~> param.api(Full).routes ~> check {
@@ -395,8 +415,6 @@ abstract class ApiWithOpa
         }
       }
     })
-
-    hasRecords = true
   }
 
   lazy val singleLinkRecordIdMapDereferenceIsFalse
@@ -414,11 +432,4 @@ abstract class ApiWithOpa
       (userId0, "record-2") -> testRecords(1).toJson.asJsObject,
       (userId2, "record-2") -> JsObject.empty
     )
-
-  GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
-    enabled = false,
-    singleLineMode = true,
-    logLevel = 'debug
-  )
-
 }

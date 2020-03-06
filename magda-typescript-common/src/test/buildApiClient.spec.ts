@@ -1,11 +1,11 @@
 import {} from "mocha";
-import * as sinon from "sinon";
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
-import * as yargs from "yargs";
+import sinon from "sinon";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+import yargs from "yargs";
 import addJwtSecretFromEnvVar from "../session/addJwtSecretFromEnvVar";
 import mockAuthApiHost from "./mockAuthApiHost";
-import ApiClient from "src/authorization-api/ApiClient";
+import ApiClient from "../authorization-api/ApiClient";
 import mockUserDataStore from "./mockUserDataStore";
 
 chai.use(chaiAsPromised);
@@ -109,7 +109,6 @@ describe("Test ApiClient.ts", function() {
             argv.userId
         );
         const data = (await api.getUser(mockUserData[1].id)).valueOr(null);
-        debugger;
         expect(data).to.deep.equal(mockUserData[1]);
     });
 

@@ -40,6 +40,7 @@ function editStory(item, onChange) {
         <div>
             <h1>
                 <ToggleEditor
+                    editable={true}
                     value={item.content.title}
                     onChange={save("title")}
                     editor={textEditor}
@@ -55,6 +56,7 @@ function editStory(item, onChange) {
             <p>
                 Linked to:{" "}
                 <ToggleEditor
+                    editable={true}
                     value={item.content.titleUrl}
                     onChange={save("titleUrl")}
                     editor={textEditor}
@@ -62,6 +64,7 @@ function editStory(item, onChange) {
             </p>
 
             <ToggleEditor
+                editable={true}
                 value={item.content.content}
                 onChange={save("content")}
                 editor={markdownEditor}

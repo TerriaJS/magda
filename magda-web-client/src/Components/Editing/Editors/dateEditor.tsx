@@ -19,12 +19,14 @@ function formatDateForOutput(date: Date | undefined | null) {
     return date ? Moment(date).format(FORMAT) : "Unknown";
 }
 
-function MagdaSingleDatePicker({
+export function MagdaSingleDatePicker({
     date,
-    callback
+    callback,
+    isOutsideRange
 }: {
     date?: Date;
     callback: Function;
+    isOutsideRange?: (date: any) => boolean;
 }) {
     const [focused, setFocused] = useState(false);
 
@@ -34,6 +36,8 @@ function MagdaSingleDatePicker({
         }
     };
 
+    isOutsideRange = isOutsideRange ? isOutsideRange : () => false;
+
     return (
         <span className="date-editor-wrapper">
             <SingleDatePicker
@@ -42,7 +46,7 @@ function MagdaSingleDatePicker({
                 id={Math.random().toString()}
                 focused={focused}
                 onFocusChange={state => setFocused(!!state.focused)}
-                isOutsideRange={() => false}
+                isOutsideRange={isOutsideRange}
                 displayFormat={FORMAT}
                 noBorder
                 small
@@ -65,10 +69,10 @@ function MagdaDateRangePicker(props: {
     value: Interval | undefined;
     onChange: Function;
 }) {
-    const [focusedInput, setFocusedInput] = useState(null as (
+    const [focusedInput, setFocusedInput] = useState(null as
         | "startDate"
         | "endDate"
-        | null));
+        | null);
 
     const onDatesChange = ({
         startDate,
@@ -125,16 +129,21 @@ export const dateIntervalEditor: Editor<Interval> = {
     }
 };
 
-export const multiDateIntervalEditor: Editor<
-    Interval[]
-> = ListMultiItemEditor.create(
-    dateIntervalEditor,
-    () => {
-        return {
-            start: undefined,
-            end: undefined
-        };
-    },
-    (value: Interval) => !!value.start && !!value.end,
-    true
-);
+export const multiDateIntervalEditor = function(renderAbove: boolean) {
+    const myMultiItemEditor = ListMultiItemEditor.create(
+        dateIntervalEditor,
+        () => {
+            return {
+                start: undefined,
+                end: undefined
+            };
+        },
+        (value: Interval) => !!value.start && !!value.end,
+        true,
+        renderAbove
+    );
+    return {
+        edit: myMultiItemEditor.edit,
+        view: myMultiItemEditor.view
+    };
+};

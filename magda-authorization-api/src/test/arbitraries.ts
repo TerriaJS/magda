@@ -1,9 +1,9 @@
-import jsc from "@magda/typescript-common/dist/test/jsverify";
+import jsc from "magda-typescript-common/src/test/jsverify";
 import {
     peopleNameArb,
     lcAlphaNumStringArbNe
-} from "@magda/typescript-common/dist/test/arbitraries";
-import { User } from "@magda/typescript-common/dist/authorization-api/model";
+} from "magda-typescript-common/src/test/arbitraries";
+import { User } from "magda-typescript-common/src/authorization-api/model";
 
 export const emailArb: jsc.Arbitrary<string> = jsc
     .tuple([
@@ -16,13 +16,13 @@ export const emailArb: jsc.Arbitrary<string> = jsc
         function(x) {
             return x.join("");
         },
-        function(email) {
+        function(email): [string, string, string, string] {
             const items = [];
             let parts = email.split("@");
             items.push(parts[0], "@");
             parts = parts[1].split(".com");
             items.push(parts[0], ".com");
-            return items;
+            return items as [string, string, string, string];
         }
     );
 

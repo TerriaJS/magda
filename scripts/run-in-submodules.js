@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const fse = require("fs-extra");
 const childProcess = require("child_process");
 const glob = require("glob");
 const _ = require("lodash");
 const os = require("os");
-const yargs = require("yargs");
 
 const lernaJson = require("../lerna.json");
 

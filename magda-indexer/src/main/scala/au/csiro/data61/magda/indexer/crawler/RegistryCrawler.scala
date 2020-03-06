@@ -15,10 +15,14 @@ import com.typesafe.config.Config
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class RegistryCrawler(interface: RegistryExternalInterface, indexer: SearchIndexer)
-                     (implicit val system: ActorSystem,
-                      implicit val config: Config,
-                      implicit val materializer: Materializer) extends Crawler {
+class RegistryCrawler(
+    interface: RegistryExternalInterface,
+    indexer: SearchIndexer
+)(
+    implicit val system: ActorSystem,
+    implicit val config: Config,
+    implicit val materializer: Materializer
+) extends Crawler {
   val log = Logging(system, getClass)
   implicit val ec: ExecutionContextExecutor = system.dispatcher
   implicit val scheduler: Scheduler = system.scheduler
@@ -44,9 +48,14 @@ class RegistryCrawler(interface: RegistryExternalInterface, indexer: SearchIndex
 
     val interfaceSource = streamForInterface()
 
-    indexer.index(interfaceSource)
+    indexer
+      .index(interfaceSource)
       .flatMap { result =>
-        log.info("Indexed {} datasets with {} failures", result.successes, result.failures.length)
+        log.info(
+          "Indexed {} datasets with {} failures",
+          result.successes,
+          result.failures.length
+        )
 
         // By default ElasticSearch index is refreshed every second. Let the trimming operation
         // (delete by query) be delayed by some time interval. Otherwise the operation might report
@@ -60,13 +69,14 @@ class RegistryCrawler(interface: RegistryExternalInterface, indexer: SearchIndex
           val delay = 1000
           Thread.sleep(delay)
         }.flatMap(_ => {
-          val futureOpt: Option[Future[Unit]] = if (result.failures.isEmpty) { // does this need to be tunable?
-            log.info("Trimming datasets indexed before {}", startInstant)
-            Some(indexer.trim(startInstant))
-          } else {
-            log.warning("Encountered too many failures to trim old datasets")
-            None
-          }
+          val futureOpt: Option[Future[Unit]] =
+            if (result.failures.isEmpty) { // does this need to be tunable?
+              log.info("Trimming datasets indexed before {}", startInstant)
+              Some(indexer.trim(startInstant))
+            } else {
+              log.warning("Encountered too many failures to trim old datasets")
+              None
+            }
 
           futureOpt.map(_.map(_ => result)).getOrElse(Future(result))
         })
@@ -85,7 +95,9 @@ class RegistryCrawler(interface: RegistryExternalInterface, indexer: SearchIndex
               indexer.snapshot()
             }
           } else {
-            log.info("Did not successfully index anything, no need to snapshot either.")
+            log.info(
+              "Did not successfully index anything, no need to snapshot either."
+            )
           }
 
           if (failureCount > 0) {
@@ -104,7 +116,8 @@ class RegistryCrawler(interface: RegistryExternalInterface, indexer: SearchIndex
     * @return the stream source
     */
   private def streamForInterface(): Source[DataSet, NotUsed] = {
-    val streamController = new StreamController(interface, streamControllerSourceBufferSize)
+    val streamController =
+      new StreamController(interface, streamControllerSourceBufferSize)
     streamController.start()
     streamController.getSource
   }

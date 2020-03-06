@@ -1,6 +1,6 @@
 {
   "name": "@magda/migrator-authorization-db",
-  "version": "0.0.56-terria-3",
+  "version": "0.0.57-0",
   "description": "The MAGDA database for storing users and other authorization data.",
   "license": "Apache-2.0",
   "scripts": {
@@ -16,8 +16,8 @@
     }
   },
   "devDependencies": {
-    "@magda/db-migrator": "^0.0.56-terria-3",
-    "@magda/scripts": "^0.0.56-terria-3"
+    "@magda/db-migrator": "^0.0.57-0",
+    "@magda/scripts": "^0.0.57-0"
   },
   "magda": {
     "categories": {

@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 
 export type RegoValue = string | boolean | number | Array<any> | Object;
 
@@ -936,6 +936,8 @@ export default class OpaCompileResponseParser {
      */
     public rules: RegoRule[] = [];
 
+    public queries: RegoExp[] = [];
+
     /**
      * A cache of all resolved rule result
      *
@@ -968,33 +970,68 @@ export default class OpaCompileResponseParser {
             return [];
         }
         this.data = this.data.result;
-        if (!_.isArray(this.data.support) || !this.data.support.length) {
+        if (
+            (!this.data.queries ||
+                !_.isArray(this.data.queries) ||
+                !this.data.queries.length) &&
+            (!_.isArray(this.data.support) || !this.data.support.length)
+        ) {
             // --- mean no rule matched
             return [];
         }
-        const packages: any[] = this.data.support;
-        packages.forEach(p => {
-            if (!_.isArray(p.rules) || !p.rules.length) return;
-            const packageName =
-                p.package && _.isArray(p.package.path)
-                    ? RegoRef.convertToFullRefString(p.package.path)
-                    : "";
 
-            const rules: any[] = p.rules;
-            rules.forEach(r => {
-                const regoRule = RegoRule.parseFromData(r, packageName, this);
-                this.completeRules.push(regoRule);
-                // --- only save matched rules
-                if (!regoRule.isCompleteEvaluated) {
-                    this.rules.push(regoRule);
-                } else {
-                    if (regoRule.isMatched) {
-                        this.rules.push(regoRule);
-                    }
-                }
+        const queries = this.data.queries;
+
+        if (queries) {
+            queries.forEach((q: any, i: number) => {
+                const rule = new RegoRule({
+                    name: "queryRule" + 1,
+                    fullName: "queryRule" + 1,
+                    expressions: q.map((innerQ: any) =>
+                        RegoExp.parseFromData(innerQ, this)
+                    ),
+                    isDefault: false,
+                    isCompleteEvaluated: false,
+                    value: undefined,
+                    parser: this
+                });
+
+                this.completeRules.push(rule);
+                this.rules.push(rule);
             });
-        });
-        this.calculateCompleteRuleResult();
+        }
+
+        const packages: any[] = this.data.support;
+
+        if (packages) {
+            packages.forEach(p => {
+                if (!_.isArray(p.rules) || !p.rules.length) return;
+                const packageName =
+                    p.package && _.isArray(p.package.path)
+                        ? RegoRef.convertToFullRefString(p.package.path)
+                        : "";
+
+                const rules: any[] = p.rules;
+                rules.forEach(r => {
+                    const regoRule = RegoRule.parseFromData(
+                        r,
+                        packageName,
+                        this
+                    );
+                    this.completeRules.push(regoRule);
+                    // --- only save matched rules
+                    if (!regoRule.isCompleteEvaluated) {
+                        this.rules.push(regoRule);
+                    } else {
+                        if (regoRule.isMatched) {
+                            this.rules.push(regoRule);
+                        }
+                    }
+                });
+            });
+        }
+
+        this.calculateCompleteResult();
         this.reduceDependencies();
         return this.rules;
     }
@@ -1009,7 +1046,7 @@ export default class OpaCompileResponseParser {
      * @private
      * @memberof OpaCompileResponseParser
      */
-    private calculateCompleteRuleResult() {
+    private calculateCompleteResult() {
         const fullNames = this.rules.map(r => r.fullName);
         fullNames.forEach(fullName => {
             const rules = this.rules.filter(r => r.fullName === fullName);

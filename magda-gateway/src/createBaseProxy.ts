@@ -1,5 +1,5 @@
-import * as httpProxy from "http-proxy";
-import * as express from "express";
+import httpProxy from "http-proxy";
+import express from "express";
 
 import { TenantMode } from "./setupTenantMode";
 
@@ -8,7 +8,7 @@ import groupBy = require("lodash/groupBy");
 import {
     MAGDA_TENANT_ID_HEADER,
     MAGDA_ADMIN_PORTAL_ID
-} from "@magda/typescript-common/dist/registry/TenantConsts";
+} from "magda-typescript-common/src/registry/TenantConsts";
 
 const DO_NOT_PROXY_HEADERS = [
     "Proxy-Authorization",
@@ -31,6 +31,17 @@ export default function createBaseProxy(tenantMode: TenantMode): httpProxy {
         changeOrigin: true
     } as httpProxy.ServerOptions);
 
+    (proxy as any).before(
+        "web",
+        "stream",
+        (req: any, _res: any, _options: any) => {
+            if (req.headers.expect) {
+                req.__expectHeader = req.headers.expect;
+                delete req.headers.expect;
+            }
+        }
+    );
+
     proxy.on("error", function(err: any, req: any, res: any) {
         res.writeHead(500, {
             "Content-Type": "text/plain"
@@ -45,6 +56,10 @@ export default function createBaseProxy(tenantMode: TenantMode): httpProxy {
         // Presume that we've already got whatever auth details we need out of the request and so remove it now.
         // If we keep it it causes scariness upstream - like anything that goes through the TerriaJS proxy will
         // be leaking auth details to wherever it proxies to.
+        if ((req as any).__expectHeader) {
+            proxyReq.setHeader("Expect", (req as any).__expectHeader);
+        }
+
         const headerNames = proxyReq.getHeaderNames();
         for (let i = 0; i < headerNames.length; i++) {
             const headerName = headerNames[i];

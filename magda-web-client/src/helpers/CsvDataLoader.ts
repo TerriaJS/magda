@@ -76,7 +76,7 @@ class CsvDataLoader {
      *
      * This is necessary because even if we call `parser.abort()`, the parser `onComplete` event will still be triggered,
      * causing the `complete` method to be called here.
-     * 
+     *
      * @private
      * @type {boolean}
      * @memberof CsvDataLoader

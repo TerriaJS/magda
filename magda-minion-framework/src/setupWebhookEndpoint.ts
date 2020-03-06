@@ -1,15 +1,13 @@
-import * as _ from "lodash";
-import * as express from "express";
+import _ from "lodash";
+import express from "express";
 
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
-import unionToThrowable from "@magda/typescript-common/dist/util/unionToThrowable";
+import { Record } from "magda-typescript-common/src/generated/registry/api";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
+import unionToThrowable from "magda-typescript-common/src/util/unionToThrowable";
 
 import MinionOptions from "./MinionOptions";
 
-import AsyncPage, {
-    forEachAsync
-} from "@magda/typescript-common/dist/AsyncPage";
+import AsyncPage, { forEachAsync } from "magda-typescript-common/src/AsyncPage";
 
 export default function setupWebhookEndpoint(
     server: express.Application,

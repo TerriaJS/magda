@@ -1,0 +1,11 @@
+image: {}
+resources:
+  requests:
+    cpu: 10m
+    memory: 30Mi
+  limits:
+    cpu: 50m
+
+minio:
+  host: "minio"
+  port: 9000

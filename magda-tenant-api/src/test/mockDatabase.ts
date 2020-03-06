@@ -1,5 +1,5 @@
-import mockTenantDataStore from "@magda/typescript-common/dist/test/mockTenantDataStore";
-import { Tenant } from "@magda/typescript-common/dist/tenant-api/Tenant";
+import mockTenantDataStore from "magda-typescript-common/src/test/mockTenantDataStore";
+import { Tenant } from "magda-typescript-common/src/tenant-api/Tenant";
 
 export default class MockDatabase {
     async getTenants(): Promise<Tenant[]> {

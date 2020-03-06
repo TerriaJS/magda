@@ -1,0 +1,29 @@
+version: "3.3"
+
+# starts 4 docker containers running minio server instances. Each
+# minio server's web interface will be accessible on the host at port
+# 9001 through 9004.
+services:
+  minio1:
+    image: minio/minio:RELEASE.2019-10-12T01-39-57Z
+    volumes:
+      - data1-1:/data1
+      - data1-2:/data2
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+      JWT_SECRET: squirrel
+    command: server /tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+## By default this config uses default local driver,
+## For custom volumes replace with volume driver configuration.
+volumes:
+  data1-1:
+  data1-2:

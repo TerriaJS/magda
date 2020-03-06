@@ -14,7 +14,9 @@ class WebhookIncludedRecordNotDeletedSpec extends WebhookSpecBase {
 
   describe("when webhook received") {
 
-    it("given a combination of deletions and insertions, it should not delete anything that was included as a record") {
+    it(
+      "given a combination of deletions and insertions, it should not delete anything that was included as a record"
+    ) {
       val gen = for {
         gennedDataSets <- dataSetsGen
         dataSets = gennedDataSets.map(_._1)
@@ -30,20 +32,25 @@ class WebhookIncludedRecordNotDeletedSpec extends WebhookSpecBase {
             refresh(idxName)
           }
 
-          val events = dataSetsToDelete.map(dataSet =>
-            RegistryEvent(
-              id = None,
-              eventTime = None,
-              eventType = EventType.DeleteRecord,
-              userId = 0,
-              data = JsObject("recordId" -> JsString(dataSet.identifier))
-            ))
+          val events = dataSetsToDelete.map(
+            dataSet =>
+              RegistryEvent(
+                id = None,
+                eventTime = None,
+                eventType = EventType.DeleteRecord,
+                userId = 0,
+                data = JsObject("recordId" -> JsString(dataSet.identifier)),
+                tenantId = 1
+              )
+          )
 
           val payload = WebHookPayload(
             action = "records.changed",
             lastEventId = 104856,
             events = Some(events.toList),
-            records = Some(deletedDataSetsToSave.map(x => dataSetToRecord((x, Nil))).toList),
+            records = Some(
+              deletedDataSetsToSave.map(x => dataSetToRecord((x, Nil))).toList
+            ),
             aspectDefinitions = None,
             deferredResponseUrl = None
           )
@@ -64,7 +71,9 @@ class WebhookIncludedRecordNotDeletedSpec extends WebhookSpecBase {
             val result = responseAs[SearchResult]
 
             result.dataSets.length shouldEqual expectedDataSets.length
-            result.dataSets.map(_.identifier).toSet shouldEqual expectedDataSets.map(_.identifier).toSet
+            result.dataSets.map(_.identifier).toSet shouldEqual expectedDataSets
+              .map(_.identifier)
+              .toSet
           }
 
           builtIndex.indexNames.foreach { idxName =>

@@ -1,4 +1,5 @@
 @import "variables";
+@import "./pancake/sass/core.scss";
 
 .search-suggestion-box {
     left: 0px;
@@ -38,6 +39,9 @@
             width: calc(100% - 50px);
             text-align: left;
             padding: 0px;
+            &.search-item-main-button {
+                color: $AU-color-foreground-action;
+            }
             &.markdown {
                 margin-left: 0;
                 em {

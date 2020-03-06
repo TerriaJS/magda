@@ -49,13 +49,16 @@ class RegionsApiSpec
       index match {
         case Indices.DataSetsIndex =>
           throw new RuntimeException(
-            "Why are we here this is the regions test?")
+            "Why are we here this is the regions test?"
+          )
         case Indices.PublishersIndex =>
           throw new RuntimeException(
-            "Why are we here this is the regions test?")
+            "Why are we here this is the regions test?"
+          )
         case Indices.FormatsIndex =>
           throw new RuntimeException(
-            "Why are we here this is the regions test?")
+            "Why are we here this is the regions test?"
+          )
         case Indices.RegionsIndex => "regions_test_regions_api_spec"
       }
   }
@@ -143,7 +146,8 @@ class RegionsApiSpec
   }
 
   it(
-    "should return SA2 regions with `lv1Id`, `lv2Id`, `lv3Id` & `lv4Id` Fields") {
+    "should return SA2 regions with `lv1Id`, `lv2Id`, `lv3Id` & `lv4Id` Fields"
+  ) {
     Get(s"/v0/regions?type=SA2") ~> addTenantIdHeader ~> api.routes ~> check {
       status shouldBe OK
       contentType shouldBe `application/json`
@@ -163,7 +167,8 @@ class RegionsApiSpec
   }
 
   it(
-    "should return SA1 regions with `lv1Id`, `lv2Id`, `lv3Id`, `lv4Id` & `lv5Id` Fields") {
+    "should return SA1 regions with `lv1Id`, `lv2Id`, `lv3Id`, `lv4Id` & `lv5Id` Fields"
+  ) {
     Get(s"/v0/regions?type=SA1") ~> addTenantIdHeader ~> api.routes ~> check {
       status shouldBe OK
       contentType shouldBe `application/json`
@@ -197,7 +202,8 @@ class RegionsApiSpec
   }
 
   it(
-    "should only return Test SA3 2 regions when specify lv2 region Id 3 & lv3Id 301") {
+    "should only return Test SA3 2 regions when specify lv2 region Id 3 & lv3Id 301"
+  ) {
     Get(s"/v0/regions?type=SA3&lv2Id=3&lv3Id=301") ~> addTenantIdHeader ~> api.routes ~> check {
       status shouldBe OK
       contentType shouldBe `application/json`
@@ -213,7 +219,8 @@ class RegionsApiSpec
   }
 
   it(
-    "should only return Test SA2 2 regions when specify lv2 region Id 3 & lv3Id 301 & lv4Id 30101") {
+    "should only return Test SA2 2 regions when specify lv2 region Id 3 & lv3Id 301 & lv4Id 30101"
+  ) {
     Get(s"/v0/regions?type=SA2&lv2Id=3&lv3Id=301&lv4Id=30101") ~> addTenantIdHeader ~> api.routes ~> check {
       status shouldBe OK
       contentType shouldBe `application/json`
@@ -230,7 +237,8 @@ class RegionsApiSpec
   }
 
   it(
-    "should only return Test SA1 2 regions when specify lv2 region Id 3 & lv3Id 301 & lv4Id 30101 & lv5Id 301011001") {
+    "should only return Test SA1 2 regions when specify lv2 region Id 3 & lv3Id 301 & lv4Id 30101 & lv5Id 301011001"
+  ) {
     Get(s"/v0/regions?type=SA1&lv2Id=3&lv3Id=301&lv4Id=30101&lv5Id=301011001") ~> addTenantIdHeader ~> api.routes ~> check {
       status shouldBe OK
       contentType shouldBe `application/json`
@@ -248,16 +256,19 @@ class RegionsApiSpec
   }
 
   val indexedRegions = List(
-    (new RegionSource("STE",
-                      new URL("http://example.com"),
-                      "STE_CODE11",
-                      "STE_NAME11",
-                      Some("STE_ABBREV"),
-                      false,
-                      false,
-                      10,
-                      lv1Id = Some("1")),
-     """
+    (
+      new RegionSource(
+        "STE",
+        new URL("http://example.com"),
+        "STE_CODE11",
+        "STE_NAME11",
+        Some("STE_ABBREV"),
+        false,
+        false,
+        10,
+        lv1Id = Some("1")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -293,17 +304,21 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource("STE",
-                      new URL("http://example.com"),
-                      "STE_CODE11",
-                      "STE_NAME11",
-                      Some("STE_ABBREV"),
-                      false,
-                      false,
-                      10,
-                      lv1Id = Some("1")),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "STE",
+        new URL("http://example.com"),
+        "STE_CODE11",
+        "STE_NAME11",
+        Some("STE_ABBREV"),
+        false,
+        false,
+        10,
+        lv1Id = Some("1")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -339,18 +354,22 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource("SA4",
-                      new URL("http://example.com"),
-                      "SA4_CODE11",
-                      "SA4_NAME11",
-                      None,
-                      false,
-                      false,
-                      10,
-                      lv1Id = Some("1"),
-                      lv2IdField = Some("STE_CODE11")),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA4",
+        new URL("http://example.com"),
+        "SA4_CODE11",
+        "SA4_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -386,18 +405,22 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource("SA4",
-                      new URL("http://example.com"),
-                      "SA4_CODE11",
-                      "SA4_NAME11",
-                      None,
-                      false,
-                      false,
-                      10,
-                      lv1Id = Some("1"),
-                      lv2IdField = Some("STE_CODE11")),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA4",
+        new URL("http://example.com"),
+        "SA4_CODE11",
+        "SA4_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -433,21 +456,23 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource(
-       "SA3",
-       new URL("http://example.com"),
-       "SA3_CODE11",
-       "SA3_NAME11",
-       None,
-       false,
-       false,
-       10,
-       lv1Id = Some("1"),
-       lv2IdField = Some("STE_CODE11"),
-       lv3IdField = Some("SA4_CODE11")
-     ),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA3",
+        new URL("http://example.com"),
+        "SA3_CODE11",
+        "SA3_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11"),
+        lv3IdField = Some("SA4_CODE11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -484,21 +509,23 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource(
-       "SA3",
-       new URL("http://example.com"),
-       "SA3_CODE11",
-       "SA3_NAME11",
-       None,
-       false,
-       false,
-       10,
-       lv1Id = Some("1"),
-       lv2IdField = Some("STE_CODE11"),
-       lv3IdField = Some("SA4_CODE11")
-     ),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA3",
+        new URL("http://example.com"),
+        "SA3_CODE11",
+        "SA3_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11"),
+        lv3IdField = Some("SA4_CODE11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -535,22 +562,24 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource(
-       "SA2",
-       new URL("http://example.com"),
-       "SA2_MAIN11",
-       "SA2_NAME11",
-       None,
-       false,
-       false,
-       10,
-       lv1Id = Some("1"),
-       lv2IdField = Some("STE_CODE11"),
-       lv3IdField = Some("SA4_CODE11"),
-       lv4IdField = Some("SA3_CODE11")
-     ),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA2",
+        new URL("http://example.com"),
+        "SA2_MAIN11",
+        "SA2_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11"),
+        lv3IdField = Some("SA4_CODE11"),
+        lv4IdField = Some("SA3_CODE11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -588,22 +617,24 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource(
-       "SA2",
-       new URL("http://example.com"),
-       "SA2_MAIN11",
-       "SA2_NAME11",
-       None,
-       false,
-       false,
-       10,
-       lv1Id = Some("1"),
-       lv2IdField = Some("STE_CODE11"),
-       lv3IdField = Some("SA4_CODE11"),
-       lv4IdField = Some("SA3_CODE11")
-     ),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA2",
+        new URL("http://example.com"),
+        "SA2_MAIN11",
+        "SA2_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11"),
+        lv3IdField = Some("SA4_CODE11"),
+        lv4IdField = Some("SA3_CODE11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -641,23 +672,25 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource(
-       "SA1",
-       new URL("http://example.com"),
-       "SA1_MAIN11",
-       "SA1_NAME11",
-       None,
-       false,
-       false,
-       10,
-       lv1Id = Some("1"),
-       lv2IdField = Some("STE_CODE11"),
-       lv3IdField = Some("SA4_CODE11"),
-       lv4IdField = Some("SA3_CODE11"),
-       lv5IdField = Some("SA2_MAIN11")
-     ),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA1",
+        new URL("http://example.com"),
+        "SA1_MAIN11",
+        "SA1_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11"),
+        lv3IdField = Some("SA4_CODE11"),
+        lv4IdField = Some("SA3_CODE11"),
+        lv5IdField = Some("SA2_MAIN11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -696,23 +729,25 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject),
-    (new RegionSource(
-       "SA1",
-       new URL("http://example.com"),
-       "SA1_MAIN11",
-       "SA1_NAME11",
-       None,
-       false,
-       false,
-       10,
-       lv1Id = Some("1"),
-       lv2IdField = Some("STE_CODE11"),
-       lv3IdField = Some("SA4_CODE11"),
-       lv4IdField = Some("SA3_CODE11"),
-       lv5IdField = Some("SA2_MAIN11")
-     ),
-     """
+      """.stripMargin.parseJson.asJsObject
+    ),
+    (
+      new RegionSource(
+        "SA1",
+        new URL("http://example.com"),
+        "SA1_MAIN11",
+        "SA1_NAME11",
+        None,
+        false,
+        false,
+        10,
+        lv1Id = Some("1"),
+        lv2IdField = Some("STE_CODE11"),
+        lv3IdField = Some("SA4_CODE11"),
+        lv4IdField = Some("SA3_CODE11"),
+        lv5IdField = Some("SA2_MAIN11")
+      ),
+      """
         |{
         |  "type": "Feature",
         |  "properties": {
@@ -751,7 +786,8 @@ class RegionsApiSpec
         |    ]
         |  }
         |}
-      """.stripMargin.parseJson.asJsObject)
+      """.stripMargin.parseJson.asJsObject
+    )
   )
 
 }

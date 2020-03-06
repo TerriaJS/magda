@@ -8,35 +8,29 @@
                 "ckan-dataset": {
                     "jurisdiction": "Commonwealth of Australia",
                     "organization": {
-                        "image_url":
-                            "2018-02-18-235753.917110ABARESstackedblack.png",
+                        "image_url": "2018-02-18-235753.917110ABARESstackedblack.png",
                         "name": "abares",
                         "state": "active",
-                        "description":
-                            "The Australian Bureau of Agriculture and Resource Economics and Sciences (ABARES) is the science and economics research division of the Department of Agriculture and Water Resources.",
+                        "description": "The Australian Bureau of Agriculture and Resource Economics and Sciences (ABARES) is the science and economics research division of the Department of Agriculture and Water Resources.",
                         "is_organization": true,
                         "id": "5a9f3a8e-2673-4c6e-be5b-e8f7287993c5",
-                        "title":
-                            "Australian Bureau of Agriculture and Resource Economics and Sciences",
+                        "title": "Australian Bureau of Agriculture and Resource Economics and Sciences",
                         "type": "organization",
                         "revision_id": "f6a4a322-cbd2-4129-b8e9-72d47c4fa253",
                         "approval_status": "approved",
                         "created": "2013-05-12T07:33:57.982323"
                     },
-                    "author":
-                        "Australian Bureau of Agriculture and Resource Economics and Sciences",
+                    "author": "Australian Bureau of Agriculture and Resource Economics and Sciences",
                     "name": "pg_skafsd0_f___00120141210_11a",
                     "author_email": null,
                     "license_id": "cc-by-4.0",
                     "relationships_as_object": [],
-                    "spatial":
-                        "{\"type\": \"Point\",\"coordinates\": [151.122622,-25.371968]}",
+                    "spatial": "{\"type\": \"Point\",\"coordinates\": [151.122622,-25.371968]}",
                     "private": false,
                     "state": "active",
                     "url": null,
                     "creator_user_id": "82ceae41-fd4a-41d4-91c1-6f3a6bd8c92f",
-                    "license_title":
-                        "Creative Commons Attribution 4.0 International",
+                    "license_title": "Creative Commons Attribution 4.0 International",
                     "tags": [
                         {
                             "name": "FISHERIES",
@@ -65,8 +59,7 @@
                     "groups": [
                         {
                             "name": "trade",
-                            "description":
-                                "Developing policy to regulate the purchase, sale or exchange of commodities. Monitoring the balance of trade, industry protection and subsidy schemes. Includes foreign and domestic activities, and liaison across jurisdictions to support trade agreement negotiations.\r\n\r\nIncludes components listed at http://agift.naa.gov.au/000014.htm",
+                            "description": "Developing policy to regulate the purchase, sale or exchange of commodities. Monitoring the balance of trade, industry protection and subsidy schemes. Includes foreign and domestic activities, and liaison across jurisdictions to support trade agreement negotiations.\r\n\r\nIncludes components listed at http://agift.naa.gov.au/000014.htm",
                             "display_name": "Trade",
                             "image_display_url": "",
                             "id": "25780283-7622-4cbd-b254-efbcaa9a647d",
@@ -84,13 +77,11 @@
                     "metadata_created": "2018-07-19T23:45:54.205453",
                     "isopen": true,
                     "num_tags": 4,
-                    "notes":
-                        "Report produced in collaboration between Universities and Commonwealth and State Government agencies.  \r\n\r\n Overview  \r\n• The  Status of key Australian fish stocks reports 2014  provide national assessments of the status of key wild-capture fish stocks. The reports provide scientifically based stock status assessments for 68 key species (or species complexes), which cumulatively contribute over 90 percent of the value and 85 percent of the volume from Australian fisheries. \r\n• Stock status assessments in the 2014 reports are based on the abundance and level of harvest in 2013. In total, 238 stocks were assessed across the 68 key species; 129 stocks were classified as sustainable, these contribute around 87.5 per cent of the total catch of the 68 species. There were 7 stocks classified as transitional-recovering, 19 as transitional-depleting, 11 as overfished and 4 as environmentally limited. There were 68 stocks where status was classified as undefined; these stocks contribute 6.4 per cent of the total catch of the 68 species. \r\n• The  Status of key Australian fish stocks reports  focus on the status of targeted fish stocks. The status classifications do not consider broader ecosystem impacts of fishing, such as bycatch or habitat impacts, or social and economic considerations. These elements may be included in future editions, or companion reports. \r\n• The reports rely on a consistent national reporting framework that was developed collaboratively by fisheries scientists from around Australia. The framework provides transparency and consistency in stock status reporting across jurisdictions. \r\n• The Status of key Australian fish stocks reports 2014  builds on the 2012 inaugural edition with 19 new species. Four of the new species are caught in Commonwealth fisheries. The additional species were nominated by the states and the Northern Territory as either iconic species that are likely to be seen in retail outlets or historically overfished species. \r\n• There were minor alterations to the national stock status classification framework and species chapters. The main update to the framework is the inclusion of the new environmentally limited stock category. The  Status of key Australian fish stocks reports  Advisory Group included this additional category to describe stocks depleted below the limit reference point by environmental factors rather than fishing. \r\n• Between 2012 and 2014 there have been a number of changes to stock structure and stock status for some species. In both cases the changes are based on the most recent and reliable information available. \r\n• The reports were developed collaboratively by the Australian Bureau of Agricultural and Resource Economics and Sciences (ABARES), the Fisheries Research and Development Corporation (FRDC) and government fishery research agencies from all states, the Northern Territory and the CSIRO; more than 100 fisheries researchers were involved. \r\n",
+                    "notes": "Report produced in collaboration between Universities and Commonwealth and State Government agencies.  \r\n\r\n Overview  \r\n• The  Status of key Australian fish stocks reports 2014  provide national assessments of the status of key wild-capture fish stocks. The reports provide scientifically based stock status assessments for 68 key species (or species complexes), which cumulatively contribute over 90 percent of the value and 85 percent of the volume from Australian fisheries. \r\n• Stock status assessments in the 2014 reports are based on the abundance and level of harvest in 2013. In total, 238 stocks were assessed across the 68 key species; 129 stocks were classified as sustainable, these contribute around 87.5 per cent of the total catch of the 68 species. There were 7 stocks classified as transitional-recovering, 19 as transitional-depleting, 11 as overfished and 4 as environmentally limited. There were 68 stocks where status was classified as undefined; these stocks contribute 6.4 per cent of the total catch of the 68 species. \r\n• The  Status of key Australian fish stocks reports  focus on the status of targeted fish stocks. The status classifications do not consider broader ecosystem impacts of fishing, such as bycatch or habitat impacts, or social and economic considerations. These elements may be included in future editions, or companion reports. \r\n• The reports rely on a consistent national reporting framework that was developed collaboratively by fisheries scientists from around Australia. The framework provides transparency and consistency in stock status reporting across jurisdictions. \r\n• The Status of key Australian fish stocks reports 2014  builds on the 2012 inaugural edition with 19 new species. Four of the new species are caught in Commonwealth fisheries. The additional species were nominated by the states and the Northern Territory as either iconic species that are likely to be seen in retail outlets or historically overfished species. \r\n• There were minor alterations to the national stock status classification framework and species chapters. The main update to the framework is the inclusion of the new environmentally limited stock category. The  Status of key Australian fish stocks reports  Advisory Group included this additional category to describe stocks depleted below the limit reference point by environmental factors rather than fishing. \r\n• Between 2012 and 2014 there have been a number of changes to stock structure and stock status for some species. In both cases the changes are based on the most recent and reliable information available. \r\n• The reports were developed collaboratively by the Australian Bureau of Agricultural and Resource Economics and Sciences (ABARES), the Fisheries Research and Development Corporation (FRDC) and government fishery research agencies from all states, the Northern Territory and the CSIRO; more than 100 fisheries researchers were involved. \r\n",
                     "update_freq": "other",
                     "geospatial_topic": ["Farming"],
                     "metadata_modified": "2018-07-19T23:58:47.940678",
-                    "title":
-                        "Status of key Australian fish stocks reports 2014",
+                    "title": "Status of key Australian fish stocks reports 2014",
                     "owner_org": "5a9f3a8e-2673-4c6e-be5b-e8f7287993c5",
                     "type": "dataset",
                     "license_url": "http://creativecommons.org/licenses/by/4.0",

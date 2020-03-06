@@ -1,8 +1,8 @@
-import * as express from "express";
-import * as URI from "urijs";
-import * as _ from "lodash";
-import Registry from "@magda/typescript-common/dist/registry/RegistryClient";
-import unionToThrowable from "@magda/typescript-common/dist/util/unionToThrowable";
+import express from "express";
+import URI from "urijs";
+import _ from "lodash";
+import Registry from "magda-typescript-common/src/registry/RegistryClient";
+import unionToThrowable from "magda-typescript-common/src/util/unionToThrowable";
 import { escapeRegExp } from "lodash";
 
 export type CkanRedirectionRouterOptions = {
@@ -139,7 +139,12 @@ export default function buildCkanRedirectionRouter({
 
     genericUrlRedirectConfigs.forEach(config => {
         const args = covertGenericUrlRedirectConfigToFullArgList(config);
-        redirectToCkanGeneric.apply(null, args);
+        redirectToCkanGeneric.apply(null, args as [
+            string,
+            boolean?,
+            number?,
+            string?
+        ]);
     });
 
     /**

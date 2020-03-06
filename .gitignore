@@ -29,6 +29,7 @@ bin
 # VS Code
 .bloop
 .metals
+metals.sbt
 
 regions
 snapshots
@@ -47,3 +48,8 @@ docker-context-*/
 #tenant-api specific
 magda-tenant-api/lib/
 
+#typescript
+tsconfig.tsbuildinfo
+
+# Ignore Magda helm chart auto build dependencies
+deploy/helm/magda/charts

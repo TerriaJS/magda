@@ -59,6 +59,7 @@ class Account extends React.Component<any, any> {
                 <td>{head}</td>
                 <td>
                     <ToggleEditor
+                        editable={true}
                         editor={textEditor}
                         value={item.content}
                         onChange={save}

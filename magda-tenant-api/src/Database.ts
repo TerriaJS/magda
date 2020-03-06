@@ -1,7 +1,7 @@
 import createPool from "./createPool";
-import { Tenant } from "@magda/typescript-common/dist/tenant-api/Tenant";
-import * as pg from "pg";
-import * as _ from "lodash";
+import { Tenant } from "magda-typescript-common/src/tenant-api/Tenant";
+import pg from "pg";
+import _ from "lodash";
 
 export interface DatabaseOptions {
     dbHost: string;

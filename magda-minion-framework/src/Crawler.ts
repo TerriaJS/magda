@@ -1,10 +1,8 @@
-import { Record } from "@magda/typescript-common/dist/generated/registry/api";
-import { RecordsPage } from "@magda/typescript-common/dist/registry/RegistryClient";
-import unionToThrowable from "@magda/typescript-common/dist/util/unionToThrowable";
-import AsyncPage, {
-    forEachAsync
-} from "@magda/typescript-common/dist/AsyncPage";
-import Registry from "@magda/typescript-common/dist/registry/AuthorizedRegistryClient";
+import { Record } from "magda-typescript-common/src/generated/registry/api";
+import { RecordsPage } from "magda-typescript-common/src/registry/RegistryClient";
+import unionToThrowable from "magda-typescript-common/src/util/unionToThrowable";
+import AsyncPage, { forEachAsync } from "magda-typescript-common/src/AsyncPage";
+import Registry from "magda-typescript-common/src/registry/AuthorizedRegistryClient";
 import MinionOptions from "./MinionOptions";
 
 class Crawler {

@@ -22,9 +22,11 @@ trait MagdaElasticSugar extends SharedElasticSugar {
   this: Suite =>
 
   override def refresh(indexes: Indexes): RefreshIndexResponse = {
-    client.execute {
-      refreshIndex(indexes)
-    }.await(60 seconds)
+    client
+      .execute {
+        refreshIndex(indexes)
+      }
+      .await(60 seconds)
       .result
   }
 }

@@ -1,13 +1,13 @@
 import React, { useState, FunctionComponent } from "react";
 import { getFormatIcon } from "../View/DistributionIcon";
-import { File } from "./DatasetAddCommon";
+import { Distribution } from "./DatasetAddCommon";
 import iconWhiteArrowLeft from "assets/left-arrow-white.svg";
 import iconWhiteArrowUp from "assets/up-arrow-white.svg";
 
 import "./ReviewFilesList.scss";
 
 interface PropsType {
-    files: File[];
+    files: Distribution[];
     isOpen?: boolean;
 }
 

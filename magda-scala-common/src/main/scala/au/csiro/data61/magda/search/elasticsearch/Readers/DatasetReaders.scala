@@ -5,17 +5,14 @@ import com.sksamuel.elastic4s.json.JacksonSupport
 import au.csiro.data61.magda.model.misc.DataSet
 import scala.util.Try
 
+object DatasetReaders {
 
-object DatasetReaders{
+  implicit object AggReader extends AggReader[DataSet] {
 
-  implicit object AggReader extends AggReader[DataSet]{
-
-    def read(json:String) = {
+    def read(json: String) = {
       Try(JacksonSupport.mapper.readValue[DataSet](json))
     }
 
   }
 
 }
-
-
