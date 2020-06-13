@@ -85,12 +85,13 @@ object GraphQLSchema {
 
   case class RecordProjectorAttributes(attributes: List[String], aspects: List[String], includeAspectsList: Boolean)
 
-  def extractAttributesAndAspects(prj: Vector[ProjectedName]): Option[RecordProjectorAttributes] = {
-    prj.find(_.name == "records").map(prjName => RecordProjectorAttributes(
+  def extractAttributesAndAspects(prj: Vector[ProjectedName]): RecordProjectorAttributes = {
+    val prjName = prj.find(_.name == "records").get
+    RecordProjectorAttributes(
       Nil,
-      prjName.children.find(_.name == "aspects").map(_.children.map(_.name)).getOrElse(Nil),
+      prjName.children.find(_.name == "aspects").map(_.children.map(_.name).toList).getOrElse(Nil),
       prjName.children.exists(_.name == "aspectsList")
-    ))
+    )
   }
 
 
@@ -104,6 +105,16 @@ object GraphQLSchema {
   object AspectJsonProtocol extends DefaultJsonProtocol {
     def makeResolver(name: String, outputType: OutputType[_]): (Context[GraphQLDataFetcher, JsObject] => Action[GraphQLDataFetcher, _]) = {
       // Fetch correct field of parent JsObject and treat it according to the field type
+
+      // Could do error handling similar to:
+      // def nonMatchingJson(expectedType: String, x: JsValue) = {
+      //   "Aspect JSON did not match" + expectedType + ". Expected string, but got: " + x
+      // }
+      //   case StringType => _.value.fields.get(name).map({
+      //     case JsString(s) => Right(s)
+      //     case x => Left(nonMatchingJson("string", x))
+      //   })
+
       outputType match {
         case StringType => _.value.fields.get(name).map(_.convertTo[String])
         case IntType => _.value.fields.get(name).map(_.convertTo[Int])
@@ -122,7 +133,6 @@ object GraphQLSchema {
     }
 
     def constructSchemaDefinition(path: String, schema: JsObject): Option[OutputType[_]] = {
-      println(path)
       schema.getFields("type", "links") match {
         case Seq(_, JsArray(links)) => if (links.exists(x => isRecordLink(x.asJsObject))) Some(RecordType) else None
         case Seq(JsString("string"), _) => Some(StringType)
@@ -182,9 +192,8 @@ object GraphQLSchema {
       Field("allRecords", RecordsPageGraphQLType,
         arguments = List(PageTokenArg, RequiredAspectsArg),
         resolve = Projector((ctx,prj) => {
-
-          prj.foreach { x => println(x.asVector) }
-          ctx.ctx.getRecordsPage(ctx.arg(PageTokenArg))
+          val extractedAspects = extractAttributesAndAspects(prj)
+          ctx.ctx.getRecordsPage(ctx.arg(PageTokenArg), extractedAspects.aspects)
         })
       )
     )

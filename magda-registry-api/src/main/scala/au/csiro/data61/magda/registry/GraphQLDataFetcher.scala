@@ -4,11 +4,11 @@ import scalikejdbc.DB
 import spray.json._
 
 class GraphQLDataFetcher {
-  def getRecord(id: String, aspects: List[String]) : GraphQLSchema.Record = {
+  def getRecord(id: String, aspects: List[String]) : Option[GraphQLSchema.Record] = {
     DB readOnly { session => {
-      val record = RecordPersistence.getByIdWithAspects(session, id, Nil, aspects)
+      RecordPersistence.getByIdWithAspects(session, id, Nil, aspects).map(r => GraphQLSchema.Record(id = r.id, name = r.name, Nil, r.aspects))
+
     }}
-    GraphQLSchema.Record(id = id, name = "made-up name", Nil, null)
   }
   // , paths: Vector[Vector[String]]
   def getRecordsPage(pageToken: Option[String], aspects: List[String]) : GraphQLSchema.RecordsPageGraphQL = {
