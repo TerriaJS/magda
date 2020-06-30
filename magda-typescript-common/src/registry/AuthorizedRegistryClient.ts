@@ -39,7 +39,7 @@ export default class AuthorizedRegistryClient extends RegistryClient {
 
         super(options);
         this.options = options;
-        this.jwt = buildJwt(options.jwtSecret, options.req.user.id, {
+        this.jwt = buildJwt(options.jwtSecret, options.userId, {
             session: options.req.user.session
         });
     }
