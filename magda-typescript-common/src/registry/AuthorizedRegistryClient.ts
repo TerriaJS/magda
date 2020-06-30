@@ -39,9 +39,11 @@ export default class AuthorizedRegistryClient extends RegistryClient {
 
         super(options);
         this.options = options;
-        this.jwt = buildJwt(options.jwtSecret, options.userId, {
-            session: options.req.user.session
-        });
+        this.jwt = options.req
+            ? buildJwt(options.jwtSecret, options.userId, {
+                  session: options.req.user.session
+              })
+            : buildJwt(options.jwtSecret, options.userId);
     }
 
     putAspectDefinition(
