@@ -17,6 +17,7 @@ import { Maybe } from "tsmonad";
 export interface AuthorizedRegistryOptions extends RegistryOptions {
     jwtSecret: string;
     userId: string;
+    req?: any;
 }
 
 export default class AuthorizedRegistryClient extends RegistryClient {
@@ -38,7 +39,9 @@ export default class AuthorizedRegistryClient extends RegistryClient {
 
         super(options);
         this.options = options;
-        this.jwt = buildJwt(options.jwtSecret, options.userId);
+        this.jwt = buildJwt(options.jwtSecret, options.req.user.id, {
+            session: options.req.user.session
+        });
     }
 
     putAspectDefinition(
