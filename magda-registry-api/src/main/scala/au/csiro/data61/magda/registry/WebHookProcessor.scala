@@ -198,6 +198,7 @@ class WebHookProcessor(actorSystem: ActorSystem, val publicUrl: Uri, implicit va
             // Try to deserialize the success response as a WebHook response.  It's ok if this fails.
             Unmarshal(response.entity).to[WebHookResponse].map { webHookResponse =>
               if (webHookResponse.deferResponse) {
+                Thread.sleep(1000)
                 DB localTx { session =>
                   HookPersistence.setIsWaitingForResponse(session, webHook.id.get, isWaitingForResponse = true)
                   if (webHook.retryCount > 0) {

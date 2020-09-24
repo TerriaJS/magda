@@ -21,9 +21,12 @@ import au.csiro.data61.magda.client.AuthApiClient
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
+import akka.event.Logging
+
 @Path("/hooks")
 @io.swagger.annotations.Api(value = "web hooks", produces = "application/json")
 class HooksService(config: Config, webHookActor: ActorRef, authClient: AuthApiClient, system: ActorSystem, materializer: Materializer) extends Protocols with SprayJsonSupport {
+  val logger = Logging(system, getClass)
 
   /**
    * @apiGroup Registry Webhooks
@@ -411,6 +414,7 @@ class HooksService(config: Config, webHookActor: ActorRef, authClient: AuthApiCl
   def ack: Route = post {
     path(Segment / "ack") { id: String =>
       entity(as[WebHookAcknowledgement]) { acknowledgement =>
+      logger.info(s"""Received ack. lastEventIdReceived = ${acknowledgement.lastEventIdReceived} """)
         val result = DB localTx { session =>
           HookPersistence.acknowledgeRaisedHook(session, id, acknowledgement) match {
             case Success(theResult) => complete(theResult)

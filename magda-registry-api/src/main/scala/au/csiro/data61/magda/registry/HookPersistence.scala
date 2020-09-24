@@ -149,12 +149,14 @@ object HookPersistence extends Protocols with DiffsonProtocol {
       if (acknowledgement.succeeded) {
         acknowledgement.lastEventIdReceived match {
           case Some(eventId) =>
+            println(s"""--- Web hook $id ack event id $eventId""")
             sql"update WebHooks set isWaitingForResponse=false, lastEvent=${acknowledgement.lastEventIdReceived} ${setActive} where webHookId=$id".update.apply()
             WebHookAcknowledgementResponse(eventId)
           case None =>
             throw new Exception("If acknowledgement succeeded is true, lastEventIdReceived must be provided")
         }
       } else {
+        println(s"""--- Web hook $id ack failure""")
         sql"update WebHooks set isWaitingForResponse=false ${setActive} where webHookId=$id".update.apply()
         WebHookAcknowledgementResponse(sql"select lastEvent from WebHooks where webHookId=$id".map(rs => rs.long("lastEvent")).single.apply().get)
       }
