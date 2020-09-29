@@ -1,7 +1,7 @@
 {
   "name": "@magda/gateway",
   "description": "The public gateway to all of MAGDA, including the API and web front end.",
-  "version": "0.0.58-alpha.0",
+  "version": "0.0.58-alpha.0-qld-tweak",
   "license": "Apache-2.0",
   "scripts": {
     "prebuild": "rimraf dist tsconfig.tsbuildinfo",
